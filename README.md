@@ -74,3 +74,4 @@ ahost hostingiga qo‘yish kerak bo‘lsa: `npm run build` dan keyin `dist/` ich
 # portfolio
 # portfolio
 # portfolio
+# portfolio
