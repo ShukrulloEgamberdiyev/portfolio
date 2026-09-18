@@ -70,3 +70,4 @@ ahost hostingiga qo‘yish kerak bo‘lsa: `npm run build` dan keyin `dist/` ich
 - **Meta Pixel:** `index.html` ga pixel kodini qo‘ying va `src/lib/submit.ts` ichida muvaffaqiyatli yuborilgandan keyin `Lead` hodisasini yuboring.
 - **Maqolalar:** `src/content/articles.ts`. Hozir 3 ta maqola o‘zbek tilida; RU/EN sahifalarida shu matn ko‘rsatiladi va til haqida qisqa izoh chiqadi.
 # portfolio
+# portfolio
