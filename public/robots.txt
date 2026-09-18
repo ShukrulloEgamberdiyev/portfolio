@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://fazodigital.uz/sitemap.xml
