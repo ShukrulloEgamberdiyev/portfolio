@@ -3,11 +3,11 @@
 Sayt statik: ma'lumotlar bazasi, admin panel va foydalanuvchi akkauntlari yo‘q. Asosiy xavf — akkauntlar va ariza formasi.
 
 ## Kodda qilingan himoya
-- **Honeypot maydoni** — odamga ko‘rinmaydi, botlar to‘ldiradi. To‘ldirilsa, ariza yuborilmaydi (bot "muvaffaqiyat" ekranini ko‘radi).
+- **Honeypot maydoni** — odamga ko‘rinmaydi, botlar to‘ldiradi. To‘ldirilsa, ariza yuborilmaydi (xato holati qaytadi).
 - **Minimal vaqt** — forma 4 soniyadan tez to‘ldirilsa, yuborilmaydi.
-- **10 daqiqalik cheklov** — bitta brauzerdan qayta-qayta yuborish bloklanadi.
+- **Takroriy ariza** — server bir xil ariza ma’lumotlarini 10 daqiqa davomida qayta yozmaydi; avval saqlanganini tasdiqlaydi.
 - **Maydon uzunligi cheklangan** (160 / 1000 belgi).
-- **Apps Script** (`docs/apps-script.gs`): token, honeypot va vaqt tekshiruvi, bir xil aloqa 10 daqiqada takrorlansa rad etiladi, soatiga 30 tadan ortiq ariza bloklanadi, jadvalga formula yozilishining oldi olinadi (formula injection).
+- **Apps Script** (`docs/apps-script.gs`): token, honeypot va vaqt tekshiruvi, bir xil ariza 10 daqiqada qayta yozilmaydi, soatiga 30 tadan ortiq ariza bloklanadi, jadvalga formula yozilishining oldi olinadi (formula injection).
 - **Xavfsizlik sarlavhalari** (`vercel.json`): Content-Security-Policy, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy.
 
 ## Keyinchalik e'tibor bering
@@ -17,4 +17,4 @@ Sayt statik: ma'lumotlar bazasi, admin panel va foydalanuvchi akkauntlari yo‘q
 ## O‘zingiz qilishingiz kerak
 1. GitHub, Vercel, Google, ahost akkauntlarida **2FA** yoqing.
 2. Vercel → Project → **Firewall** → Bot protection / Attack Challenge Mode ni yoqing (bepul).
-3. Apps Script URL'ini va `VITE_APPLICATION_TOKEN` ni hech kimga bermang.
+3. Apps Script URL va `VITE_APPLICATION_TOKEN` brauzerga yuboriladi; ular maxfiy kalit emas. Soatiga 30 ta yozuv cheklovi butun xizmat uchun amal qiladi. Bu cheklov, honeypot va vaqt tekshiruvi kuchli bot himoyasi o‘rnini bosmaydi.

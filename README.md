@@ -42,13 +42,11 @@ docs/apps-script.gs     Google Sheets'ga ariza yozadigan skript
 ```
 
 ## Ariza → Google Sheets
-`docs/apps-script.gs` faylini **Targeting Xizmat** jadvalida Apps Script sifatida joylashtiring va web app qilib deploy qiling. Keyin `.env` faylga yozing (`.env.example` ga qarang):
+Ariza xizmati 2026-09-22 kuni ishga tushirildi. Arizalar [Targeting Xizmat → Sayt arizalari](https://docs.google.com/spreadsheets/d/1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo/edit#gid=1999326885) varag‘iga yoziladi.
 
-```
-VITE_APPLICATION_ENDPOINT=https://script.google.com/macros/s/.../exec
-VITE_APPLICATION_TOKEN=fazo-2026-maxfiy
-```
-Arizalar jadvalda **"Sayt arizalari"** listiga tushadi. Telegram xabari uchun skript ichidagi `BOT_TOKEN` va `CHAT_ID` ni to‘ldiring.
+Amaldagi endpoint `src/lib/submit.ts` ichida tayyor. Ushbu versiyani build va deploy qilish kifoya. `VITE_APPLICATION_ENDPOINT` va `VITE_APPLICATION_TOKEN` faqat ulanishni almashtirish uchun ixtiyoriy; eski noto‘g‘ri qiymatlar Vercel’da bo‘lsa, ularni olib tashlang yoki yangilang va qayta build qiling.
+
+Muvaffaqiyat ekrani faqat xizmat `{ok:true}` qaytarganda chiqadi. Telegram bildirishnomasi ulanmagan. Google Apps Script kodi `docs/apps-script.gs` ichida; xizmat yangilanganda mavjud deployment uchun yangi versiya chiqaring.
 
 ## Deploy (GitHub + Vercel)
 ```bash
@@ -58,7 +56,7 @@ git remote add origin https://github.com/<username>/fazodigital.git
 git push -u origin main
 ```
 1. vercel.com → **Add New → Project** → repo'ni tanlang. Sozlama `vercel.json` da tayyor.
-2. **Settings → Environment Variables** → yuqoridagi ikki qiymatni qo‘shing → qayta deploy.
+2. Ushbu versiyada Sheets ulanishi tayyor. Eski environment qiymatlari bo‘lsa, yuqoridagi izohga qarang.
 3. **Settings → Domains** → `fazodigital.uz` va `www.fazodigital.uz`.
 4. Vercel ko‘rsatgan DNS yozuvini ahost panelida kiriting. `.env` fayl hech qachon GitHub'ga yuklanmaydi.
 

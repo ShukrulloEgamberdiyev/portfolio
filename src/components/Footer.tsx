@@ -39,7 +39,7 @@ export function Footer() {
           </div>
         </div>
 
-        <p aria-hidden className="outline-text-faint mt-20 select-none whitespace-nowrap text-center text-[24vw] font-bold uppercase leading-[0.75] tracking-[-0.07em] lg:mt-28">
+        <p aria-hidden className="pointer-events-none outline-text-faint mt-20 select-none whitespace-nowrap text-center text-[24vw] font-bold uppercase leading-[0.75] tracking-[-0.07em] lg:mt-28">
           FAZO
         </p>
 

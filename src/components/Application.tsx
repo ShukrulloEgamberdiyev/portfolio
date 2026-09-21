@@ -12,15 +12,6 @@ import { Reveal } from '../ui/Reveal';
 type Data = Record<string, string>;
 
 const MIN_FILL_MS = 4000;
-const COOLDOWN_MS = 10 * 60 * 1000;
-const LAST_KEY = 'fazo.lastApplication';
-
-function recentlySubmitted() {
-  try { return Date.now() - Number(window.localStorage.getItem(LAST_KEY) || 0) < COOLDOWN_MS; } catch { return false; }
-}
-function markSubmitted() {
-  try { window.localStorage.setItem(LAST_KEY, String(Date.now())); } catch { /* storage unavailable */ }
-}
 const ease = [0.22, 1, 0.36, 1] as const;
 
 function TextField({ id, label, value, onChange, placeholder, hint, type = 'text', optional, autoComplete }: {
@@ -96,15 +87,14 @@ export function Application({ compact = false }: { compact?: boolean } = {}) {
   const last = a.stepNames.length - 1;
 
   const next = async () => {
+    if (status === 'sending') return;
     if (!valid[step]) { setShowError(true); return; }
     if (step < last) { setDir(1); setStep(step + 1); return; }
     setStatus('sending');
     const elapsed = Date.now() - startedAt.current;
-    // Bots get the same success screen, but nothing is sent.
-    if (honeypot || elapsed < MIN_FILL_MS || recentlySubmitted()) { setStatus('done'); return; }
+    if (honeypot || elapsed < MIN_FILL_MS) { setStatus('error'); return; }
     try {
       await submitApplication(data, lang, { hp: honeypot, elapsed });
-      markSubmitted();
       setStatus('done');
     } catch { setStatus('error'); }
   };

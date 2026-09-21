@@ -1,0 +1,20 @@
+✔ missing endpoint never sends or reports success (0.519083ms)
+✔ explicit receiver acceptance succeeds and preserves the payload (7.890208ms)
+✔ HTTP 200 does not hide receiver rejection: {"ok":false,"error":"forbidden"} (0.162959ms)
+✔ HTTP 200 does not hide receiver rejection: {"ok":false,"error":"rate_limited"} (0.106791ms)
+✔ HTTP 200 does not hide receiver rejection: {} (0.113916ms)
+✔ HTTP 200 does not hide receiver rejection: null (0.113584ms)
+✔ HTTP 200 does not hide receiver rejection: {"ok":"true"} (0.0845ms)
+✔ HTTP errors, invalid JSON and network failures never report success (0.222334ms)
+✔ receiver appends to the selected tab and sanitises formula prefixes (1.758458ms)
+✔ retries are acknowledged without adding a duplicate (0.296792ms)
+✔ rejected and malformed requests never report success (0.23975ms)
+✔ wrong workbook or failed append never reports success (0.774875ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 150.874708

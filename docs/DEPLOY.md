@@ -29,13 +29,13 @@ git push -u origin main
 4. 1–2 daqiqada `fazodigital.vercel.app` manzili ishlaydi
 
 ## 3. Ariza formasini ulash
-1. "Targeting Xizmat" jadvali → Extensions → Apps Script → `docs/apps-script.gs` kodini qo‘ying
-2. Deploy → New deployment → Web app → Execute as: Me, Access: Anyone → URL ni oling
-3. Vercel → Project → **Settings → Environment Variables**:
-   - `VITE_APPLICATION_ENDPOINT` = o‘sha URL
-   - `VITE_APPLICATION_TOKEN` = `fazo-2026-maxfiy`
-4. **Deployments → Redeploy** (o‘zgarish kuchga kirishi uchun)
-5. Saytda test ariza yuboring va jadvalda "Sayt arizalari" listini tekshiring
+Ariza xizmati ishga tushirilgan; ushbu source’dagi endpoint tayyor. Qayta Apps Script loyihasi yaratish shart emas.
+
+1. Yangilangan source’ni mavjud sayt loyihasiga joylang va `npm run build` bilan deploy qiling.
+2. Vercel’da eski `VITE_APPLICATION_ENDPOINT` / `VITE_APPLICATION_TOKEN` qiymatlari bo‘lsa, olib tashlang yoki amaldagi xizmatga moslang; ular source’dagi qiymatdan ustun turadi.
+3. Live saytdan TEST deb belgilangan ariza yuboring; [Sayt arizalari](https://docs.google.com/spreadsheets/d/1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo/edit#gid=1999326885) varag‘iga tushganini tekshiring.
+
+2026-09-22 tekshiruvida xizmat va mahalliy sayt formasi ishladi. Live sayt source’i bu ish davomida deploy qilinmagan.
 
 ## 4. Domenni ulash
 1. Vercel → Project → **Settings → Domains** → `fazodigital.uz` qo‘shing, keyin `www.fazodigital.uz`

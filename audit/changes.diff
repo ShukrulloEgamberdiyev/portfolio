@@ -1,25 +1,325 @@
---- original/src/components/Problem.tsx
-+++ final/src/components/Problem.tsx
-@@ -29,7 +29,7 @@
-                 <span className="text-[1.35rem] font-semibold tracking-[-0.02em] lg:text-[1.75rem]">{row.has}</span>
-                 <span className="relative col-start-2 text-[1.05rem] text-mist sm:col-start-3 lg:text-[1.25rem]">
-                   <span className="relative">
--                    — {row.gap}
-+                    {' — '}{row.gap}
-                     <motion.span aria-hidden className="absolute left-0 top-[55%] h-px w-full origin-left bg-violet/70"
-                       initial={reduce ? false : { scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
-                       transition={{ duration: 0.9, delay: 0.5 + i * 0.05, ease: [0.22, 1, 0.36, 1] }} />
---- original/src/components/Nav.tsx
-+++ final/src/components/Nav.tsx
-@@ -36,7 +36,7 @@
-         initial={{ y: -24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-         className={`fixed inset-x-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${compact ? 'border-b border-line bg-ink/70 backdrop-blur-xl' : 'border-b border-transparent'}`}
-         style={{ top: 0, paddingTop: 'env(safe-area-inset-top, 0px)' }}>
--        <nav aria-label="Primary" className={`shell flex items-center justify-between transition-[height] duration-500 ${compact ? 'h-16' : 'h-20 lg:h-24'}`}>
-+        <nav aria-label={t.footer.navLabel} className={`shell flex items-center justify-between transition-[height] duration-500 ${compact ? 'h-16' : 'h-20 lg:h-24'}`}>
-           <Link to="/" onClick={close} aria-label="FAZO Digital" data-cursor="hover"><Logo /></Link>
+--- original/.env.example
++++ final/.env.example
+@@ -1,4 +1,5 @@
+-# Apps Script web app URL (docs/apps-script.gs)
++# Ixtiyoriy: amaldagi Sheets ulanishi src/lib/submit.ts ichida tayyor.
++# Faqat boshqa deploymentga o‘tishda belgilang; qiymatlar build vaqtida olinadi.
+ VITE_APPLICATION_ENDPOINT=
+-# Apps Script dagi TOKEN bilan bir xil bo'lsin
++# Apps Script TOKEN bilan bir xil ommaviy identifikator; maxfiy kalit emas.
+ VITE_APPLICATION_TOKEN=
+--- original/README.md
++++ final/README.md
+@@ -42,13 +42,11 @@
+ ```
  
-           <ul className="hidden items-center gap-7 whitespace-nowrap xl:flex 2xl:gap-9">
+ ## Ariza → Google Sheets
+-`docs/apps-script.gs` faylini **Targeting Xizmat** jadvalida Apps Script sifatida joylashtiring va web app qilib deploy qiling. Keyin `.env` faylga yozing (`.env.example` ga qarang):
++Ariza xizmati 2026-09-22 kuni ishga tushirildi. Arizalar [Targeting Xizmat → Sayt arizalari](https://docs.google.com/spreadsheets/d/1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo/edit#gid=1999326885) varag‘iga yoziladi.
+ 
+-```
+-VITE_APPLICATION_ENDPOINT=https://script.google.com/macros/s/.../exec
+-VITE_APPLICATION_TOKEN=fazo-2026-maxfiy
+-```
+-Arizalar jadvalda **"Sayt arizalari"** listiga tushadi. Telegram xabari uchun skript ichidagi `BOT_TOKEN` va `CHAT_ID` ni to‘ldiring.
++Amaldagi endpoint `src/lib/submit.ts` ichida tayyor. Ushbu versiyani build va deploy qilish kifoya. `VITE_APPLICATION_ENDPOINT` va `VITE_APPLICATION_TOKEN` faqat ulanishni almashtirish uchun ixtiyoriy; eski noto‘g‘ri qiymatlar Vercel’da bo‘lsa, ularni olib tashlang yoki yangilang va qayta build qiling.
++
++Muvaffaqiyat ekrani faqat xizmat `{ok:true}` qaytarganda chiqadi. Telegram bildirishnomasi ulanmagan. Google Apps Script kodi `docs/apps-script.gs` ichida; xizmat yangilanganda mavjud deployment uchun yangi versiya chiqaring.
+ 
+ ## Deploy (GitHub + Vercel)
+ ```bash
+@@ -58,7 +56,7 @@
+ git push -u origin main
+ ```
+ 1. vercel.com → **Add New → Project** → repo'ni tanlang. Sozlama `vercel.json` da tayyor.
+-2. **Settings → Environment Variables** → yuqoridagi ikki qiymatni qo‘shing → qayta deploy.
++2. Ushbu versiyada Sheets ulanishi tayyor. Eski environment qiymatlari bo‘lsa, yuqoridagi izohga qarang.
+ 3. **Settings → Domains** → `fazodigital.uz` va `www.fazodigital.uz`.
+ 4. Vercel ko‘rsatgan DNS yozuvini ahost panelida kiriting. `.env` fayl hech qachon GitHub'ga yuklanmaydi.
+ 
+--- original/docs/DEPLOY.md
++++ final/docs/DEPLOY.md
+@@ -29,13 +29,13 @@
+ 4. 1–2 daqiqada `fazodigital.vercel.app` manzili ishlaydi
+ 
+ ## 3. Ariza formasini ulash
+-1. "Targeting Xizmat" jadvali → Extensions → Apps Script → `docs/apps-script.gs` kodini qo‘ying
+-2. Deploy → New deployment → Web app → Execute as: Me, Access: Anyone → URL ni oling
+-3. Vercel → Project → **Settings → Environment Variables**:
+-   - `VITE_APPLICATION_ENDPOINT` = o‘sha URL
+-   - `VITE_APPLICATION_TOKEN` = `fazo-2026-maxfiy`
+-4. **Deployments → Redeploy** (o‘zgarish kuchga kirishi uchun)
+-5. Saytda test ariza yuboring va jadvalda "Sayt arizalari" listini tekshiring
++Ariza xizmati ishga tushirilgan; ushbu source’dagi endpoint tayyor. Qayta Apps Script loyihasi yaratish shart emas.
++
++1. Yangilangan source’ni mavjud sayt loyihasiga joylang va `npm run build` bilan deploy qiling.
++2. Vercel’da eski `VITE_APPLICATION_ENDPOINT` / `VITE_APPLICATION_TOKEN` qiymatlari bo‘lsa, olib tashlang yoki amaldagi xizmatga moslang; ular source’dagi qiymatdan ustun turadi.
++3. Live saytdan TEST deb belgilangan ariza yuboring; [Sayt arizalari](https://docs.google.com/spreadsheets/d/1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo/edit#gid=1999326885) varag‘iga tushganini tekshiring.
++
++2026-09-22 tekshiruvida xizmat va mahalliy sayt formasi ishladi. Live sayt source’i bu ish davomida deploy qilinmagan.
+ 
+ ## 4. Domenni ulash
+ 1. Vercel → Project → **Settings → Domains** → `fazodigital.uz` qo‘shing, keyin `www.fazodigital.uz`
+--- original/docs/SECURITY.md
++++ final/docs/SECURITY.md
+@@ -3,11 +3,11 @@
+ Sayt statik: ma'lumotlar bazasi, admin panel va foydalanuvchi akkauntlari yo‘q. Asosiy xavf — akkauntlar va ariza formasi.
+ 
+ ## Kodda qilingan himoya
+-- **Honeypot maydoni** — odamga ko‘rinmaydi, botlar to‘ldiradi. To‘ldirilsa, ariza yuborilmaydi (bot "muvaffaqiyat" ekranini ko‘radi).
++- **Honeypot maydoni** — odamga ko‘rinmaydi, botlar to‘ldiradi. To‘ldirilsa, ariza yuborilmaydi (xato holati qaytadi).
+ - **Minimal vaqt** — forma 4 soniyadan tez to‘ldirilsa, yuborilmaydi.
+-- **10 daqiqalik cheklov** — bitta brauzerdan qayta-qayta yuborish bloklanadi.
++- **Takroriy ariza** — server bir xil ariza ma’lumotlarini 10 daqiqa davomida qayta yozmaydi; avval saqlanganini tasdiqlaydi.
+ - **Maydon uzunligi cheklangan** (160 / 1000 belgi).
+-- **Apps Script** (`docs/apps-script.gs`): token, honeypot va vaqt tekshiruvi, bir xil aloqa 10 daqiqada takrorlansa rad etiladi, soatiga 30 tadan ortiq ariza bloklanadi, jadvalga formula yozilishining oldi olinadi (formula injection).
++- **Apps Script** (`docs/apps-script.gs`): token, honeypot va vaqt tekshiruvi, bir xil ariza 10 daqiqada qayta yozilmaydi, soatiga 30 tadan ortiq ariza bloklanadi, jadvalga formula yozilishining oldi olinadi (formula injection).
+ - **Xavfsizlik sarlavhalari** (`vercel.json`): Content-Security-Policy, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy.
+ 
+ ## Keyinchalik e'tibor bering
+@@ -17,4 +17,4 @@
+ ## O‘zingiz qilishingiz kerak
+ 1. GitHub, Vercel, Google, ahost akkauntlarida **2FA** yoqing.
+ 2. Vercel → Project → **Firewall** → Bot protection / Attack Challenge Mode ni yoqing (bepul).
+-3. Apps Script URL'ini va `VITE_APPLICATION_TOKEN` ni hech kimga bermang.
++3. Apps Script URL va `VITE_APPLICATION_TOKEN` brauzerga yuboriladi; ular maxfiy kalit emas. Soatiga 30 ta yozuv cheklovi butun xizmat uchun amal qiladi. Bu cheklov, honeypot va vaqt tekshiruvi kuchli bot himoyasi o‘rnini bosmaydi.
+--- original/docs/apps-script.gs
++++ final/docs/apps-script.gs
+@@ -1,25 +1,13 @@
+ /**
+- * FAZO Digital — sayt arizalarini "Targeting Xizmat" jadvaliga yozadi.
+- *
+- * O‘RNATISH
+- * 1. https://docs.google.com/spreadsheets/d/1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo  → Extensions → Apps Script
+- * 2. Kodni shu faylga qo‘ying (Code.gs ichidagi hammasini almashtiring) va saqlang.
+- * 3. Deploy → New deployment → Type: Web app
+- *      Execute as: Me
+- *      Who has access: Anyone
+- *    → Deploy → ruxsat bering → Web app URL ni nusxalang.
+- * 4. Sayt papkasida .env fayl yarating:
+- *      VITE_APPLICATION_ENDPOINT=https://script.google.com/macros/s/AKfy.../exec
+- *      VITE_APPLICATION_TOKEN=fazo-2026-maxfiy   (pastdagi TOKEN bilan bir xil bo‘lsin)
+- * 5. Telegramga xabar kelishi uchun BOT_TOKEN va CHAT_ID ni to‘ldiring (ixtiyoriy).
+- *
+- * Kodni o‘zgartirsangiz: Deploy → Manage deployments → tahrirlash → Version: New version → Deploy.
++ * @OnlyCurrentDoc
++ * FAZO Digital — Targeting Xizmat jadvalidagi Sayt arizalari varag‘i.
++ * Ushbu kod aynan maqsad jadvalining Extensions → Apps Script loyihasiga qo‘yiladi.
++ * Web app: Execute as Me; Who has access: Anyone.
++ * VITE_APPLICATION_ENDPOINT = deployment /exec URL; VITE_APPLICATION_TOKEN = TOKEN.
++ * TOKEN brauzer buildida ko‘rinadi; u maxfiy server kaliti emas.
+  */
+-
+ const SHEET_NAME = 'Sayt arizalari';
+-const TOKEN = 'fazo-2026-maxfiy';   // .env dagi VITE_APPLICATION_TOKEN bilan bir xil
+-const BOT_TOKEN = '';               // masalan: 1234567:AAH... (bo‘sh bo‘lsa xabar yuborilmaydi)
+-const CHAT_ID = '';                 // masalan: -1001234567890
++const TOKEN = 'fazo-2026-maxfiy';
+ 
+ const COLUMNS = [
+   ['submittedAt', 'Sana'],
+@@ -41,93 +29,75 @@
+   ['page', 'Sahifa'],
+ ];
+ 
+-const MIN_FILL_MS = 4000;          // formani 4 soniyadan tez to'ldirgan — bot
+-const DUPLICATE_WINDOW_SEC = 600;  // bir xil aloqa 10 daqiqa ichida takrorlansa — rad etiladi
+-const MAX_PER_HOUR = 30;           // soatiga 30 tadan ortiq ariza — spam hujumi deb hisoblanadi
++
++function doGet() {
++  return out({ ok: true, status: 'FAZO application endpoint' });
++}
+ 
+ function doPost(e) {
++  let lock;
+   try {
+     const data = JSON.parse(e.postData.contents);
+-    if (TOKEN && data.token !== TOKEN) return out({ ok: false, error: 'forbidden' });
++    if (!data || typeof data !== 'object') return out({ ok: false, error: 'invalid' });
++    if (data.token !== TOKEN) return out({ ok: false, error: 'forbidden' });
++    if (data.hp || Number(data.elapsed || 0) < 4000) return out({ ok: false, error: 'spam' });
++    const required = ['name', 'company', 'industry', 'revenue', 'spend', 'budget', 'problem', 'objective', 'decision', 'contact'];
++    if (required.some(function (key) { return typeof data[key] !== 'string' || !data[key].trim(); })) {
++      return out({ ok: false, error: 'invalid' });
++    }
+ 
+-    // --- Spam himoyasi ---
+-    if (data.hp) return out({ ok: true });                                   // honeypot to'ldirilgan
+-    if (Number(data.elapsed || 0) < MIN_FILL_MS) return out({ ok: true });   // juda tez
+-    if (!data.name || !data.contact) return out({ ok: false, error: 'invalid' });
+-
++    lock = LockService.getScriptLock();
++    lock.waitLock(10000);
+     const cache = CacheService.getScriptCache();
+-    const contactKey = 'c_' + String(data.contact).replace(/[^0-9a-zA-Z@_]/g, '').toLowerCase();
+-    if (cache.get(contactKey)) return out({ ok: true });                     // takroriy ariza
++    const fingerprint = COLUMNS.filter(function (c) { return c[0] !== 'submittedAt'; })
++      .map(function (c) { return String(data[c[0]] || '').trim(); }).join('|');
++    const duplicateKey = 'd_' + Utilities.base64EncodeWebSafe(
++      Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, fingerprint));
++    if (cache.get(duplicateKey)) return out({ ok: true, duplicate: true });
+     const hourKey = 'h_' + Utilities.formatDate(new Date(), 'Asia/Tashkent', 'yyyyMMddHH');
+     const count = Number(cache.get(hourKey) || 0);
+-    if (count >= MAX_PER_HOUR) return out({ ok: false, error: 'rate_limited' });
++    if (count >= 30) return out({ ok: false, error: 'rate_limited' });
+ 
+-    const lock = LockService.getScriptLock();
+-    lock.waitLock(10000);
+-    try {
+-      const sheet = getSheet();
+-      const row = COLUMNS.map(function (c) {
+-        return c[0] === 'submittedAt' ? new Date() : clean(data[c[0]]);
+-      });
+-      row.push('Yangi');                     // Holat ustuni — sotuv bo'limi uchun
+-      sheet.appendRow(row);
+-    } finally {
+-      lock.releaseLock();
+-    }
+-
+-    cache.put(contactKey, '1', DUPLICATE_WINDOW_SEC);
++    const sheet = getSheet();
++    const row = COLUMNS.map(function (c) {
++      return c[0] === 'submittedAt' ? new Date() : clean(data[c[0]]);
++    });
++    row.push('Yangi');
++    sheet.appendRow(row);
++    SpreadsheetApp.flush();
++    cache.put(duplicateKey, '1', 600);
+     cache.put(hourKey, String(count + 1), 3600);
+-    notify(data);
+     return out({ ok: true });
+-  } catch (err) {
+-    return out({ ok: false, error: String(err) });
++  } catch (error) {
++    console.error(error);
++    return out({ ok: false, error: 'storage_failed' });
++  } finally {
++    if (lock && lock.hasLock()) lock.releaseLock();
+   }
+ }
+ 
+-/** Matnni tozalaydi: uzunlikni cheklaydi va jadval formulasi sifatida bajarilishining oldini oladi. */
+-function clean(v) {
+-  if (v == null) return '';
+-  let s = String(v).slice(0, 1000).trim();
+-  if (/^[=+\-@]/.test(s)) s = "'" + s;       // formula injection himoyasi
+-  return s;
++function clean(value) {
++  if (value == null) return '';
++  let text = String(value).slice(0, 1000).trim();
++  if (/^[=+\-@]/.test(text)) text = "'" + text;
++  return text;
+ }
+ 
+-function doGet() { return out({ ok: true, status: 'FAZO application endpoint' }); }
+-
+ function getSheet() {
+-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+-  let sheet = ss.getSheetByName(SHEET_NAME);
++  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
++  if (!spreadsheet || spreadsheet.getId() !== '1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo') {
++    throw new Error('Wrong spreadsheet binding');
++  }
++  let sheet = spreadsheet.getSheetByName(SHEET_NAME);
+   if (!sheet) {
+-    sheet = ss.insertSheet(SHEET_NAME, 0);
+-    const header = COLUMNS.map(function (c) { return c[1]; }).concat(['Holat']);
+-    sheet.appendRow(header);
+-    const head = sheet.getRange(1, 1, 1, header.length);
+-    head.setFontWeight('bold').setBackground('#0b0b0d').setFontColor('#ffffff');
++    sheet = spreadsheet.insertSheet(SHEET_NAME);
++    sheet.appendRow(COLUMNS.map(function (c) { return c[1]; }).concat(['Holat']));
++    sheet.getRange(1, 1, 1, COLUMNS.length + 1).setFontWeight('bold');
+     sheet.setFrozenRows(1);
+-    sheet.setColumnWidths(1, header.length, 150);
+   }
+   return sheet;
+ }
+ 
+-function notify(data) {
+-  if (!BOT_TOKEN || !CHAT_ID) return;
+-  let text =
+-    '🟣 Yangi ariza — fazodigital.uz\n\n' +
+-    'Ism: ' + (data.name || '-') + '\n' +
+-    'Kompaniya: ' + (data.company || '-') + '\n' +
+-    'Soha: ' + (data.industry || '-') + '\n' +
+-    'Byudjet: ' + (data.budget || '-') + '\n' +
+-    'Daromad: ' + (data.revenue || '-') + '\n' +
+-    'Muammo: ' + (data.problem || '-') + '\n' +
+-    'Aloqa: ' + (data.contact || '-');
+-  text = text.slice(0, 3500);
+-  UrlFetchApp.fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage', {
+-    method: 'post',
+-    payload: { chat_id: CHAT_ID, text: text },
+-    muteHttpExceptions: true,
+-  });
++function out(value) {
++  return ContentService.createTextOutput(JSON.stringify(value)).setMimeType(ContentService.MimeType.JSON);
+ }
+-
+-function out(obj) {
+-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+-}
+--- original/index.html
++++ final/index.html
+@@ -3,8 +3,8 @@
+   <head>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+-    <title>FAZO Digital</title>
+-    <meta name="description" content="FAZO Digital — Toshkentdagi raqamli marketing agentligi. Strategiya, kreativ, Meta Ads, lidlar jalb qilish, sotuv tizimi va CRMni bitta o‘lchanadigan o‘sish tizimiga birlashtiramiz." />
++    <title>FAZO Digital — Raqamli marketing agentligi · Toshkent</title>
++    <meta name="description" content="FAZO Digital — Toshkentdagi raqamli marketing agentligi. Strategiya, kreativ, Meta Ads, lidlarni jalb qilish, sotuv tizimi va CRM’ni bitta o‘lchanadigan o‘sish tizimiga birlashtiramiz." />
+     <meta name="keywords" content="FAZO Digital, marketing agency Tashkent, digital marketing Uzbekistan, performance marketing Uzbekistan, SMM agency Tashkent, targeting agency Uzbekistan" />
+     <meta name="theme-color" content="#050505" />
+     <link rel="canonical" href="https://fazodigital.uz/" />
+--- original/src/components/Application.tsx
++++ final/src/components/Application.tsx
+@@ -12,15 +12,6 @@
+ type Data = Record<string, string>;
+ 
+ const MIN_FILL_MS = 4000;
+-const COOLDOWN_MS = 10 * 60 * 1000;
+-const LAST_KEY = 'fazo.lastApplication';
+-
+-function recentlySubmitted() {
+-  try { return Date.now() - Number(window.localStorage.getItem(LAST_KEY) || 0) < COOLDOWN_MS; } catch { return false; }
+-}
+-function markSubmitted() {
+-  try { window.localStorage.setItem(LAST_KEY, String(Date.now())); } catch { /* storage unavailable */ }
+-}
+ const ease = [0.22, 1, 0.36, 1] as const;
+ 
+ function TextField({ id, label, value, onChange, placeholder, hint, type = 'text', optional, autoComplete }: {
+@@ -96,15 +87,14 @@
+   const last = a.stepNames.length - 1;
+ 
+   const next = async () => {
++    if (status === 'sending') return;
+     if (!valid[step]) { setShowError(true); return; }
+     if (step < last) { setDir(1); setStep(step + 1); return; }
+     setStatus('sending');
+     const elapsed = Date.now() - startedAt.current;
+-    // Bots get the same success screen, but nothing is sent.
+-    if (honeypot || elapsed < MIN_FILL_MS || recentlySubmitted()) { setStatus('done'); return; }
++    if (honeypot || elapsed < MIN_FILL_MS) { setStatus('error'); return; }
+     try {
+       await submitApplication(data, lang, { hp: honeypot, elapsed });
+-      markSubmitted();
+       setStatus('done');
+     } catch { setStatus('error'); }
+   };
+--- original/src/components/Footer.tsx
++++ final/src/components/Footer.tsx
+@@ -39,7 +39,7 @@
+           </div>
+         </div>
+ 
+-        <p aria-hidden className="outline-text-faint mt-20 select-none whitespace-nowrap text-center text-[24vw] font-bold uppercase leading-[0.75] tracking-[-0.07em] lg:mt-28">
++        <p aria-hidden className="pointer-events-none outline-text-faint mt-20 select-none whitespace-nowrap text-center text-[24vw] font-bold uppercase leading-[0.75] tracking-[-0.07em] lg:mt-28">
+           FAZO
+         </p>
+ 
 --- original/src/components/Hero.tsx
 +++ final/src/components/Hero.tsx
 @@ -9,7 +9,7 @@
@@ -49,17 +349,28 @@
            </motion.div>
          </div>
  
---- original/src/ui/Headline.tsx
-+++ final/src/ui/Headline.tsx
-@@ -25,7 +25,7 @@
-           <motion.span
-             className={`block ${line.outline ? 'outline-text' : ''}`}
-             variants={{ hide: { y: '108%' }, show: { y: '0%', transition: { duration: 1.05, ease: [0.22, 1, 0.36, 1] } } }}>
--            {line.t}
-+            {i > 0 && ' '}{line.t}
-             {line.accent && <span className="text-violet" style={{ WebkitTextStroke: 0 }}>.</span>}
-           </motion.span>
-         </span>
+--- original/src/components/Nav.tsx
++++ final/src/components/Nav.tsx
+@@ -36,7 +36,7 @@
+         initial={{ y: -24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+         className={`fixed inset-x-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${compact ? 'border-b border-line bg-ink/70 backdrop-blur-xl' : 'border-b border-transparent'}`}
+         style={{ top: 0, paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+-        <nav aria-label="Primary" className={`shell flex items-center justify-between transition-[height] duration-500 ${compact ? 'h-16' : 'h-20 lg:h-24'}`}>
++        <nav aria-label={t.footer.navLabel} className={`shell flex items-center justify-between transition-[height] duration-500 ${compact ? 'h-16' : 'h-20 lg:h-24'}`}>
+           <Link to="/" onClick={close} aria-label="FAZO Digital" data-cursor="hover"><Logo /></Link>
+ 
+           <ul className="hidden items-center gap-7 whitespace-nowrap xl:flex 2xl:gap-9">
+--- original/src/components/Problem.tsx
++++ final/src/components/Problem.tsx
+@@ -29,7 +29,7 @@
+                 <span className="text-[1.35rem] font-semibold tracking-[-0.02em] lg:text-[1.75rem]">{row.has}</span>
+                 <span className="relative col-start-2 text-[1.05rem] text-mist sm:col-start-3 lg:text-[1.25rem]">
+                   <span className="relative">
+-                    — {row.gap}
++                    {' — '}{row.gap}
+                     <motion.span aria-hidden className="absolute left-0 top-[55%] h-px w-full origin-left bg-violet/70"
+                       initial={reduce ? false : { scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
+                       transition={{ duration: 0.9, delay: 0.5 + i * 0.05, ease: [0.22, 1, 0.36, 1] }} />
 --- original/src/content/articles.ts
 +++ final/src/content/articles.ts
 @@ -26,7 +26,7 @@
@@ -225,6 +536,73 @@
    applyPage: { title: 'Application', intro: 'Fill in the form — a strategist reviews every application and gets in touch if there’s a fit.' },
    privacy: {
      title: 'Privacy Policy', updated: 'Updated: September 2026',
+--- original/src/i18n/pages.ru.ts
++++ final/src/i18n/pages.ru.ts
+@@ -2,7 +2,7 @@
+ 
+ export const pagesRu: PageDict = {
+   common: {
+-    home: 'Главная', backHome: 'На главную', readMore: 'Подробнее',
++    home: 'Главная', backHome: 'На главную', readMore: 'Следующая статья',
+     ctaTitle: 'Поговорим о вашем росте?',
+     ctaText: 'Разберём ваш бизнес и покажем, где теряется результат. Встреча бесплатная.',
+     ctaButton: 'Оставить заявку', ctaSecondary: 'Написать в Telegram',
+@@ -32,7 +32,7 @@
+         lead: 'Стратегия — это не презентация. Это решение: какому клиенту, с каким предложением и через какой канал мы идём.',
+         sections: [
+           { h: 'Изучаем рынок', body: 'Собираем рекламу, цены и обещания конкурентов. Говорим с вашими клиентами или читаем существующие обращения — там видно, чего люди боятся и что сравнивают.' },
+-          { h: 'Определяем позицию', body: 'Чем вы отличаетесь и можете ли сказать это одной фразой. Если отличие только в цене — создать его тоже задача этого этапа.' },
++          { h: 'Определяем позицию', body: 'Чем вы отличаетесь и можете ли сказать это одной фразой? Если отличие только в цене — создать его тоже задача этого этапа.' },
+           { h: 'Строим оффер и воронку', body: 'Что клиент получает на первом шаге, что происходит дальше, на каком этапе он теряется. Для каждого этапа ставится измеримая цель.' },
+         ],
+         deliverables: ['Анализ рынка и конкурентов', 'Портрет клиента и список возражений', 'Позиционирование и ключевые сообщения', 'Архитектура оффера', 'Карта воронки и KPI'],
+@@ -42,7 +42,7 @@
+         sections: [
+           { h: 'Система контента', body: 'Месячный план строится не из случайных тем, а из вопросов и возражений клиента. Мы знаем, на какой этап работает каждая рубрика.' },
+           { h: 'Съёмка', body: 'Reels, продуктовые и производственные видео, интервью. Сценарий, режиссура, монтаж — на нашей стороне. В продуктовых кадрах цвета не меняем: клиент должен увидеть реальный товар.' },
+-          { h: 'Performance-креативы', body: 'Для рекламы готовятся отдельные креативы, и они проходят тест. Работающее остаётся, неработающее заменяется — процесс не останавливается.' },
++          { h: 'Рекламные креативы', body: 'Для рекламы готовятся отдельные креативы, и они проходят тест. Работающее остаётся, неработающее заменяется — процесс не останавливается.' },
+         ],
+         deliverables: ['Контент-стратегия и рубрики', 'Месячный контент-план', 'Съёмка и монтаж', 'Reels и коммерческие видео', 'Рекламные креативы и результаты тестов'],
+       },
+@@ -79,8 +79,8 @@
+     outputs: ['Документ аудита и найденные разрывы', 'Стратегия и план роста', 'Готовая система и материалы', 'Работающие кампании и поток лидов', 'Месячный отчёт и план на следующий месяц'],
+     ninetyTitle: 'Первые 90 дней',
+     ninety: [
+-      { when: '1–2 неделя', what: 'Аудит, стратегия и оффер. Обычно именно здесь находится главный разрыв.' },
+-      { when: '3–4 неделя', what: 'Съёмка, креативы, CRM и скрипты. Запускаются первые кампании.' },
++      { when: '1–2-я недели', what: 'Аудит, стратегия и оффер. Обычно именно здесь находится главный разрыв.' },
++      { when: '3–4-я недели', what: 'Съёмка, креативы, CRM и скрипты. Запускаются первые кампании.' },
+       { when: '2-й месяц', what: 'Период тестов: меняются креативы и аудитории, качество лидов проверяется вместе с продажами.' },
+       { when: '3-й месяц', what: 'Усиливается работающее направление, бюджет перераспределяется под него.' },
+     ],
+@@ -88,21 +88,21 @@
+   about: {
+     title: 'О FAZO', lead: 'Мы работаем в Ташкенте и помогаем бизнесу связать маркетинг с продажами.',
+     story: [
+-      { h: 'С чего начиналось', body: 'FAZO начиналась с обычного SMM. Со временем стало ясно: ни красивый контент, ни дешёвый лид сами по себе не приносят денег. Вопрос клиента всегда был один — «а где продажи?».' },
++      { h: 'С чего начиналось', body: 'FAZO начиналась с обычного SMM. Со временем стало ясно: ни красивый контент, ни дешёвый лид сами по себе не приносят денег. Вопрос клиента всегда был один — «а где продажи?»' },
+       { h: 'Что изменилось', body: 'Мы расширили границу работы: после рекламы зашли в продажи, CRM и аналитику. Сегодня мы не производитель контента, а команда, отвечающая за систему роста клиента.' },
+-      { h: 'Как работаем', body: 'На клиента выделяется стратег, креативная группа и таргетолог. Работа идёт в недельном ритме: план, исполнение, цифры, корректировка. Отчёт пишется на языке лидов и продаж, а не лайков.' },
++      { h: 'Как работаем', body: 'Над каждым проектом работают профильные специалисты: за стратегию, рекламу, сценарии, тексты, дизайн и видеосъёмку отвечают отдельные специалисты. Работа идёт в недельном ритме: план, исполнение, цифры, корректировка. Отчёт пишется на языке лидов и продаж, а не лайков.' },
+     ],
+     principlesTitle: 'Принципы',
+     principles: [
+-      { h: 'Начинаем с цифр', body: 'Перед рекомендацией проверяем реальные результаты в аккаунте. Вместо «best practice» — ваши CPA и продажи.' },
++      { h: 'Начинаем с цифр', body: 'Перед рекомендацией проверяем реальные результаты в аккаунте. Вместо общих рекомендаций — ваши CPA и продажи.' },
+       { h: 'Не даём обещаний', body: 'Мы не говорим о гарантированной выручке. Обещаем то, что контролируем: процесс, качество и скорость.' },
+       { h: 'Говорим и неприятное', body: 'Если проблема не в рекламе, а в продукте или продажах, мы скажем это прямо.' },
+       { h: 'Один ответственный', body: 'Вместо разрозненных подрядчиков — одна команда и один результат.' },
+     ],
+-    teamTitle: 'Команда', teamText: 'Стратег, таргетолог, креативный продюсер, контент-менеджер, видеограф и консультант по продажам — состав собирается под проект.',
++    teamTitle: 'Команда', teamText: 'Стратег, таргетолог, сценарист, копирайтер, дизайнер, видеограф, монтажёр, контент-менеджер и консультант по продажам — каждый работает в своём направлении. Состав зависит от задач проекта. С ростом объёма работ и бюджета сотрудничества увеличивается и число привлечённых специалистов.',
+     numbersTitle: 'В цифрах',
+   },
+-  insightsPage: { title: 'Insights', intro: 'О повторяющихся ошибках в работе и о том, как их закрывать.', langNote: 'Статья доступна на узбекском языке.', minutes: 'мин чтения' },
++  insightsPage: { title: 'Полезные материалы', intro: 'О повторяющихся ошибках в работе и о том, как их исправлять.', langNote: 'Статья доступна на узбекском языке.', minutes: 'мин чтения' },
+   applyPage: { title: 'Заявка', intro: 'Заполните форму — заявку изучит стратег и, если мы подходим друг другу, свяжется для встречи.' },
+   privacy: {
+     title: 'Политика конфиденциальности', updated: 'Обновлено: сентябрь 2026',
 --- original/src/i18n/pages.uz.ts
 +++ final/src/i18n/pages.uz.ts
 @@ -9,7 +9,7 @@
@@ -323,73 +701,6 @@
    applyPage: { title: 'Ariza qoldirish', intro: 'Formani to‘ldiring — arizani strateg ko‘rib chiqadi va mos bo‘lsa, uchrashuv uchun bog‘lanamiz.' },
    privacy: {
      title: 'Maxfiylik siyosati', updated: 'Yangilangan: 2026-yil sentabr',
---- original/src/i18n/pages.ru.ts
-+++ final/src/i18n/pages.ru.ts
-@@ -2,7 +2,7 @@
- 
- export const pagesRu: PageDict = {
-   common: {
--    home: 'Главная', backHome: 'На главную', readMore: 'Подробнее',
-+    home: 'Главная', backHome: 'На главную', readMore: 'Следующая статья',
-     ctaTitle: 'Поговорим о вашем росте?',
-     ctaText: 'Разберём ваш бизнес и покажем, где теряется результат. Встреча бесплатная.',
-     ctaButton: 'Оставить заявку', ctaSecondary: 'Написать в Telegram',
-@@ -32,7 +32,7 @@
-         lead: 'Стратегия — это не презентация. Это решение: какому клиенту, с каким предложением и через какой канал мы идём.',
-         sections: [
-           { h: 'Изучаем рынок', body: 'Собираем рекламу, цены и обещания конкурентов. Говорим с вашими клиентами или читаем существующие обращения — там видно, чего люди боятся и что сравнивают.' },
--          { h: 'Определяем позицию', body: 'Чем вы отличаетесь и можете ли сказать это одной фразой. Если отличие только в цене — создать его тоже задача этого этапа.' },
-+          { h: 'Определяем позицию', body: 'Чем вы отличаетесь и можете ли сказать это одной фразой? Если отличие только в цене — создать его тоже задача этого этапа.' },
-           { h: 'Строим оффер и воронку', body: 'Что клиент получает на первом шаге, что происходит дальше, на каком этапе он теряется. Для каждого этапа ставится измеримая цель.' },
-         ],
-         deliverables: ['Анализ рынка и конкурентов', 'Портрет клиента и список возражений', 'Позиционирование и ключевые сообщения', 'Архитектура оффера', 'Карта воронки и KPI'],
-@@ -42,7 +42,7 @@
-         sections: [
-           { h: 'Система контента', body: 'Месячный план строится не из случайных тем, а из вопросов и возражений клиента. Мы знаем, на какой этап работает каждая рубрика.' },
-           { h: 'Съёмка', body: 'Reels, продуктовые и производственные видео, интервью. Сценарий, режиссура, монтаж — на нашей стороне. В продуктовых кадрах цвета не меняем: клиент должен увидеть реальный товар.' },
--          { h: 'Performance-креативы', body: 'Для рекламы готовятся отдельные креативы, и они проходят тест. Работающее остаётся, неработающее заменяется — процесс не останавливается.' },
-+          { h: 'Рекламные креативы', body: 'Для рекламы готовятся отдельные креативы, и они проходят тест. Работающее остаётся, неработающее заменяется — процесс не останавливается.' },
-         ],
-         deliverables: ['Контент-стратегия и рубрики', 'Месячный контент-план', 'Съёмка и монтаж', 'Reels и коммерческие видео', 'Рекламные креативы и результаты тестов'],
-       },
-@@ -79,8 +79,8 @@
-     outputs: ['Документ аудита и найденные разрывы', 'Стратегия и план роста', 'Готовая система и материалы', 'Работающие кампании и поток лидов', 'Месячный отчёт и план на следующий месяц'],
-     ninetyTitle: 'Первые 90 дней',
-     ninety: [
--      { when: '1–2 неделя', what: 'Аудит, стратегия и оффер. Обычно именно здесь находится главный разрыв.' },
--      { when: '3–4 неделя', what: 'Съёмка, креативы, CRM и скрипты. Запускаются первые кампании.' },
-+      { when: '1–2-я недели', what: 'Аудит, стратегия и оффер. Обычно именно здесь находится главный разрыв.' },
-+      { when: '3–4-я недели', what: 'Съёмка, креативы, CRM и скрипты. Запускаются первые кампании.' },
-       { when: '2-й месяц', what: 'Период тестов: меняются креативы и аудитории, качество лидов проверяется вместе с продажами.' },
-       { when: '3-й месяц', what: 'Усиливается работающее направление, бюджет перераспределяется под него.' },
-     ],
-@@ -88,21 +88,21 @@
-   about: {
-     title: 'О FAZO', lead: 'Мы работаем в Ташкенте и помогаем бизнесу связать маркетинг с продажами.',
-     story: [
--      { h: 'С чего начиналось', body: 'FAZO начиналась с обычного SMM. Со временем стало ясно: ни красивый контент, ни дешёвый лид сами по себе не приносят денег. Вопрос клиента всегда был один — «а где продажи?».' },
-+      { h: 'С чего начиналось', body: 'FAZO начиналась с обычного SMM. Со временем стало ясно: ни красивый контент, ни дешёвый лид сами по себе не приносят денег. Вопрос клиента всегда был один — «а где продажи?»' },
-       { h: 'Что изменилось', body: 'Мы расширили границу работы: после рекламы зашли в продажи, CRM и аналитику. Сегодня мы не производитель контента, а команда, отвечающая за систему роста клиента.' },
--      { h: 'Как работаем', body: 'На клиента выделяется стратег, креативная группа и таргетолог. Работа идёт в недельном ритме: план, исполнение, цифры, корректировка. Отчёт пишется на языке лидов и продаж, а не лайков.' },
-+      { h: 'Как работаем', body: 'Над каждым проектом работают профильные специалисты: за стратегию, рекламу, сценарии, тексты, дизайн и видеосъёмку отвечают отдельные специалисты. Работа идёт в недельном ритме: план, исполнение, цифры, корректировка. Отчёт пишется на языке лидов и продаж, а не лайков.' },
-     ],
-     principlesTitle: 'Принципы',
-     principles: [
--      { h: 'Начинаем с цифр', body: 'Перед рекомендацией проверяем реальные результаты в аккаунте. Вместо «best practice» — ваши CPA и продажи.' },
-+      { h: 'Начинаем с цифр', body: 'Перед рекомендацией проверяем реальные результаты в аккаунте. Вместо общих рекомендаций — ваши CPA и продажи.' },
-       { h: 'Не даём обещаний', body: 'Мы не говорим о гарантированной выручке. Обещаем то, что контролируем: процесс, качество и скорость.' },
-       { h: 'Говорим и неприятное', body: 'Если проблема не в рекламе, а в продукте или продажах, мы скажем это прямо.' },
-       { h: 'Один ответственный', body: 'Вместо разрозненных подрядчиков — одна команда и один результат.' },
-     ],
--    teamTitle: 'Команда', teamText: 'Стратег, таргетолог, креативный продюсер, контент-менеджер, видеограф и консультант по продажам — состав собирается под проект.',
-+    teamTitle: 'Команда', teamText: 'Стратег, таргетолог, сценарист, копирайтер, дизайнер, видеограф, монтажёр, контент-менеджер и консультант по продажам — каждый работает в своём направлении. Состав зависит от задач проекта. С ростом объёма работ и бюджета сотрудничества увеличивается и число привлечённых специалистов.',
-     numbersTitle: 'В цифрах',
-   },
--  insightsPage: { title: 'Insights', intro: 'О повторяющихся ошибках в работе и о том, как их закрывать.', langNote: 'Статья доступна на узбекском языке.', minutes: 'мин чтения' },
-+  insightsPage: { title: 'Полезные материалы', intro: 'О повторяющихся ошибках в работе и о том, как их исправлять.', langNote: 'Статья доступна на узбекском языке.', minutes: 'мин чтения' },
-   applyPage: { title: 'Заявка', intro: 'Заполните форму — заявку изучит стратег и, если мы подходим друг другу, свяжется для встречи.' },
-   privacy: {
-     title: 'Политика конфиденциальности', updated: 'Обновлено: сентябрь 2026',
 --- original/src/i18n/ru.ts
 +++ final/src/i18n/ru.ts
 @@ -2,12 +2,12 @@
@@ -730,16 +1041,152 @@
      successTitle: 'Ariza qabul qilindi.', successText: 'Arizangizni ko‘rib chiqamiz va Telegram yoki telefon orqali bog‘lanamiz.', successCta: 'Telegram orqali bog‘lanish',
      error: 'Yuborib bo‘lmadi. Iltimos, Telegram orqali yozing: @fazo_digital',
    },
---- original/index.html
-+++ final/index.html
-@@ -3,8 +3,8 @@
-   <head>
-     <meta charset="UTF-8" />
-     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
--    <title>FAZO Digital</title>
--    <meta name="description" content="FAZO Digital — Toshkentdagi raqamli marketing agentligi. Strategiya, kreativ, Meta Ads, lidlar jalb qilish, sotuv tizimi va CRMni bitta o‘lchanadigan o‘sish tizimiga birlashtiramiz." />
-+    <title>FAZO Digital — Raqamli marketing agentligi · Toshkent</title>
-+    <meta name="description" content="FAZO Digital — Toshkentdagi raqamli marketing agentligi. Strategiya, kreativ, Meta Ads, lidlarni jalb qilish, sotuv tizimi va CRM’ni bitta o‘lchanadigan o‘sish tizimiga birlashtiramiz." />
-     <meta name="keywords" content="FAZO Digital, marketing agency Tashkent, digital marketing Uzbekistan, performance marketing Uzbekistan, SMM agency Tashkent, targeting agency Uzbekistan" />
-     <meta name="theme-color" content="#050505" />
-     <link rel="canonical" href="https://fazodigital.uz/" />
+--- original/src/lib/applicationTransport.ts
++++ final/src/lib/applicationTransport.ts
+@@ -0,0 +1,22 @@
++/** Success is shown only after the receiver explicitly accepts the application. */
++export async function deliverApplication(endpoint: string | undefined, payload: Record<string, string>): Promise<void> {
++  if (!endpoint?.trim()) throw new Error('Application endpoint is not configured');
++
++  const controller = new AbortController();
++  const timeout = setTimeout(() => controller.abort(), 15000);
++  try {
++    const response = await fetch(endpoint, {
++      method: 'POST',
++      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
++      body: JSON.stringify(payload),
++      signal: controller.signal,
++    });
++    if (!response.ok) throw new Error(`Application failed: ${response.status}`);
++    const result: unknown = await response.json();
++    if (!result || typeof result !== 'object' || !('ok' in result) || result.ok !== true) {
++      throw new Error('Application was not accepted');
++    }
++  } finally {
++    clearTimeout(timeout);
++  }
++}
+--- original/src/lib/submit.ts
++++ final/src/lib/submit.ts
+@@ -1,3 +1,5 @@
++import { deliverApplication } from './applicationTransport';
++
+ export type Application = Record<string, string>;
+ 
+ function utm(): Record<string, string> {
+@@ -13,13 +15,14 @@
+ /**
+  * Sends an application to the endpoint in VITE_APPLICATION_ENDPOINT — the Apps Script
+  * web app bound to the "Targeting Xizmat" spreadsheet (see docs/apps-script.gs).
+- * Without an endpoint it resolves after a short delay so the flow can be reviewed.
++ * A configured endpoint and an explicit successful server response are required.
+  *
+  * Sent as text/plain on purpose: Apps Script web apps reject the CORS preflight that
+  * an application/json POST triggers.
+  */
+ export async function submitApplication(data: Application, lang = 'uz', guard: { hp: string; elapsed: number } = { hp: '', elapsed: 0 }): Promise<void> {
+-  const endpoint = import.meta.env.VITE_APPLICATION_ENDPOINT as string | undefined;
++  const endpoint = (import.meta.env.VITE_APPLICATION_ENDPOINT as string | undefined)
++    || 'https://script.google.com/macros/s/AKfycbzBvnC8i5tglLCg_7ZX2op1BuAQ79c2mRHAYtX__XJfQa4aD3htuXs9lUYWWam_mylr1Q/exec';
+   const payload = {
+     ...data,
+     ...utm(),
+@@ -29,9 +32,8 @@
+     submittedAt: new Date().toISOString(),
+     source: 'fazodigital.uz',
+     page: location.href,
+-    token: import.meta.env.VITE_APPLICATION_TOKEN ?? '',
++    // Public identifier, not a secret: the Apps Script validates and limits writes.
++    token: import.meta.env.VITE_APPLICATION_TOKEN || 'fazo-2026-maxfiy',
+   };
+-  if (!endpoint) { await new Promise((r) => setTimeout(r, 900)); return; }
+-  const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+-  if (!res.ok) throw new Error(`Application failed: ${res.status}`);
++  await deliverApplication(endpoint, payload);
+ }
+--- original/src/ui/Headline.tsx
++++ final/src/ui/Headline.tsx
+@@ -25,7 +25,7 @@
+           <motion.span
+             className={`block ${line.outline ? 'outline-text' : ''}`}
+             variants={{ hide: { y: '108%' }, show: { y: '0%', transition: { duration: 1.05, ease: [0.22, 1, 0.36, 1] } } }}>
+-            {line.t}
++            {i > 0 && ' '}{line.t}
+             {line.accent && <span className="text-violet" style={{ WebkitTextStroke: 0 }}>.</span>}
+           </motion.span>
+         </span>
+--- original/tests/applicationTransport.test.mjs
++++ final/tests/applicationTransport.test.mjs
+@@ -0,0 +1,43 @@
++import { test } from 'node:test';
++import assert from 'node:assert/strict';
++import { readFile } from 'node:fs/promises';
++import ts from 'typescript';
++
++const source = await readFile(new URL('../src/lib/applicationTransport.ts', import.meta.url), 'utf8');
++const js = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText;
++const { deliverApplication } = await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
++const endpoint = 'https://example.invalid/applications';
++
++test('missing endpoint never sends or reports success', async (t) => {
++  const fetch = t.mock.method(globalThis, 'fetch', () => assert.fail('must not send'));
++  await assert.rejects(deliverApplication(undefined, {}), /not configured/);
++  await assert.rejects(deliverApplication(' ', {}), /not configured/);
++  assert.equal(fetch.mock.callCount(), 0);
++});
++
++test('explicit receiver acceptance succeeds and preserves the payload', async (t) => {
++  t.mock.method(globalThis, 'fetch', async (url, options) => {
++    assert.equal(url, endpoint);
++    assert.equal(options.method, 'POST');
++    assert.equal(options.headers['Content-Type'], 'text/plain;charset=utf-8');
++    assert.deepEqual(JSON.parse(options.body), { name: 'Test', lang: 'uz' });
++    return new Response(JSON.stringify({ ok: true }), { status: 200 });
++  });
++  await deliverApplication(endpoint, { name: 'Test', lang: 'uz' });
++});
++
++for (const body of [{ ok: false, error: 'forbidden' }, { ok: false, error: 'rate_limited' }, {}, null, { ok: 'true' }]) {
++  test(`HTTP 200 does not hide receiver rejection: ${JSON.stringify(body)}`, async (t) => {
++    t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify(body)));
++    await assert.rejects(deliverApplication(endpoint, {}), /not accepted/);
++  });
++}
++
++test('HTTP errors, invalid JSON and network failures never report success', async (t) => {
++  const mocked = t.mock.method(globalThis, 'fetch', async () => new Response('unavailable', { status: 503 }));
++  await assert.rejects(deliverApplication(endpoint, {}), /503/);
++  mocked.mock.mockImplementation(async () => new Response('<html>Sign in</html>'));
++  await assert.rejects(deliverApplication(endpoint, {}), SyntaxError);
++  mocked.mock.mockImplementation(async () => { throw new TypeError('network failed'); });
++  await assert.rejects(deliverApplication(endpoint, {}), /network failed/);
++});
+--- original/tests/appsScript.test.mjs
++++ final/tests/appsScript.test.mjs
+@@ -0,0 +1,26 @@
++import { test } from 'node:test';
++import assert from 'node:assert/strict';
++import vm from 'node:vm';
++import { readFile } from 'node:fs/promises';
++import { createHash } from 'node:crypto';
++const source = await readFile(new URL('../docs/apps-script.gs', import.meta.url), 'utf8');
++function receiver({ wrongSheet = false, failWrite = false } = {}) {
++  const rows = [], cache = new Map(); let held = false;
++  const sheet = { appendRow(row) { if (failWrite) throw Error('failed'); rows.push(row); } };
++  const sandbox = {
++    console: { error() {} },
++    SpreadsheetApp: { getActiveSpreadsheet: () => ({ getId: () => wrongSheet ? 'other' : '1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo', getSheetByName(name) { assert.equal(name,'Sayt arizalari'); return sheet; } }), flush() {} },
++    LockService: { getScriptLock: () => ({ waitLock() { held = true; }, hasLock: () => held, releaseLock() { held = false; } }) },
++    CacheService: { getScriptCache: () => ({ get: key => cache.get(key), put: (key,val) => cache.set(key,val) }) },
++    Utilities: { DigestAlgorithm: { SHA_256: 'sha256' }, computeDigest: (alg,v) => createHash(alg).update(v).digest(), base64EncodeWebSafe: v=>v.toString('base64url'), formatDate: ()=>'2026092204' },
++    ContentService: { MimeType: { JSON:'json' }, createTextOutput: text => ({ setMimeType: () => JSON.parse(text) }) },
++  };
++  vm.createContext(sandbox);vm.runInContext(source,sandbox);
++  const send = data=>sandbox.doPost({postData:{contents:JSON.stringify(data)}});
++  return {send,rows};
++}
++const data={token:'fazo-2026-maxfiy',elapsed:'5000',name:'TEST',company:'=bad()',industry:'auto',revenue:'private',spend:'<1k',budget:'2.5-4k',problem:'strategy',objective:'revenue',decision:'yes',contact:'@test_only'};
++test('receiver appends to the selected tab and sanitises formula prefixes',()=>{ const r=receiver();assert.equal(r.send(data).ok,true);assert.equal(r.rows.length,1);assert.equal(r.rows[0][2],"'=bad()"); });
++test('retries are acknowledged without adding a duplicate',()=>{ const r=receiver();r.send(data);assert.equal(r.send(data).duplicate,true);assert.equal(r.rows.length,1); });
++test('rejected and malformed requests never report success',()=>{ const r=receiver(); for(const patch of [{token:'wrong'},{name:''},{hp:'bot'},{elapsed:'1'}])assert.equal(r.send({...data,...patch}).ok,false);assert.equal(r.rows.length,0); });
++test('wrong workbook or failed append never reports success',()=>{for(const config of [{wrongSheet:true},{failWrite:true}]){const r=receiver(config);assert.equal(r.send(data).ok,false);assert.equal(r.rows.length,0);} });
