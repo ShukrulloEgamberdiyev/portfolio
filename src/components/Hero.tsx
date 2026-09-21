@@ -9,7 +9,7 @@ import { Headline } from '../ui/Headline';
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /** Mono readout cycling through the growth system — tells the visitor in one glance this isn't "just SMM". */
-function SystemReadout({ steps }: { steps: { name: string }[] }) {
+function SystemReadout({ steps, label }: { steps: { name: string }[]; label: string }) {
   const [i, setI] = useState(0);
   const reduce = useReducedMotion();
   useEffect(() => {
@@ -18,7 +18,7 @@ function SystemReadout({ steps }: { steps: { name: string }[] }) {
     return () => clearInterval(id);
   }, [reduce, steps.length]);
   return (
-    <ol className="space-y-1.5 font-mono text-[11px] uppercase tracking-[0.14em]" aria-label="FAZO growth system">
+    <ol className="space-y-1.5 font-mono text-[11px] uppercase tracking-[0.14em]" aria-label={label}>
       {steps.map((s, k) => (
         <li key={s.name} className={`flex items-center gap-3 transition-colors duration-500 ${k === i ? 'text-bone' : k < i ? 'text-mist/60' : 'text-ash/60'}`}>
           <span className="tabular w-5">{String(k + 1).padStart(2, '0')}</span>
@@ -51,7 +51,7 @@ export function Hero() {
             {t.hero.eyebrow}
           </motion.p>
           <motion.div className="absolute right-14 top-16 hidden xl:block" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.2, delay: 1.1, ease }}>
-            <SystemReadout steps={t.system.steps} />
+            <SystemReadout steps={t.system.steps} label={t.system.label} />
           </motion.div>
         </div>
 

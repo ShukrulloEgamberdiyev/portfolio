@@ -2,12 +2,12 @@ import type { Dict } from './types';
 
 export const en: Dict = {
   meta: {
-    title: 'FAZO Digital — Growth & Performance Agency · Tashkent',
+    title: 'FAZO Digital — Digital Marketing Agency · Tashkent',
     description: 'We connect strategy, creative, performance marketing and sales into one measurable growth system.',
   },
   nav: { expertise: 'Expertise', work: 'Work', process: 'Process', about: 'About', insights: 'Insights', cta: 'Book a strategy call', menu: 'Menu', close: 'Close', skip: 'Skip to content', language: 'Language' },
   hero: {
-    eyebrow: 'FAZO DIGITAL · GROWTH & PERFORMANCE AGENCY',
+    eyebrow: 'FAZO DIGITAL · DIGITAL MARKETING AGENCY',
     lines: [{ t: 'The system' }, { t: 'that turns', outline: true }, { t: 'attention', outline: true }, { t: 'into revenue', accent: true }],
     sub: 'We don’t just run ads. FAZO connects strategy, creative, performance marketing and sales into one measurable growth system.',
     ctaPrimary: 'Book a strategy call',
@@ -57,8 +57,8 @@ export const en: Dict = {
     modules: [
       { name: ['Growth', 'Strategy'], summary: 'Decide where to play and how to win.', items: ['Positioning', 'Market research', 'Competitor analysis', 'Offer development', 'Funnel strategy'] },
       { name: ['Creative', '& Content'], summary: 'Content that earns attention and sells.', items: ['Content strategy', 'Reels', 'Commercial video', 'Professional production', 'Copywriting', 'Performance creatives'] },
-      { name: ['Performance', 'Marketing'], summary: 'Turn budget into measurable demand.', items: ['Meta Ads', 'Lead generation', 'Retargeting', 'Creative testing', 'Campaign optimization', 'Performance analytics'] },
-      { name: ['Sales', 'System'], summary: 'Where leads become revenue — we work there too.', items: ['Sales structure', 'Sales scripts', 'CRM workflow', 'Lead management', 'KPI', 'Sales process optimization'] },
+      { name: ['Performance', 'Marketing'], summary: 'Turn budget into measurable demand.', items: ['Meta Ads', 'Lead generation', 'Retargeting', 'Creative testing', 'Campaign optimisation', 'Performance analytics'] },
+      { name: ['Sales', 'System'], summary: 'Where leads become revenue — we work there too.', items: ['Sales structure', 'Sales scripts', 'CRM workflow', 'Lead management', 'KPI', 'Sales process optimisation'] },
     ],
   },
   work: {
@@ -74,8 +74,8 @@ export const en: Dict = {
         result: ['Average apartment sales time: 1–3 days', 'Qualified buyer flow improved', 'Lead cost decreased', 'Reach increased'] },
       { slug: 'exeed-buxoro-autocity', industry: 'Automotive', headline: 'Test-drive applications increased',
         challenge: 'Generate qualified test-drive leads and introduce new vehicle models.',
-        work: ['Lead generation', 'Meta Ads', 'Content', 'Funnel optimization'],
-        result: ['Test-drive applications increased', 'Lead quality improved', 'New models gained awareness', 'Lead cost decreased'] },
+        work: ['Lead generation', 'Meta Ads', 'Content', 'Funnel optimisation'],
+        result: ['Test-drive applications increased', 'Lead quality improved', 'Awareness of new models increased', 'Lead cost decreased'] },
       { slug: 'laminox-factory', industry: 'Manufacturing · B2B', headline: 'New partners joined',
         challenge: 'Generate B2B inquiries and attract dealers and partners.',
         work: ['B2B positioning', 'Factory content', 'Lead generation', 'Targeting'],
@@ -97,7 +97,7 @@ export const en: Dict = {
   why: {
     label: 'Why FAZO',
     title: [{ t: 'Not another', outline: true }, { t: 'marketing agency', accent: true }],
-    intro: 'Most businesses buy marketing in pieces. Each contractor optimizes their own part — and nobody owns the outcome.',
+    intro: 'Most businesses buy marketing in pieces. Each contractor optimises their own part — and nobody owns the outcome.',
     fragmentedLabel: 'The fragmented model',
     fragmented: ['SMM freelancer', 'Ads specialist', 'Videographer', 'Sales team', 'CRM person'],
     fragmentedResult: 'Disconnected execution',
@@ -184,7 +184,7 @@ export const en: Dict = {
       { value: 'yes', label: 'Yes, I make the decision' }, { value: 'shared', label: 'I decide together with a partner' }, { value: 'no', label: 'No, I represent the company' },
     ],
     contact: 'Phone or Telegram', contactPh: '+998 90 000 00 00 or @username', contactHint: 'Used only to follow up on this application.',
-    next: 'Next', back: 'Back', submit: 'Submit application', sending: 'Sending…', required: 'Complete this step to continue', stepOf: 'Step',
+    next: 'Next', back: 'Back', submit: 'Submit application', sending: 'Sending…', required: 'Complete the required fields correctly to continue.', stepOf: 'Step',
     successTitle: 'Application received.', successText: 'We’ll review it and reach out via Telegram or phone.', successCta: 'Message us on Telegram',
     error: 'Couldn’t send. Please message us on Telegram: @fazo_digital',
   },
@@ -197,7 +197,7 @@ export const en: Dict = {
     location: 'Tashkent, Uzbekistan',
   },
   footer: {
-    tagline: 'Growth & Performance Agency', navLabel: 'Navigation', socialLabel: 'Social', legalLabel: 'Legal',
+    tagline: 'Digital Marketing Agency', navLabel: 'Navigation', socialLabel: 'Social', legalLabel: 'Legal',
     privacy: 'Privacy Policy', contact: 'Contact', rights: '© 2026 FAZO DIGITAL', location: 'Tashkent, Uzbekistan', top: 'Back to top',
   },
 };

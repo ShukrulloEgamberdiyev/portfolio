@@ -2,13 +2,13 @@ import type { PageDict } from './pageTypes';
 
 export const pagesEn: PageDict = {
   common: {
-    home: 'Home', backHome: 'Back to home', readMore: 'Read more',
+    home: 'Home', backHome: 'Back to home', readMore: 'Next article',
     ctaTitle: 'Want to talk about growth?',
     ctaText: 'We’ll look at your business and show you where the result is being lost. The call is free.',
     ctaButton: 'Submit an application', ctaSecondary: 'Message on Telegram',
   },
   work: {
-    title: 'Work', intro: 'In every project we answered one question: where is the money being lost, and how do we get it back.',
+    title: 'Work', intro: 'In every project we answered one question: where is the money being lost, and how do we get it back?',
     featured: 'Detailed cases', other: 'Other projects', otherNote: 'Brands we have worked with on SMM, paid acquisition, content or sales.',
   },
   caseDetail: {
@@ -32,7 +32,7 @@ export const pagesEn: PageDict = {
         lead: 'Strategy isn’t a deck. It is a decision: which customer, with which offer, through which channel.',
         sections: [
           { h: 'We study the market', body: 'We collect competitors’ ads, prices and promises. We talk to your customers or read your existing enquiries — that is where you see what people fear and what they compare.' },
-          { h: 'We define the position', body: 'What makes you different, and can you say it in one sentence. If the only difference is price, creating one is part of this stage.' },
+          { h: 'We define the position', body: 'What makes you different, and can you say it in one sentence? If the only difference is price, creating one is part of this stage.' },
           { h: 'We build the offer and funnel', body: 'What the customer gets at the first step, what happens next, where they drop out. Every stage gets a measurable objective.' },
         ],
         deliverables: ['Market and competitor analysis', 'Customer profile and objection list', 'Positioning and key messages', 'Offer architecture', 'Funnel map and KPI'],
@@ -90,7 +90,7 @@ export const pagesEn: PageDict = {
     story: [
       { h: 'Where it started', body: 'FAZO started as an SMM agency. Over time one thing became clear: neither good content nor a cheap lead makes money on its own. The client’s question was always the same — “where are the sales?”' },
       { h: 'What changed', body: 'We widened the scope: past the ads into sales, CRM and analytics. Today we are not a content producer but the team accountable for a client’s growth system.' },
-      { h: 'How we work', body: 'Each client gets a strategist, a creative group and a media buyer. The rhythm is weekly: plan, execute, read the numbers, correct. Reports are written in leads and sales, not likes.' },
+      { h: 'How we work', body: 'Each project brings together specialists in strategy, advertising, scriptwriting, copywriting, design and video production, with each discipline handled by a dedicated specialist. The rhythm is weekly: plan, execute, read the numbers, correct. Reports are written in leads and sales, not likes.' },
     ],
     principlesTitle: 'Principles',
     principles: [
@@ -99,10 +99,10 @@ export const pagesEn: PageDict = {
       { h: 'We say the uncomfortable part', body: 'If the problem is the product or the sales team rather than the ads, we say so directly.' },
       { h: 'One owner', body: 'One team and one outcome instead of five disconnected contractors.' },
     ],
-    teamTitle: 'Team', teamText: 'Strategist, media buyer, creative producer, content manager, videographer and a sales consultant — the group is assembled per project.',
+    teamTitle: 'Team', teamText: 'Strategists, advertising specialists, scriptwriters, copywriters, designers, videographers, video editors, content managers and sales consultants each work in their own discipline. The team is assembled around the project’s needs. As the scope of work and engagement budget grow, more specialists join the project.',
     numbersTitle: 'In numbers',
   },
-  insightsPage: { title: 'Insights', intro: 'On the mistakes that keep repeating, and how to close them.', langNote: 'This article is available in Uzbek.', minutes: 'min read' },
+  insightsPage: { title: 'Insights', intro: 'On the mistakes that keep repeating, and how to fix them.', langNote: 'This article is available in Uzbek.', minutes: 'min read' },
   applyPage: { title: 'Application', intro: 'Fill in the form — a strategist reviews every application and gets in touch if there’s a fit.' },
   privacy: {
     title: 'Privacy Policy', updated: 'Updated: September 2026',

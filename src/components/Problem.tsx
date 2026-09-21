@@ -29,7 +29,7 @@ export function Problem() {
                 <span className="text-[1.35rem] font-semibold tracking-[-0.02em] lg:text-[1.75rem]">{row.has}</span>
                 <span className="relative col-start-2 text-[1.05rem] text-mist sm:col-start-3 lg:text-[1.25rem]">
                   <span className="relative">
-                    — {row.gap}
+                    {' — '}{row.gap}
                     <motion.span aria-hidden className="absolute left-0 top-[55%] h-px w-full origin-left bg-violet/70"
                       initial={reduce ? false : { scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
                       transition={{ duration: 0.9, delay: 0.5 + i * 0.05, ease: [0.22, 1, 0.36, 1] }} />

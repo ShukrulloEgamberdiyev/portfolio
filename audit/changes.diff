@@ -1,0 +1,745 @@
+--- original/src/components/Problem.tsx
++++ final/src/components/Problem.tsx
+@@ -29,7 +29,7 @@
+                 <span className="text-[1.35rem] font-semibold tracking-[-0.02em] lg:text-[1.75rem]">{row.has}</span>
+                 <span className="relative col-start-2 text-[1.05rem] text-mist sm:col-start-3 lg:text-[1.25rem]">
+                   <span className="relative">
+-                    — {row.gap}
++                    {' — '}{row.gap}
+                     <motion.span aria-hidden className="absolute left-0 top-[55%] h-px w-full origin-left bg-violet/70"
+                       initial={reduce ? false : { scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
+                       transition={{ duration: 0.9, delay: 0.5 + i * 0.05, ease: [0.22, 1, 0.36, 1] }} />
+--- original/src/components/Nav.tsx
++++ final/src/components/Nav.tsx
+@@ -36,7 +36,7 @@
+         initial={{ y: -24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+         className={`fixed inset-x-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${compact ? 'border-b border-line bg-ink/70 backdrop-blur-xl' : 'border-b border-transparent'}`}
+         style={{ top: 0, paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+-        <nav aria-label="Primary" className={`shell flex items-center justify-between transition-[height] duration-500 ${compact ? 'h-16' : 'h-20 lg:h-24'}`}>
++        <nav aria-label={t.footer.navLabel} className={`shell flex items-center justify-between transition-[height] duration-500 ${compact ? 'h-16' : 'h-20 lg:h-24'}`}>
+           <Link to="/" onClick={close} aria-label="FAZO Digital" data-cursor="hover"><Logo /></Link>
+ 
+           <ul className="hidden items-center gap-7 whitespace-nowrap xl:flex 2xl:gap-9">
+--- original/src/components/Hero.tsx
++++ final/src/components/Hero.tsx
+@@ -9,7 +9,7 @@
+ const ease = [0.22, 1, 0.36, 1] as const;
+ 
+ /** Mono readout cycling through the growth system — tells the visitor in one glance this isn't "just SMM". */
+-function SystemReadout({ steps }: { steps: { name: string }[] }) {
++function SystemReadout({ steps, label }: { steps: { name: string }[]; label: string }) {
+   const [i, setI] = useState(0);
+   const reduce = useReducedMotion();
+   useEffect(() => {
+@@ -18,7 +18,7 @@
+     return () => clearInterval(id);
+   }, [reduce, steps.length]);
+   return (
+-    <ol className="space-y-1.5 font-mono text-[11px] uppercase tracking-[0.14em]" aria-label="FAZO growth system">
++    <ol className="space-y-1.5 font-mono text-[11px] uppercase tracking-[0.14em]" aria-label={label}>
+       {steps.map((s, k) => (
+         <li key={s.name} className={`flex items-center gap-3 transition-colors duration-500 ${k === i ? 'text-bone' : k < i ? 'text-mist/60' : 'text-ash/60'}`}>
+           <span className="tabular w-5">{String(k + 1).padStart(2, '0')}</span>
+@@ -51,7 +51,7 @@
+             {t.hero.eyebrow}
+           </motion.p>
+           <motion.div className="absolute right-14 top-16 hidden xl:block" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.2, delay: 1.1, ease }}>
+-            <SystemReadout steps={t.system.steps} />
++            <SystemReadout steps={t.system.steps} label={t.system.label} />
+           </motion.div>
+         </div>
+ 
+--- original/src/ui/Headline.tsx
++++ final/src/ui/Headline.tsx
+@@ -25,7 +25,7 @@
+           <motion.span
+             className={`block ${line.outline ? 'outline-text' : ''}`}
+             variants={{ hide: { y: '108%' }, show: { y: '0%', transition: { duration: 1.05, ease: [0.22, 1, 0.36, 1] } } }}>
+-            {line.t}
++            {i > 0 && ' '}{line.t}
+             {line.accent && <span className="text-violet" style={{ WebkitTextStroke: 0 }}>.</span>}
+           </motion.span>
+         </span>
+--- original/src/content/articles.ts
++++ final/src/content/articles.ts
+@@ -26,7 +26,7 @@
+       { h: 'Haqiqiy narxni qanday hisoblash kerak' },
+       { p: 'Bitta formula hammasini joyiga qo‘yadi: sarflangan pulni lidlarga emas, sotuvga bo‘ling.' },
+       { quote: 'Lid narxi — marketing raqami. Mijoz narxi — biznes raqami. Qaror ikkinchisi bo‘yicha qabul qilinadi.' },
+-      { p: 'Yuqoridagi misolda: $150 sarf, 2 ta sotuv — mijoz narxi $75. Endi boshqa kampaniyani olaylik: lid narxi $6, 25 ta lid, sarf yana $150. Ammo bu lidlarning 8 tasi gaplashgan, 5 tasi sotib olgan. Mijoz narxi — $30. Ikkinchi kampaniya hisobotda «qimmat» ko‘ringan, aslida esa ikki barobar arzon.' },
++      { p: 'Yuqoridagi misolda: $150 sarf, 2 ta sotuv — mijoz narxi $75. Endi boshqa kampaniyani olaylik: lid narxi $6, 25 ta lid, sarf yana $150. Ammo bu lidlarning 8 tasi gaplashgan, 5 tasi sotib olgan. Mijoz narxi — $30. Ikkinchi kampaniya hisobotda «qimmat» ko‘ringan, aslida esa ancha arzon.' },
+       { h: 'Nimani o‘zgartirish kerak' },
+       { list: [
+         'Hisobotga «sotuv soni» va «mijoz narxi» ustunlarini qo‘shing. Faqat shu ikki ustun ko‘p qarorni o‘zgartiradi.',
+@@ -44,11 +44,11 @@
+     minutes: 5,
+     date: '2026-08-19',
+     title: 'Muammo reklamada emas, sotuv skriptida ekanining 5 belgisi',
+-    lead: 'Reklama byudjetini oshirishdan oldin tekshirib ko‘rish arziydigan besh narsa.',
++    lead: 'Reklama byudjetini oshirishdan oldin tekshirib ko‘rishga arziydigan besh narsa.',
+     body: [
+       { p: 'Mijoz ko‘pincha bitta xulosa bilan keladi: «reklama ishlamayapti». Ammo akkauntni ochganda ko‘rinadiki, lid bor, narxi ham normal. Demak, pul reklamada emas, undan keyingi bosqichda yo‘qolyapti. Quyidagi belgilardan ikkitasi topilsa, byudjetni oshirish foyda bermaydi.' },
+       { h: '1. Javob vaqti soatlar bilan o‘lchanadi' },
+-      { p: 'Odam formani to‘ldirgan payt — uning qiziqishi eng yuqori nuqtasi. Bir soatdan keyin u boshqa kompaniyani topadi yoki umuman unutadi. Agar lidga javob 15 daqiqada emas, ertasiga kelsa, kampaniyani emas, jarayonni tuzatish kerak.' },
++      { p: 'Odam formani to‘ldirgan payt — uning qiziqishi eng yuqori bo‘lgan payt. Bir soatdan keyin u boshqa kompaniyani topadi yoki umuman unutadi. Agar lidga javob 15 daqiqada emas, ertasiga kelsa, kampaniyani emas, jarayonni tuzatish kerak.' },
+       { h: '2. Har bir sotuvchi o‘zicha gapiradi' },
+       { p: 'Bir sotuvchi narxni birinchi aytadi, ikkinchisi umuman aytmaydi. Bir xil reklamadan kelgan lidlarning konversiyasi sotuvchiga qarab bir necha barobar farq qiladi. Bu skript yo‘qligining eng aniq belgisi.' },
+       { h: '3. «Qimmat» degan javobdan keyin suhbat tugaydi' },
+@@ -75,19 +75,19 @@
+     title: 'CPL’dan CAC’ga: qaysi raqamni kuzatish kerak',
+     lead: 'Marketing hisobotidagi o‘nlab raqamdan biznes uchun ahamiyatlisi to‘rtta.',
+     body: [
+-      { p: 'Reklama kabinetida yuzlab ko‘rsatkich bor. Ularning aksariyati qaror qabul qilishga yordam bermaydi — ular faqat nima bo‘layotganini tasvirlaydi. Biznes uchun ahamiyatlisi to‘rtta raqam.' },
++      { p: 'Reklama akkauntida yuzlab ko‘rsatkich bor. Ularning aksariyati qaror qabul qilishga yordam bermaydi — ular faqat nima bo‘layotganini tasvirlaydi. Biznes uchun ahamiyatlisi to‘rtta raqam.' },
+       { h: 'CPL — lid narxi' },
+-      { p: 'Boshlang‘ich raqam. U kampaniyalarni bir-biri bilan solishtirish uchun kerak, lekin faqat bir xil sifatdagi lidlar ichida. Turli auditoriya va turli offerdagi CPL’ni solishtirish — noto‘g‘ri xulosa manbai.' },
++      { p: 'Boshlang‘ich raqam. U kampaniyalarni bir-biri bilan solishtirish uchun kerak, lekin faqat bir xil sifatdagi lidlar ichida. Turli auditoriya va turli takliflardagi CPL’ni solishtirish — noto‘g‘ri xulosa manbai.' },
+       { h: 'CAC — mijoz narxi' },
+-      { p: 'Sarflangan pul bo‘linadi sotib olgan mijozlar soniga. Bu marketingning asosiy raqami. CAC hisoblanmasa, qaysi kanal foyda keltirayotganini bilishning imkoni yo‘q.' },
++      { p: 'Sarflangan pul sotib olgan mijozlar soniga bo‘linadi. Bu marketingning asosiy raqami. CAC hisoblanmasa, qaysi kanal foyda keltirayotganini bilishning imkoni yo‘q.' },
+       { h: 'AOV — o‘rtacha chek' },
+-      { p: 'Bitta mijoz o‘rtacha qancha pul qoldiradi. CAC bilan birga qaralganda rasm to‘liq bo‘ladi: mijoz $30 ga tushsa va o‘rtacha $500 lik xarid qilsa, byudjetni oshirish kerak. Teskari holatda esa reklamani emas, offerni ko‘rish kerak.' },
++      { p: 'Bitta mijoz o‘rtacha qancha pul qoldiradi. CAC bilan birga qaralganda rasm to‘liq bo‘ladi: mijoz $30 ga tushsa va o‘rtacha $500 lik xarid qilsa, byudjetni oshirish kerak. Teskari holatda esa reklamani emas, taklifni ko‘rish kerak.' },
+       { h: 'LTV — mijozning umumiy qiymati' },
+       { p: 'Mijoz butun hamkorlik davomida qancha olib keladi. Takroriy xarid bo‘ladigan sohalarda (restoran, ta’lim, mebel, xizmat) aynan shu raqam byudjet chegarasini belgilaydi. LTV yuqori bo‘lsa, raqobatchidan qimmatroq CAC to‘lashga ham imkon bo‘ladi — bu strategik ustunlik.' },
+       { quote: 'Umumiy qoida: LTV kamida CAC’dan uch barobar katta bo‘lsin. Aks holda o‘sish pulni ko‘paytirmaydi, balki yo‘qotishni tezlashtiradi.' },
+       { h: 'Amalda qanday yo‘lga qo‘yiladi' },
+       { list: [
+-        'CRM da har bir lidga manba yozilsin: qaysi kampaniya, qaysi kreativ.',
++        'CRM’da har bir lidga manba yozilsin: qaysi kampaniya, qaysi kreativ.',
+         'Sotuv yopilganda summa yozilsin — AOV shu yerdan chiqadi.',
+         'Har oy oxirida bitta jadval: kanal, sarf, lid, sotuv, CAC, AOV.',
+         'Qaror shu jadval asosida qabul qilinsin, hisobotdagi qamrov asosida emas.',
+--- original/src/i18n/en.ts
++++ final/src/i18n/en.ts
+@@ -2,12 +2,12 @@
+ 
+ export const en: Dict = {
+   meta: {
+-    title: 'FAZO Digital — Growth & Performance Agency · Tashkent',
++    title: 'FAZO Digital — Digital Marketing Agency · Tashkent',
+     description: 'We connect strategy, creative, performance marketing and sales into one measurable growth system.',
+   },
+   nav: { expertise: 'Expertise', work: 'Work', process: 'Process', about: 'About', insights: 'Insights', cta: 'Book a strategy call', menu: 'Menu', close: 'Close', skip: 'Skip to content', language: 'Language' },
+   hero: {
+-    eyebrow: 'FAZO DIGITAL · GROWTH & PERFORMANCE AGENCY',
++    eyebrow: 'FAZO DIGITAL · DIGITAL MARKETING AGENCY',
+     lines: [{ t: 'The system' }, { t: 'that turns', outline: true }, { t: 'attention', outline: true }, { t: 'into revenue', accent: true }],
+     sub: 'We don’t just run ads. FAZO connects strategy, creative, performance marketing and sales into one measurable growth system.',
+     ctaPrimary: 'Book a strategy call',
+@@ -57,8 +57,8 @@
+     modules: [
+       { name: ['Growth', 'Strategy'], summary: 'Decide where to play and how to win.', items: ['Positioning', 'Market research', 'Competitor analysis', 'Offer development', 'Funnel strategy'] },
+       { name: ['Creative', '& Content'], summary: 'Content that earns attention and sells.', items: ['Content strategy', 'Reels', 'Commercial video', 'Professional production', 'Copywriting', 'Performance creatives'] },
+-      { name: ['Performance', 'Marketing'], summary: 'Turn budget into measurable demand.', items: ['Meta Ads', 'Lead generation', 'Retargeting', 'Creative testing', 'Campaign optimization', 'Performance analytics'] },
+-      { name: ['Sales', 'System'], summary: 'Where leads become revenue — we work there too.', items: ['Sales structure', 'Sales scripts', 'CRM workflow', 'Lead management', 'KPI', 'Sales process optimization'] },
++      { name: ['Performance', 'Marketing'], summary: 'Turn budget into measurable demand.', items: ['Meta Ads', 'Lead generation', 'Retargeting', 'Creative testing', 'Campaign optimisation', 'Performance analytics'] },
++      { name: ['Sales', 'System'], summary: 'Where leads become revenue — we work there too.', items: ['Sales structure', 'Sales scripts', 'CRM workflow', 'Lead management', 'KPI', 'Sales process optimisation'] },
+     ],
+   },
+   work: {
+@@ -74,8 +74,8 @@
+         result: ['Average apartment sales time: 1–3 days', 'Qualified buyer flow improved', 'Lead cost decreased', 'Reach increased'] },
+       { slug: 'exeed-buxoro-autocity', industry: 'Automotive', headline: 'Test-drive applications increased',
+         challenge: 'Generate qualified test-drive leads and introduce new vehicle models.',
+-        work: ['Lead generation', 'Meta Ads', 'Content', 'Funnel optimization'],
+-        result: ['Test-drive applications increased', 'Lead quality improved', 'New models gained awareness', 'Lead cost decreased'] },
++        work: ['Lead generation', 'Meta Ads', 'Content', 'Funnel optimisation'],
++        result: ['Test-drive applications increased', 'Lead quality improved', 'Awareness of new models increased', 'Lead cost decreased'] },
+       { slug: 'laminox-factory', industry: 'Manufacturing · B2B', headline: 'New partners joined',
+         challenge: 'Generate B2B inquiries and attract dealers and partners.',
+         work: ['B2B positioning', 'Factory content', 'Lead generation', 'Targeting'],
+@@ -97,7 +97,7 @@
+   why: {
+     label: 'Why FAZO',
+     title: [{ t: 'Not another', outline: true }, { t: 'marketing agency', accent: true }],
+-    intro: 'Most businesses buy marketing in pieces. Each contractor optimizes their own part — and nobody owns the outcome.',
++    intro: 'Most businesses buy marketing in pieces. Each contractor optimises their own part — and nobody owns the outcome.',
+     fragmentedLabel: 'The fragmented model',
+     fragmented: ['SMM freelancer', 'Ads specialist', 'Videographer', 'Sales team', 'CRM person'],
+     fragmentedResult: 'Disconnected execution',
+@@ -184,7 +184,7 @@
+       { value: 'yes', label: 'Yes, I make the decision' }, { value: 'shared', label: 'I decide together with a partner' }, { value: 'no', label: 'No, I represent the company' },
+     ],
+     contact: 'Phone or Telegram', contactPh: '+998 90 000 00 00 or @username', contactHint: 'Used only to follow up on this application.',
+-    next: 'Next', back: 'Back', submit: 'Submit application', sending: 'Sending…', required: 'Complete this step to continue', stepOf: 'Step',
++    next: 'Next', back: 'Back', submit: 'Submit application', sending: 'Sending…', required: 'Complete the required fields correctly to continue.', stepOf: 'Step',
+     successTitle: 'Application received.', successText: 'We’ll review it and reach out via Telegram or phone.', successCta: 'Message us on Telegram',
+     error: 'Couldn’t send. Please message us on Telegram: @fazo_digital',
+   },
+@@ -197,7 +197,7 @@
+     location: 'Tashkent, Uzbekistan',
+   },
+   footer: {
+-    tagline: 'Growth & Performance Agency', navLabel: 'Navigation', socialLabel: 'Social', legalLabel: 'Legal',
++    tagline: 'Digital Marketing Agency', navLabel: 'Navigation', socialLabel: 'Social', legalLabel: 'Legal',
+     privacy: 'Privacy Policy', contact: 'Contact', rights: '© 2026 FAZO DIGITAL', location: 'Tashkent, Uzbekistan', top: 'Back to top',
+   },
+ };
+--- original/src/i18n/pages.en.ts
++++ final/src/i18n/pages.en.ts
+@@ -2,13 +2,13 @@
+ 
+ export const pagesEn: PageDict = {
+   common: {
+-    home: 'Home', backHome: 'Back to home', readMore: 'Read more',
++    home: 'Home', backHome: 'Back to home', readMore: 'Next article',
+     ctaTitle: 'Want to talk about growth?',
+     ctaText: 'We’ll look at your business and show you where the result is being lost. The call is free.',
+     ctaButton: 'Submit an application', ctaSecondary: 'Message on Telegram',
+   },
+   work: {
+-    title: 'Work', intro: 'In every project we answered one question: where is the money being lost, and how do we get it back.',
++    title: 'Work', intro: 'In every project we answered one question: where is the money being lost, and how do we get it back?',
+     featured: 'Detailed cases', other: 'Other projects', otherNote: 'Brands we have worked with on SMM, paid acquisition, content or sales.',
+   },
+   caseDetail: {
+@@ -32,7 +32,7 @@
+         lead: 'Strategy isn’t a deck. It is a decision: which customer, with which offer, through which channel.',
+         sections: [
+           { h: 'We study the market', body: 'We collect competitors’ ads, prices and promises. We talk to your customers or read your existing enquiries — that is where you see what people fear and what they compare.' },
+-          { h: 'We define the position', body: 'What makes you different, and can you say it in one sentence. If the only difference is price, creating one is part of this stage.' },
++          { h: 'We define the position', body: 'What makes you different, and can you say it in one sentence? If the only difference is price, creating one is part of this stage.' },
+           { h: 'We build the offer and funnel', body: 'What the customer gets at the first step, what happens next, where they drop out. Every stage gets a measurable objective.' },
+         ],
+         deliverables: ['Market and competitor analysis', 'Customer profile and objection list', 'Positioning and key messages', 'Offer architecture', 'Funnel map and KPI'],
+@@ -90,7 +90,7 @@
+     story: [
+       { h: 'Where it started', body: 'FAZO started as an SMM agency. Over time one thing became clear: neither good content nor a cheap lead makes money on its own. The client’s question was always the same — “where are the sales?”' },
+       { h: 'What changed', body: 'We widened the scope: past the ads into sales, CRM and analytics. Today we are not a content producer but the team accountable for a client’s growth system.' },
+-      { h: 'How we work', body: 'Each client gets a strategist, a creative group and a media buyer. The rhythm is weekly: plan, execute, read the numbers, correct. Reports are written in leads and sales, not likes.' },
++      { h: 'How we work', body: 'Each project brings together specialists in strategy, advertising, scriptwriting, copywriting, design and video production, with each discipline handled by a dedicated specialist. The rhythm is weekly: plan, execute, read the numbers, correct. Reports are written in leads and sales, not likes.' },
+     ],
+     principlesTitle: 'Principles',
+     principles: [
+@@ -99,10 +99,10 @@
+       { h: 'We say the uncomfortable part', body: 'If the problem is the product or the sales team rather than the ads, we say so directly.' },
+       { h: 'One owner', body: 'One team and one outcome instead of five disconnected contractors.' },
+     ],
+-    teamTitle: 'Team', teamText: 'Strategist, media buyer, creative producer, content manager, videographer and a sales consultant — the group is assembled per project.',
++    teamTitle: 'Team', teamText: 'Strategists, advertising specialists, scriptwriters, copywriters, designers, videographers, video editors, content managers and sales consultants each work in their own discipline. The team is assembled around the project’s needs. As the scope of work and engagement budget grow, more specialists join the project.',
+     numbersTitle: 'In numbers',
+   },
+-  insightsPage: { title: 'Insights', intro: 'On the mistakes that keep repeating, and how to close them.', langNote: 'This article is available in Uzbek.', minutes: 'min read' },
++  insightsPage: { title: 'Insights', intro: 'On the mistakes that keep repeating, and how to fix them.', langNote: 'This article is available in Uzbek.', minutes: 'min read' },
+   applyPage: { title: 'Application', intro: 'Fill in the form — a strategist reviews every application and gets in touch if there’s a fit.' },
+   privacy: {
+     title: 'Privacy Policy', updated: 'Updated: September 2026',
+--- original/src/i18n/pages.uz.ts
++++ final/src/i18n/pages.uz.ts
+@@ -9,7 +9,7 @@
+   },
+   work: {
+     title: 'Natijalar', intro: 'Har bir loyihada bitta savolga javob berganmiz: pul qayerda yo‘qolyapti va uni qanday qaytarish mumkin.',
+-    featured: 'Tanlangan loyihalar', other: 'Boshqa loyihalar', otherNote: 'Ushbu brendlar bilan SMM, target reklama, kontent yoki sotuv yo‘nalishlarida ishlaganmiz.',
++    featured: 'Tanlangan loyihalar', other: 'Boshqa loyihalar', otherNote: 'Ushbu brendlar bilan SMM, maqsadli reklama, kontent yoki sotuv yo‘nalishlarida ishlaganmiz.',
+   },
+   caseDetail: {
+     back: 'Barcha loyihalar', industry: 'Soha', challenge: 'Vazifa', approach: 'Yondashuv', work: 'Nima qildik', result: 'Natija',
+@@ -18,13 +18,13 @@
+     approaches: {
+       'fazilat-estate': 'Ko‘chmas mulkda muammo qamrovda emas edi — murojaatlarning aksariyati byudjeti mos kelmaydigan odamlardan kelardi. Reklamani obyekt va narx segmenti bo‘yicha ajratdik, kontentda kvartira emas, qaror jarayonini ko‘rsatdik, sotuv bo‘limiga esa lidni birinchi 15 daqiqada saralash tartibini berdik.',
+       'exeed-buxoro-autocity': 'Avtosalonda lid arzon bo‘lishi mumkin, lekin salonga kelmasa, qiymati yo‘q. Shuning uchun test-drayv arizasini asosiy maqsad qilib oldik, kreativlarni model bo‘yicha ajratdik va kelmagan mijozlar uchun qayta aloqa ketma-ketligini qurdik.',
+-      'laminox-factory': 'B2B’da xaridor emas, hamkor qidiriladi. Zavodning o‘zini kontent qildik: ishlab chiqarish jarayoni, hajm, sifat nazorati. Bu diler uchun ishonch beradigan asosiy dalil va so‘rovlar aynan shundan keyin o‘sdi.',
+-      'uz-style-catering': 'Korporativ buyurtma va shaxsiy tadbir — bu ikki xil mijoz, ikki xil taklif. Ularni ajratdik, har biriga alohida taklif va skript yozdik. Retargeting esa narx so‘rab ketganlarni qaytardi.',
++      'laminox-factory': 'B2B’da xaridor emas, hamkor qidiriladi. Zavod haqida kontent tayyorladik: ishlab chiqarish jarayoni, hajm, sifat nazorati. Bu diler uchun ishonch beradigan asosiy dalil va so‘rovlar aynan shundan keyin o‘sdi.',
++      'uz-style-catering': 'Korporativ buyurtma va shaxsiy tadbir — bu ikki xil mijoz, ikki xil taklif. Ularni ajratdik, har biriga alohida taklif va skript yozdik. Qayta reklama esa narx so‘rab ketganlarni qaytardi.',
+       'zk-academy': 'Ta’limda ariza arzon bo‘lishi mumkin, ammo qabulgacha yetmasligi mumkin. Shuning uchun kontentda o‘qituvchi va natijani ko‘rsatdik, arizadan keyingi aloqani avtomatlashtirdik — javob kutish vaqti qisqargani konversiyani ko‘tardi.',
+-      'dilbar-restaurant': 'Marosim — uzoq o‘ylanadigan qaror. Kontentda zalni, xizmatni va haqiqiy tadbirlarni ko‘rsatdik, arizaga javobni avtomatlashtirdik, bron so‘ragan mijoz esa menejerga darhol tushadigan qilib yo‘naltirdik.',
++      'dilbar-restaurant': 'Marosim — uzoq o‘ylanadigan qaror. Kontentda zalni, xizmatni va haqiqiy tadbirlarni ko‘rsatdik, arizaga javobni avtomatlashtirdik, bron so‘ragan mijozni esa darhol menejerga yo‘naltirdik.',
+     },
+   },
+-  expertise: { title: 'Ekspertiza', intro: 'To‘rt yo‘nalish — bitta tizimning qismlari. Har biri alohida ham ishlaydi, lekin natija ular birga ishlaganda chiqadi.', open: 'Yo‘nalishni ochish' },
++  expertise: { title: 'Yo‘nalishlar', intro: 'To‘rt yo‘nalish — bitta tizimning qismlari. Har biri alohida ham ishlaydi, lekin natija ular birga ishlaganda chiqadi.', open: 'Yo‘nalishni ochish' },
+   expertiseDetail: {
+     inSystem: 'Tizimdagi o‘rni', deliverables: 'Nima olasiz', howLabel: 'Qanday ishlaymiz', relatedLabel: 'Shu yo‘nalish qo‘llangan loyihalar',
+     modules: [
+@@ -41,19 +41,19 @@
+         lead: 'Kontent chiroyli bo‘lishi shart emas. U diqqatni tortishi va keyingi qadamga olib borishi kerak.',
+         sections: [
+           { h: 'Kontent tizimi', body: 'Oylik reja tasodifiy mavzulardan emas, mijozning savollari va e’tirozlaridan tuziladi. Har bir rubrika qaysi bosqich uchun ishlashini bilamiz.' },
+-          { h: 'Suratga olish', body: 'Reels, mahsulot va jarayon videolari, intervyu formatlari. Stsenariy, rejissura, montaj — hammasi bizda. Mahsulot rasmlarida ranglar o‘zgartirilmaydi: mijoz ko‘rgan narsa haqiqiysidan farq qilmasligi kerak.' },
++          { h: 'Suratga olish', body: 'Reels, mahsulot va jarayon videolari, intervyu formatlari. Ssenariy, rejissura, montaj — hammasi bizda. Mahsulot rasmlarida ranglar o‘zgartirilmaydi: mijoz ko‘rgan narsa haqiqiysidan farq qilmasligi kerak.' },
+           { h: 'Reklama kreativlari', body: 'Reklama uchun alohida kreativlar tayyorlanadi va ular sinovdan o‘tkaziladi. Ishlagani qoladi, ishlamagani almashtiriladi — bu to‘xtamaydigan jarayon.' },
+         ],
+         deliverables: ['Kontent strategiyasi va rubrikalar', 'Oylik kontent-reja', 'Suratga olish va montaj', 'Reels va tijoriy videolar', 'Reklama kreativlari va sinov natijalari'],
+       },
+       {
+-        lead: 'Reklama — byudjetni talabga aylantiruvchi mexanizm. Uning vazifasi arzon lid emas, sotiladigan lid.',
++        lead: 'Reklama — byudjetni talabga aylantiruvchi mexanizm. Uning vazifasi arzon lid emas, xaridga tayyor lid.',
+         sections: [
+           { h: 'Kampaniya tuzilmasi', body: 'Maqsad, auditoriya va kreativ bo‘yicha aniq tuzilma quriladi. Tasodifiy sozlama qo‘shilmaydi — har bir o‘zgarish sababi bilan yoziladi.' },
+           { h: 'Sinov va optimallashtirish', body: 'Kreativ, taklif va auditoriya ketma-ket sinaladi. Qaror akkauntdagi haqiqiy raqamlar asosida qabul qilinadi: CPA, sarf, natijalar soni va lid sifati.' },
+           { h: 'Hisobot', body: 'Har hafta nima ishlagani, nima ishlamagani va keyingi qadam aytiladi. Layk va qamrov hisobotning asosiy raqami bo‘lmaydi.' },
+         ],
+-        deliverables: ['Media-reja va byudjet taqsimoti', 'Meta Ads kampaniyalari', 'Retargeting ketma-ketligi', 'Kreativlarni sinash rejasi', 'Haftalik va oylik hisobot'],
++        deliverables: ['Mediareja va byudjet taqsimoti', 'Meta Ads kampaniyalari', 'Qayta reklama ketma-ketligi', 'Kreativlarni sinash rejasi', 'Haftalik va oylik hisobot'],
+       },
+       {
+         lead: 'Ko‘p biznesda pul reklamada emas, aynan shu joyda yo‘qoladi: lid keldi, lekin u bilan hech kim to‘g‘ri ishlamadi.',
+@@ -67,7 +67,7 @@
+     ],
+   },
+   processPage: {
+-    title: 'Jarayon', intro: 'Ish qanday boradi — birinchi uchrashuvdan masshtablashgacha. Har bir bosqichning aniq natijasi bor.',
++    title: 'Jarayon', intro: 'Ish qanday boradi — birinchi uchrashuvdan ko‘lamni kengaytirishgacha. Har bir bosqichning aniq natijasi bor.',
+     insideLabel: 'Ichida nima bor', outputLabel: 'Bosqich natijasi',
+     inside: [
+       ['Biznes va daromad tuzilmasini ko‘rib chiqamiz', 'Reklama akkauntidagi haqiqiy raqamlarni tekshiramiz', 'Sotuv bo‘limining javob vaqtini o‘lchaymiz', 'Kontent va raqobatchilarni tahlil qilamiz'],
+@@ -79,8 +79,8 @@
+     outputs: ['Audit hujjati va topilgan uzilishlar', 'Strategiya va o‘sish rejasi', 'Tayyor tizim va materiallar', 'Ishlayotgan kampaniyalar va lidlar oqimi', 'Oylik hisobot va keyingi oy rejasi'],
+     ninetyTitle: 'Birinchi 90 kun',
+     ninety: [
+-      { when: '1–2 hafta', what: 'Audit, strategiya va taklif. Shu bosqichda odatda eng katta uzilish topiladi.' },
+-      { when: '3–4 hafta', what: 'Suratga olish, kreativlar, CRM va skriptlar. Birinchi kampaniyalar ishga tushadi.' },
++      { when: '1–2-hafta', what: 'Audit, strategiya va taklif. Shu bosqichda odatda eng katta uzilish topiladi.' },
++      { when: '3–4-hafta', what: 'Suratga olish, kreativlar, CRM va skriptlar. Birinchi kampaniyalar ishga tushadi.' },
+       { when: '2-oy', what: 'Sinov davri: kreativ va auditoriya almashtiriladi, lidlar sifati sotuv bilan birga tekshiriladi.' },
+       { when: '3-oy', what: 'Ishlayotgan yo‘nalish kuchaytiriladi, byudjet shunga qarab qayta taqsimlanadi.' },
+     ],
+@@ -88,9 +88,9 @@
+   about: {
+     title: 'FAZO haqida', lead: 'Biz Toshkentda ishlaymiz va bizneslarga marketingni sotuvga ulashda yordam beramiz.',
+     story: [
+-      { h: 'Nimadan boshlangan', body: 'FAZO oddiy SMM bilan boshlangan. Vaqt o‘tib bir narsa aniq bo‘ldi: chiroyli kontent ham, arzon lid ham o‘z-o‘zidan pul keltirmaydi. Mijozning savoli har doim bitta edi — «sotuv qani?».' },
+-      { h: 'Nima o‘zgardi', body: 'Shundan keyin ish chegarasini kengaytirdik: reklamadan keyin sotuvga, CRM va tahlilga kirdik. Bugun biz kontent ishlab chiqaruvchi emas, mijozning o‘sish tizimiga javob beradigan jamoamiz.' },
+-      { h: 'Qanday ishlaymiz', body: 'Har bir mijozga strateg, kreativ guruh va targetolog biriktiriladi. Ish haftalik ritmda boradi: reja, ijro, raqamlar, tuzatish. Hisobot layk emas, lid va sotuv tilida yoziladi.' },
++      { h: 'Nimadan boshlangan', body: 'FAZO oddiy SMM bilan boshlangan. Vaqt o‘tib bir narsa aniq bo‘ldi: chiroyli kontent ham, arzon lid ham o‘z-o‘zidan pul keltirmaydi. Mijozning savoli har doim bitta edi — «sotuv qani?»' },
++      { h: 'Nima o‘zgardi', body: 'Shundan keyin ish chegarasini kengaytirdik: reklamadan keyin sotuvga, CRM va tahlilga ham e’tibor qaratdik. Bugun biz kontent ishlab chiqaruvchi emas, mijozning o‘sish tizimiga javob beradigan jamoamiz.' },
++      { h: 'Qanday ishlaymiz', body: 'Har bir loyihada vazifalarni o‘z yo‘nalishi bo‘yicha mutaxassislar bajaradi: strategiya, reklama, ssenariy, matn, dizayn va videotasvirga olish uchun alohida mutaxassislar jalb qilinadi. Ish haftalik ritmda boradi: reja, ijro, raqamlar, tuzatish. Hisobot layk emas, lid va sotuv tilida yoziladi.' },
+     ],
+     principlesTitle: 'Prinsiplar',
+     principles: [
+@@ -99,10 +99,10 @@
+       { h: 'Yomon xabarni ham aytamiz', body: 'Agar muammo reklamada emas, mahsulot yoki sotuvda bo‘lsa, buni to‘g‘ridan-to‘g‘ri aytamiz.' },
+       { h: 'Bitta javobgar', body: 'Bo‘laklarga bo‘lingan ijro o‘rniga bitta jamoa va bitta natija.' },
+     ],
+-    teamTitle: 'Jamoa', teamText: 'Strateg, targetolog, kreativ prodyuser, kontent-menejer, videograf va sotuv bo‘yicha maslahatchi — loyihaga qarab guruh yig‘iladi.',
++    teamTitle: 'Jamoa', teamText: 'Strateg, reklama mutaxassisi, ssenarist, kopirayter, dizayner, videograf, montajchi, kontent-menejer va sotuv bo‘yicha maslahatchi — har biri o‘z yo‘nalishida ishlaydi. Tarkib loyiha vazifalariga qarab shakllanadi. Ish ko‘lami va hamkorlik byudjeti oshgani sari loyihaga jalb qilinadigan mutaxassislar soni ham ko‘payadi.',
+     numbersTitle: 'Raqamlarda',
+   },
+-  insightsPage: { title: 'Foydali materiallar', intro: 'Ish jarayonida takrorlanadigan xatolar va ularning yechimi haqida.', langNote: '', minutes: 'daqiqa o‘qish' },
++  insightsPage: { title: 'Foydali materiallar', intro: 'Ish jarayonida takrorlanadigan xatolar va ularning yechimi haqida.', langNote: '', minutes: 'daqiqa' },
+   applyPage: { title: 'Ariza qoldirish', intro: 'Formani to‘ldiring — arizani strateg ko‘rib chiqadi va mos bo‘lsa, uchrashuv uchun bog‘lanamiz.' },
+   privacy: {
+     title: 'Maxfiylik siyosati', updated: 'Yangilangan: 2026-yil sentabr',
+--- original/src/i18n/pages.ru.ts
++++ final/src/i18n/pages.ru.ts
+@@ -2,7 +2,7 @@
+ 
+ export const pagesRu: PageDict = {
+   common: {
+-    home: 'Главная', backHome: 'На главную', readMore: 'Подробнее',
++    home: 'Главная', backHome: 'На главную', readMore: 'Следующая статья',
+     ctaTitle: 'Поговорим о вашем росте?',
+     ctaText: 'Разберём ваш бизнес и покажем, где теряется результат. Встреча бесплатная.',
+     ctaButton: 'Оставить заявку', ctaSecondary: 'Написать в Telegram',
+@@ -32,7 +32,7 @@
+         lead: 'Стратегия — это не презентация. Это решение: какому клиенту, с каким предложением и через какой канал мы идём.',
+         sections: [
+           { h: 'Изучаем рынок', body: 'Собираем рекламу, цены и обещания конкурентов. Говорим с вашими клиентами или читаем существующие обращения — там видно, чего люди боятся и что сравнивают.' },
+-          { h: 'Определяем позицию', body: 'Чем вы отличаетесь и можете ли сказать это одной фразой. Если отличие только в цене — создать его тоже задача этого этапа.' },
++          { h: 'Определяем позицию', body: 'Чем вы отличаетесь и можете ли сказать это одной фразой? Если отличие только в цене — создать его тоже задача этого этапа.' },
+           { h: 'Строим оффер и воронку', body: 'Что клиент получает на первом шаге, что происходит дальше, на каком этапе он теряется. Для каждого этапа ставится измеримая цель.' },
+         ],
+         deliverables: ['Анализ рынка и конкурентов', 'Портрет клиента и список возражений', 'Позиционирование и ключевые сообщения', 'Архитектура оффера', 'Карта воронки и KPI'],
+@@ -42,7 +42,7 @@
+         sections: [
+           { h: 'Система контента', body: 'Месячный план строится не из случайных тем, а из вопросов и возражений клиента. Мы знаем, на какой этап работает каждая рубрика.' },
+           { h: 'Съёмка', body: 'Reels, продуктовые и производственные видео, интервью. Сценарий, режиссура, монтаж — на нашей стороне. В продуктовых кадрах цвета не меняем: клиент должен увидеть реальный товар.' },
+-          { h: 'Performance-креативы', body: 'Для рекламы готовятся отдельные креативы, и они проходят тест. Работающее остаётся, неработающее заменяется — процесс не останавливается.' },
++          { h: 'Рекламные креативы', body: 'Для рекламы готовятся отдельные креативы, и они проходят тест. Работающее остаётся, неработающее заменяется — процесс не останавливается.' },
+         ],
+         deliverables: ['Контент-стратегия и рубрики', 'Месячный контент-план', 'Съёмка и монтаж', 'Reels и коммерческие видео', 'Рекламные креативы и результаты тестов'],
+       },
+@@ -79,8 +79,8 @@
+     outputs: ['Документ аудита и найденные разрывы', 'Стратегия и план роста', 'Готовая система и материалы', 'Работающие кампании и поток лидов', 'Месячный отчёт и план на следующий месяц'],
+     ninetyTitle: 'Первые 90 дней',
+     ninety: [
+-      { when: '1–2 неделя', what: 'Аудит, стратегия и оффер. Обычно именно здесь находится главный разрыв.' },
+-      { when: '3–4 неделя', what: 'Съёмка, креативы, CRM и скрипты. Запускаются первые кампании.' },
++      { when: '1–2-я недели', what: 'Аудит, стратегия и оффер. Обычно именно здесь находится главный разрыв.' },
++      { when: '3–4-я недели', what: 'Съёмка, креативы, CRM и скрипты. Запускаются первые кампании.' },
+       { when: '2-й месяц', what: 'Период тестов: меняются креативы и аудитории, качество лидов проверяется вместе с продажами.' },
+       { when: '3-й месяц', what: 'Усиливается работающее направление, бюджет перераспределяется под него.' },
+     ],
+@@ -88,21 +88,21 @@
+   about: {
+     title: 'О FAZO', lead: 'Мы работаем в Ташкенте и помогаем бизнесу связать маркетинг с продажами.',
+     story: [
+-      { h: 'С чего начиналось', body: 'FAZO начиналась с обычного SMM. Со временем стало ясно: ни красивый контент, ни дешёвый лид сами по себе не приносят денег. Вопрос клиента всегда был один — «а где продажи?».' },
++      { h: 'С чего начиналось', body: 'FAZO начиналась с обычного SMM. Со временем стало ясно: ни красивый контент, ни дешёвый лид сами по себе не приносят денег. Вопрос клиента всегда был один — «а где продажи?»' },
+       { h: 'Что изменилось', body: 'Мы расширили границу работы: после рекламы зашли в продажи, CRM и аналитику. Сегодня мы не производитель контента, а команда, отвечающая за систему роста клиента.' },
+-      { h: 'Как работаем', body: 'На клиента выделяется стратег, креативная группа и таргетолог. Работа идёт в недельном ритме: план, исполнение, цифры, корректировка. Отчёт пишется на языке лидов и продаж, а не лайков.' },
++      { h: 'Как работаем', body: 'Над каждым проектом работают профильные специалисты: за стратегию, рекламу, сценарии, тексты, дизайн и видеосъёмку отвечают отдельные специалисты. Работа идёт в недельном ритме: план, исполнение, цифры, корректировка. Отчёт пишется на языке лидов и продаж, а не лайков.' },
+     ],
+     principlesTitle: 'Принципы',
+     principles: [
+-      { h: 'Начинаем с цифр', body: 'Перед рекомендацией проверяем реальные результаты в аккаунте. Вместо «best practice» — ваши CPA и продажи.' },
++      { h: 'Начинаем с цифр', body: 'Перед рекомендацией проверяем реальные результаты в аккаунте. Вместо общих рекомендаций — ваши CPA и продажи.' },
+       { h: 'Не даём обещаний', body: 'Мы не говорим о гарантированной выручке. Обещаем то, что контролируем: процесс, качество и скорость.' },
+       { h: 'Говорим и неприятное', body: 'Если проблема не в рекламе, а в продукте или продажах, мы скажем это прямо.' },
+       { h: 'Один ответственный', body: 'Вместо разрозненных подрядчиков — одна команда и один результат.' },
+     ],
+-    teamTitle: 'Команда', teamText: 'Стратег, таргетолог, креативный продюсер, контент-менеджер, видеограф и консультант по продажам — состав собирается под проект.',
++    teamTitle: 'Команда', teamText: 'Стратег, таргетолог, сценарист, копирайтер, дизайнер, видеограф, монтажёр, контент-менеджер и консультант по продажам — каждый работает в своём направлении. Состав зависит от задач проекта. С ростом объёма работ и бюджета сотрудничества увеличивается и число привлечённых специалистов.',
+     numbersTitle: 'В цифрах',
+   },
+-  insightsPage: { title: 'Insights', intro: 'О повторяющихся ошибках в работе и о том, как их закрывать.', langNote: 'Статья доступна на узбекском языке.', minutes: 'мин чтения' },
++  insightsPage: { title: 'Полезные материалы', intro: 'О повторяющихся ошибках в работе и о том, как их исправлять.', langNote: 'Статья доступна на узбекском языке.', minutes: 'мин чтения' },
+   applyPage: { title: 'Заявка', intro: 'Заполните форму — заявку изучит стратег и, если мы подходим друг другу, свяжется для встречи.' },
+   privacy: {
+     title: 'Политика конфиденциальности', updated: 'Обновлено: сентябрь 2026',
+--- original/src/i18n/ru.ts
++++ final/src/i18n/ru.ts
+@@ -2,12 +2,12 @@
+ 
+ export const ru: Dict = {
+   meta: {
+-    title: 'FAZO Digital — Growth & Performance Agency · Ташкент',
+-    description: 'Объединяем стратегию, креатив, performance-маркетинг и продажи в одну измеримую систему роста.',
+-  },
+-  nav: { expertise: 'Экспертиза', work: 'Кейсы', process: 'Процесс', about: 'О нас', insights: 'Insights', cta: 'Стратегическая встреча', menu: 'Меню', close: 'Закрыть', skip: 'Перейти к содержанию', language: 'Язык' },
++    title: 'FAZO Digital — Агентство цифрового маркетинга · Ташкент',
++    description: 'Объединяем стратегию, креатив, рекламу и продажи в одну измеримую систему роста.',
++  },
++  nav: { expertise: 'Экспертиза', work: 'Кейсы', process: 'Процесс', about: 'О нас', insights: 'Полезные материалы', cta: 'Стратегическая встреча', menu: 'Меню', close: 'Закрыть', skip: 'Перейти к содержанию', language: 'Язык' },
+   hero: {
+-    eyebrow: 'FAZO DIGITAL · GROWTH & PERFORMANCE AGENCY',
++    eyebrow: 'FAZO DIGITAL · АГЕНТСТВО ЦИФРОВОГО МАРКЕТИНГА',
+     lines: [{ t: 'Превращаем', outline: true }, { t: 'внимание' }, { t: 'в выручку', outline: true }, { t: 'системно', accent: true }],
+     sub: 'Мы не просто ведём рекламу. FAZO объединяет стратегию, креатив, рекламу и продажи в одну измеримую систему роста.',
+     ctaPrimary: 'Стратегическая встреча',
+@@ -15,8 +15,8 @@
+     qualifier: 'Сотрудничество — от $2,500 в месяц',
+     scroll: 'Вниз',
+   },
+-  stats: { label: 'FAZO в цифрах', campaigns: 'Успешных кампаний', clients: 'Клиентов', brands: 'Брендов-партнёров', funnelTop: 'Full-funnel', funnelBottom: 'Маркетинг → Продажи' },
+-  clients: { title: 'Нам доверяют в разных отраслях', note: 'Недвижимость · Авто · Производство · HoReCa · Образование · Retail' },
++  stats: { label: 'FAZO в цифрах', campaigns: 'Успешных кампаний', clients: 'Клиентов', brands: 'Брендов-партнёров', funnelTop: 'Полный цикл', funnelBottom: 'Маркетинг → Продажи' },
++  clients: { title: 'Нам доверяют в разных отраслях', note: 'Недвижимость · Авто · Производство · HoReCa · Образование · Розничная торговля' },
+   problem: {
+     label: 'Проблема',
+     title: [{ t: 'Больше маркетинга' }, { t: 'не всегда значит', outline: true }, { t: 'больше продаж', accent: true }],
+@@ -32,37 +32,37 @@
+     transition: 'Именно этот разрыв закрывает FAZO.',
+   },
+   system: {
+-    label: 'FAZO Growth System',
++    label: 'Система роста FAZO',
+     title: [{ t: 'Одна система.' }, { t: 'От внимания', outline: true }, { t: 'до выручки', accent: true }],
+     intro: 'Каждый этап питает следующий. Поэтому результат виден в продажах, а не в отдельных метриках.',
+     steps: [
+-      { name: 'Strategy', output: 'Positioning map', desc: 'Рынок, конкуренты, клиент и позиционирование.' },
+-      { name: 'Offer', output: 'Offer architecture', desc: 'Оффер, который клиент понимает и хочет.' },
+-      { name: 'Creative', output: 'Creative matrix', desc: 'Контент, созданный для внимания и конверсии.' },
+-      { name: 'Performance', output: 'Media plan', desc: 'Meta Ads и performance-привлечение.' },
+-      { name: 'Leads', output: 'Lead scoring', desc: 'Генерация и квалификация спроса.' },
+-      { name: 'Sales', output: 'Sales playbook', desc: 'Скрипты, процесс и исполнение продаж.' },
+-      { name: 'CRM', output: 'Pipeline', desc: 'Прозрачность по каждому лиду.' },
+-      { name: 'Analytics', output: 'Revenue dashboard', desc: 'Измеряем, что реально приносит выручку.' },
+-      { name: 'Scale', output: 'Scale plan', desc: 'Усиливаем то, что работает. Убираем то, что нет.' },
++      { name: 'Стратегия', output: 'Карта позиционирования', desc: 'Рынок, конкуренты, клиент и позиционирование.' },
++      { name: 'Предложение', output: 'Структура предложения', desc: 'Оффер, который клиент понимает и хочет.' },
++      { name: 'Креатив', output: 'Матрица креативов', desc: 'Контент, созданный для внимания и конверсии.' },
++      { name: 'Реклама', output: 'Медиаплан', desc: 'Meta Ads и привлечение клиентов.' },
++      { name: 'Лиды', output: 'Оценка лидов', desc: 'Генерация и квалификация спроса.' },
++      { name: 'Продажи', output: 'Руководство по продажам', desc: 'Скрипты, процесс и исполнение продаж.' },
++      { name: 'CRM', output: 'Воронка продаж', desc: 'Прозрачность по каждому лиду.' },
++      { name: 'Аналитика', output: 'Отчёт о выручке', desc: 'Измеряем, что реально приносит выручку.' },
++      { name: 'Масштабирование', output: 'План масштабирования', desc: 'Усиливаем то, что работает. Убираем то, что нет.' },
+     ],
+     outputLabel: 'Результат',
+     hint: 'Листайте',
+   },
+   expertise: {
+-    label: 'Expertise',
++    label: 'Экспертиза',
+     title: [{ t: 'Четыре компетенции.' }, { t: 'Одна цель', outline: true, accent: true }],
+     intro: 'Это не отдельные услуги. Все четыре работают вокруг одной стратегии и одного KPI — одной командой.',
+     inSystem: 'В системе',
+     modules: [
+-      { name: ['Growth', 'Strategy'], summary: 'Определяем, где играть и как выигрывать.', items: ['Позиционирование', 'Исследование рынка', 'Анализ конкурентов', 'Разработка оффера', 'Стратегия воронки'] },
+-      { name: ['Creative', '& Content'], summary: 'Контент, который цепляет и продаёт.', items: ['Контент-стратегия', 'Reels', 'Коммерческое видео', 'Профессиональный продакшн', 'Копирайтинг', 'Performance-креативы'] },
+-      { name: ['Performance', 'Marketing'], summary: 'Превращаем бюджет в измеримый спрос.', items: ['Meta Ads', 'Lead generation', 'Ретаргетинг', 'Тестирование креативов', 'Оптимизация кампаний', 'Performance-аналитика'] },
+-      { name: ['Sales', 'System'], summary: 'Там, где лид становится деньгами, мы тоже работаем.', items: ['Структура продаж', 'Скрипты продаж', 'CRM workflow', 'Управление лидами', 'KPI', 'Оптимизация процесса продаж'] },
++      { name: ['Анализ', 'и стратегия'], summary: 'Определяем, где играть и как выигрывать.', items: ['Позиционирование', 'Исследование рынка', 'Анализ конкурентов', 'Разработка оффера', 'Стратегия воронки'] },
++      { name: ['Креатив', 'и контент'], summary: 'Контент, который цепляет и продаёт.', items: ['Контент-стратегия', 'Reels', 'Коммерческое видео', 'Профессиональный продакшн', 'Копирайтинг', 'Рекламные креативы'] },
++      { name: ['Управление', 'рекламой'], summary: 'Превращаем бюджет в измеримый спрос.', items: ['Meta Ads', 'Привлечение лидов', 'Ретаргетинг', 'Тестирование креативов', 'Оптимизация кампаний', 'Рекламная аналитика'] },
++      { name: ['Система', 'продаж'], summary: 'Там, где лид становится деньгами, мы тоже работаем.', items: ['Структура продаж', 'Скрипты продаж', 'Процессы CRM', 'Управление лидами', 'KPI', 'Оптимизация процесса продаж'] },
+     ],
+   },
+   work: {
+-    label: 'Selected Work',
++    label: 'Кейсы',
+     title: [{ t: 'Стратегия ценна,', outline: true }, { t: 'когда даёт результат', accent: true }],
+     challenge: 'Задача', system: 'Система', result: 'Результат',
+     viewAll: 'Все проекты', openCase: 'Открыть кейс',
+@@ -74,23 +74,23 @@
+         result: ['Средний срок продажи квартиры: 1–3 дня', 'Поток квалифицированных покупателей вырос', 'Стоимость лида снизилась', 'Охват вырос'] },
+       { slug: 'exeed-buxoro-autocity', industry: 'Автомобили', headline: 'Заявок на тест-драйв стало больше',
+         challenge: 'Привлечь квалифицированные заявки на тест-драйв и представить новые модели.',
+-        work: ['Lead generation', 'Meta Ads', 'Контент', 'Оптимизация воронки'],
++        work: ['Привлечение лидов', 'Meta Ads', 'Контент', 'Оптимизация воронки'],
+         result: ['Заявок на тест-драйв стало больше', 'Качество лидов выросло', 'Узнаваемость новых моделей выросла', 'Стоимость лида снизилась'] },
+       { slug: 'laminox-factory', industry: 'Производство · B2B', headline: 'Присоединились новые партнёры',
+         challenge: 'Привлечь B2B-запросы, дилеров и партнёров.',
+-        work: ['B2B-позиционирование', 'Контент с производства', 'Lead generation', 'Таргет'],
++        work: ['B2B-позиционирование', 'Контент с производства', 'Привлечение лидов', 'Таргет'],
+         result: ['B2B-запросов стало больше', 'Присоединились новые партнёры', 'Узнаваемость завода выросла', 'Стоимость запроса снизилась'] },
+       { slug: 'uz-style-catering', industry: 'Кейтеринг · Ивенты', headline: 'Средний чек вырос',
+         challenge: 'Увеличить число корпоративных и ивент-заказов.',
+-        work: ['Сегментация B2B/B2C', 'Архитектура оффера', 'Lead generation', 'Ретаргетинг', 'Скрипты продаж'],
++        work: ['Сегментация B2B/B2C', 'Архитектура оффера', 'Привлечение лидов', 'Ретаргетинг', 'Скрипты продаж'],
+         result: ['Ивент-заказов стало больше', 'Появился новый B2B-спрос', 'Средний чек вырос', 'Стоимость лида снизилась'] },
+       { slug: 'zk-academy', industry: 'Образование', headline: 'Конверсия в поступление выросла',
+         challenge: 'Увеличить число заявок на курсы и снизить стоимость привлечения.',
+-        work: ['Контент', 'Lead generation', 'Таргет', 'Автоматизация'],
++        work: ['Контент', 'Привлечение лидов', 'Таргет', 'Автоматизация'],
+         result: ['Заявок стало больше', 'Стоимость лида снизилась', 'Конверсия в поступление выросла', 'Узнаваемость бренда выросла'] },
+       { slug: 'dilbar-restaurant', industry: 'Ресторан · Торжества', headline: 'Запросов на бронь стало больше',
+         challenge: 'Увеличить число бронирований мероприятий и торжеств.',
+-        work: ['Контент', 'Meta Ads', 'Lead generation', 'Автоматизация'],
++        work: ['Контент', 'Meta Ads', 'Привлечение лидов', 'Автоматизация'],
+         result: ['Запросов на бронь стало больше', 'Доверие клиентов выросло', 'Охват релевантной аудитории расширился', 'Стоимость запроса снизилась'] },
+     ],
+   },
+@@ -102,39 +102,39 @@
+     fragmented: ['SMM-фрилансер', 'Таргетолог', 'Видеограф', 'Отдел продаж', 'Специалист по CRM'],
+     fragmentedResult: 'Разрозненное исполнение',
+     fazoLabel: 'Модель FAZO',
+-    pillars: ['Strategy', 'Creative', 'Media', 'Sales'],
++    pillars: ['Стратегия', 'Креатив', 'Реклама', 'Продажи'],
+     fazoResult: 'Одна система роста',
+     closing: ['Одна команда.', 'Одна стратегия.', 'Одна измеримая цель: рост.'],
+   },
+   process: {
+-    label: 'Process',
++    label: 'Процесс',
+     title: [{ t: 'Как мы строим' }, { t: 'рост', outline: true, accent: true }],
+     phases: [
+-      { name: 'Diagnose', desc: 'Аудит бизнеса, рынка, воронки и текущего маркетинга.' },
+-      { name: 'Strategize', desc: 'Позиционирование, оффер, путь клиента и план привлечения.' },
+-      { name: 'Build', desc: 'Креативная система, кампании, воронка и инфраструктура продаж.' },
+-      { name: 'Launch', desc: 'Запуск контента, платного трафика и потока лидов.' },
+-      { name: 'Optimize & Scale', desc: 'Измеряем, тестируем, улучшаем и масштабируем.' },
++      { name: 'Анализ', desc: 'Аудит бизнеса, рынка, воронки и текущего маркетинга.' },
++      { name: 'Стратегия', desc: 'Позиционирование, оффер, путь клиента и план привлечения.' },
++      { name: 'Построение системы', desc: 'Креативная система, кампании, воронка и инфраструктура продаж.' },
++      { name: 'Запуск', desc: 'Запуск контента, платного трафика и потока лидов.' },
++      { name: 'Оптимизация и масштабирование', desc: 'Измеряем, тестируем, улучшаем и масштабируем.' },
+     ],
+   },
+   insights: {
+-    label: 'Insights',
++    label: 'Полезные материалы',
+     title: [{ t: 'Выводы' }, { t: 'за цифрами', outline: true }],
+     items: [
+-      { tag: 'Performance', title: 'Почему самый дешёвый лид часто обходится дороже всего' },
+-      { tag: 'Sales', title: '5 признаков, что проблема в скрипте продаж, а не в рекламе' },
+-      { tag: 'Analytics', title: 'От CPL к CAC: какую цифру стоит отслеживать' },
++      { tag: 'Реклама', title: 'Почему самый дешёвый лид часто обходится дороже всего' },
++      { tag: 'Продажи', title: '5 признаков, что проблема в скрипте продаж, а не в рекламе' },
++      { tag: 'Аналитика', title: 'От CPL к CAC: какую цифру стоит отслеживать' },
+     ],
+     cta: 'Все материалы',
+     readTime: 'мин чтения',
+   },
+   engagement: {
+-    label: 'Engagement',
++    label: 'Сотрудничество',
+     title: [{ t: 'Для тех, кто', outline: true }, { t: 'растёт всерьёз', accent: true }],
+     text: 'Каждое сотрудничество строится вокруг вашего бизнеса, рынка и цели роста. Никаких пакетов — система под вашу задачу.',
+     startsFrom: 'Сотрудничество с FAZO — от',
+     per: '/ мес',
+-    notJust: 'Это не ведение соцсетей. Это стратегическое партнёрство, которое связывает маркетинг, креатив, performance и продажи.',
++    notJust: 'Это не ведение соцсетей. Это стратегическое партнёрство, которое связывает маркетинг, креатив, рекламу и продажи.',
+     cta: 'Обсудить ваш рост',
+     qualifier: 'Для сложившихся компаний, готовых инвестировать в рост.',
+     fitLabel: 'Кому подходит',
+@@ -143,7 +143,7 @@
+     notFit: ['Нужно только публиковать посты', 'Разовая рекламная кампания', 'Ожидание результата за неделю'],
+   },
+   apply: {
+-    label: 'Application',
++    label: 'Заявка',
+     title: [{ t: 'Проверим,' }, { t: 'подходим ли мы', outline: true }],
+     intro: 'Около двух минут. Каждую заявку лично изучает стратег. Если мы подходим друг другу, свяжемся и назначим стратегическую встречу.',
+     stepNames: ['О вас', 'Бизнес', 'Бюджет', 'Цель', 'Контакт'],
+@@ -151,7 +151,7 @@
+     industry: 'Отрасль',
+     industries: [
+       { value: 'real-estate', label: 'Недвижимость' }, { value: 'auto', label: 'Автомобили' }, { value: 'manufacturing', label: 'Производство / B2B' },
+-      { value: 'horeca', label: 'HoReCa / Кейтеринг' }, { value: 'education', label: 'Образование' }, { value: 'retail', label: 'Retail / E-commerce' },
++      { value: 'horeca', label: 'HoReCa / Кейтеринг' }, { value: 'education', label: 'Образование' }, { value: 'retail', label: 'Розничная торговля / Интернет-магазин' },
+       { value: 'furniture', label: 'Мебель / Интерьер' }, { value: 'other', label: 'Другое' },
+     ],
+     revenue: 'Текущая выручка в месяц',
+@@ -163,8 +163,8 @@
+     spends: [
+       { value: '<1k', label: 'До $1,000' }, { value: '1-3k', label: '$1,000–$3,000' }, { value: '3-10k', label: '$3,000–$10,000' }, { value: '10k+', label: '$10,000+' },
+     ],
+-    budget: 'Какую ежемесячную инвестицию вы готовы сделать?',
+-    budgetHint: 'За сотрудничество с FAZO, без учёта рекламного бюджета.',
++    budget: 'Сколько вы готовы инвестировать ежемесячно?',
++    budgetHint: 'На сотрудничество с FAZO, без учёта рекламного бюджета.',
+     budgets: [
+       { value: '2.5-4k', label: '$2,500–$4,000' }, { value: '4-7.5k', label: '$4,000–$7,500' }, { value: '7.5k+', label: '$7,500+' },
+     ],
+@@ -184,7 +184,7 @@
+       { value: 'yes', label: 'Да, решение за мной' }, { value: 'shared', label: 'Решаю вместе с партнёром' }, { value: 'no', label: 'Нет, я представитель компании' },
+     ],
+     contact: 'Телефон или Telegram', contactPh: '+998 90 000 00 00 или @username', contactHint: 'Только для связи по этой заявке.',
+-    next: 'Далее', back: 'Назад', submit: 'Отправить заявку', sending: 'Отправляем…', required: 'Заполните шаг, чтобы продолжить', stepOf: 'Шаг',
++    next: 'Далее', back: 'Назад', submit: 'Отправить заявку', sending: 'Отправляем…', required: 'Чтобы продолжить, правильно заполните обязательные поля.', stepOf: 'Шаг',
+     successTitle: 'Заявка получена.', successText: 'Мы изучим её и свяжемся с вами в Telegram или по телефону.', successCta: 'Написать в Telegram',
+     error: 'Не удалось отправить. Напишите нам в Telegram: @fazo_digital',
+   },
+@@ -197,7 +197,7 @@
+     location: 'Ташкент, Узбекистан',
+   },
+   footer: {
+-    tagline: 'Growth & Performance Agency', navLabel: 'Навигация', socialLabel: 'Соцсети', legalLabel: 'Правовое',
++    tagline: 'Агентство цифрового маркетинга', navLabel: 'Навигация', socialLabel: 'Соцсети', legalLabel: 'Правовое',
+     privacy: 'Политика конфиденциальности', contact: 'Контакты', rights: '© 2026 FAZO DIGITAL', location: 'Ташкент, Узбекистан', top: 'Наверх',
+   },
+ };
+--- original/src/i18n/uz.ts
++++ final/src/i18n/uz.ts
+@@ -11,7 +11,7 @@
+     description: 'Strategiya, kreativ, reklama va sotuvni bitta o‘lchanadigan o‘sish tizimiga birlashtiramiz.',
+   },
+   nav: {
+-    expertise: 'Ekspertiza', work: 'Natijalar', process: 'Jarayon', about: 'Biz haqimizda', insights: 'Foydali materiallar',
++    expertise: 'Yo‘nalishlar', work: 'Natijalar', process: 'Jarayon', about: 'Biz haqimizda', insights: 'Foydali materiallar',
+     cta: 'Strategik uchrashuv', menu: 'Menyu', close: 'Yopish', skip: 'Asosiy qismga o‘tish', language: 'Til',
+   },
+   hero: {
+@@ -56,25 +56,25 @@
+       { name: 'Strategiya', output: 'Pozitsiyalash xaritasi', desc: 'Bozor, raqobatchilar, mijoz va pozitsiyalash.' },
+       { name: 'Taklifni shakllantirish', output: 'Taklif tuzilmasi', desc: 'Mijoz tushunadigan va xohlaydigan taklifni quramiz.' },
+       { name: 'Kreativ va kontent', output: 'Kreativ reja', desc: 'E’tibor va konversiya uchun ishlab chiqilgan kontent.' },
+-      { name: 'Reklama boshqaruvi', output: 'Media-reja', desc: 'Meta Ads orqali mijozlarni jalb qilish.' },
+-      { name: 'Lidlar jalb qilish', output: 'Lidlarni saralash', desc: 'Talabni yaratish va saralash.' },
++      { name: 'Reklama boshqaruvi', output: 'Mediareja', desc: 'Meta Ads orqali mijozlarni jalb qilish.' },
++      { name: 'Lidlarni jalb qilish', output: 'Lidlarni saralash', desc: 'Talab yaratish va lidlarni saralash.' },
+       { name: 'Sotuv tizimi', output: 'Sotuv qo‘llanmasi', desc: 'Skriptlar, jarayon va sotuv ijrosi.' },
+       { name: 'CRM va avtomat\u00ADlashtirish', output: 'Sotuv voronkasi', desc: 'Har bir lid ustidan to‘liq nazorat.' },
+       { name: 'Tahlil va hisobot', output: 'Daromad hisoboti', desc: 'Daromadga aslida nima ta’sir qilayotganini o‘lchaymiz.' },
+-      { name: 'Masshtablash', output: 'Masshtablash rejasi', desc: 'Ishlayotganini kuchaytiramiz, ishlamayotganini olib tashlaymiz.' },
++      { name: 'Ko‘lamni kengaytirish', output: 'Ko‘lamni kengaytirish rejasi', desc: 'Ishlayotganini kuchaytiramiz, ishlamayotganini olib tashlaymiz.' },
+     ],
+     outputLabel: 'Natija',
+     hint: 'Aylantiring',
+   },
+   expertise: {
+-    label: 'Ekspertiza',
++    label: 'Yo‘nalishlar',
+     title: [{ t: 'To‘rt yo‘nalish.' }, { t: 'Bitta maqsad', outline: true, accent: true }],
+     intro: 'Bular alohida xizmatlar emas. To‘rttasi bitta strategiya va bitta KPI atrofida, bitta jamoa sifatida ishlaydi.',
+     inSystem: 'Tizimda',
+     modules: [
+       { name: ['Tahlil', 'va strategiya'], summary: 'Qayerda raqobatlashish va qanday yutishni aniqlaymiz.', items: ['Pozitsiyalash', 'Bozor tadqiqoti', 'Raqobatchilar tahlili', 'Taklifni shakllantirish', 'Sotuv voronkasi strategiyasi'] },
+-      { name: ['Kreativ', 'va kontent'], summary: 'E’tiborni tortadigan va sotadigan kontent.', items: ['Kontent strategiyasi', 'Reels', 'Tijoriy video', 'Professional suratga olish', 'Kopirayting', 'Reklama kreativlari'] },
+-      { name: ['Reklama', 'boshqaruvi'], summary: 'Byudjetni o‘lchanadigan talabga aylantiramiz.', items: ['Meta Ads', 'Lidlar jalb qilish', 'Retargeting', 'Kreativlarni sinash', 'Kampaniyalarni optimallashtirish', 'Reklama tahlili'] },
++      { name: ['Kreativ', 'va kontent'], summary: 'E’tiborni tortadigan va sotadigan kontent.', items: ['Kontent strategiyasi', 'Reels', 'Tijoriy video', 'Professional suratga olish', 'Reklama matnlari', 'Reklama kreativlari'] },
++      { name: ['Reklama', 'boshqaruvi'], summary: 'Byudjetni o‘lchanadigan talabga aylantiramiz.', items: ['Meta Ads', 'Lidlarni jalb qilish', 'Qayta reklama', 'Kreativlarni sinash', 'Kampaniyalarni optimallashtirish', 'Reklama tahlili'] },
+       { name: ['Sotuv', 'tizimi'], summary: 'Lid pulga aylanadigan joy — biz u yerda ham ishlaymiz.', items: ['Sotuv tuzilmasi', 'Sotuv skriptlari', 'CRM jarayonlari', 'Lidlarni boshqarish', 'KPI', 'Sotuv jarayonini optimallashtirish'] },
+     ],
+   },
+@@ -87,27 +87,27 @@
+     cases: [
+       { slug: 'fazilat-estate', industry: 'Ko‘chmas mulk', headline: 'Kvartira o‘rtacha 1–3 kunda sotiladi',
+         challenge: 'Kvartiralarni sotish muddatini qisqartirish va sifatli xaridorlar oqimini yaratish.',
+-        work: ['Marketing strategiyasi', 'Target reklama', 'SMM', 'Kontent', 'Sotuv voronkasi'],
++        work: ['Marketing strategiyasi', 'Maqsadli reklama', 'SMM', 'Kontent', 'Sotuv voronkasi'],
+         result: ['Kvartira o‘rtacha 1–3 kunda sotiladi', 'Sifatli xaridorlar oqimi yaxshilandi', 'Lid narxi pasaydi', 'Qamrov oshdi'] },
+       { slug: 'exeed-buxoro-autocity', industry: 'Avtomobil', headline: 'Test-drayv arizalari oshdi',
+         challenge: 'Sifatli test-drayv lidlarini jalb qilish va yangi modellarni tanitish.',
+-        work: ['Lidlar jalb qilish', 'Meta Ads', 'Kontent', 'Sotuv voronkasini optimallashtirish'],
++        work: ['Lidlarni jalb qilish', 'Meta Ads', 'Kontent', 'Sotuv voronkasini optimallashtirish'],
+         result: ['Test-drayv arizalari oshdi', 'Lidlar sifati yaxshilandi', 'Yangi modellar tanildi', 'Lid narxi pasaydi'] },
+       { slug: 'laminox-factory', industry: 'Ishlab chiqarish · B2B', headline: 'Yangi hamkorlar qo‘shildi',
+         challenge: 'B2B so‘rovlarni ko‘paytirish, dilerlar va hamkorlarni jalb qilish.',
+-        work: ['B2B pozitsiyalash', 'Zavod haqida kontent', 'Lidlar jalb qilish', 'Target reklama'],
++        work: ['B2B pozitsiyalash', 'Zavod haqida kontent', 'Lidlarni jalb qilish', 'Maqsadli reklama'],
+         result: ['B2B so‘rovlar ko‘paydi', 'Yangi hamkorlar qo‘shildi', 'Zavod tanilishi oshdi', 'So‘rov narxi pasaydi'] },
+       { slug: 'uz-style-catering', industry: 'Katering · Tadbirlar', headline: 'O‘rtacha buyurtma qiymati oshdi',
+         challenge: 'Korporativ va tadbir buyurtmalarini ko‘paytirish.',
+-        work: ['B2B/B2C segmentatsiyasi', 'Taklif tuzilmasi', 'Lidlar jalb qilish', 'Retargeting', 'Sotuv skriptlari'],
++        work: ['B2B/B2C segmentatsiyasi', 'Taklif tuzilmasi', 'Lidlarni jalb qilish', 'Qayta reklama', 'Sotuv skriptlari'],
+         result: ['Tadbir buyurtmalari oshdi', 'Yangi B2B talab yaratildi', 'O‘rtacha buyurtma qiymati oshdi', 'Lid narxi pasaydi'] },
+       { slug: 'zk-academy', industry: 'Ta’lim', headline: 'Qabul konversiyasi oshdi',
+         challenge: 'Kursga arizalarni ko‘paytirish va jalb qilish narxini pasaytirish.',
+-        work: ['Kontent', 'Lidlar jalb qilish', 'Target reklama', 'Avtomatlashtirish'],
++        work: ['Kontent', 'Lidlarni jalb qilish', 'Maqsadli reklama', 'Avtomatlashtirish'],
+         result: ['Arizalar oshdi', 'Lid narxi pasaydi', 'Qabul konversiyasi oshdi', 'Brend tanilishi yaxshilandi'] },
+       { slug: 'dilbar-restaurant', industry: 'Restoran · Marosimlar', headline: 'Bron so‘rovlari oshdi',
+         challenge: 'Tadbir va marosim bronlarini ko‘paytirish.',
+-        work: ['Kontent', 'Meta Ads', 'Lidlar jalb qilish', 'Avtomatlashtirish'],
++        work: ['Kontent', 'Meta Ads', 'Lidlarni jalb qilish', 'Avtomatlashtirish'],
+         result: ['Bron so‘rovlari oshdi', 'Mijozlar ishonchi oshdi', 'Tegishli auditoriya qamrovi kengaydi', 'So‘rov narxi pasaydi'] },
+     ],
+   },
+@@ -116,8 +116,8 @@
+     title: [{ t: 'Yana bir marketing', outline: true }, { t: 'agentligi emas', accent: true }],
+     intro: 'Odatda biznes marketingni bo‘laklab sotib oladi. Har bir ijrochi o‘z qismini optimallashtiradi — lekin umumiy natija uchun hech kim javob bermaydi.',
+     fragmentedLabel: 'Odatiy model',
+-    fragmented: ['SMM frilanser', 'Targetolog', 'Videograf', 'Sotuv bo‘limi', 'CRM mas’uli'],
+-    fragmentedResult: 'Uzilgan ijro',
++    fragmented: ['SMM mutaxassisi', 'Reklama mutaxassisi', 'Videograf', 'Sotuv bo‘limi', 'CRM mas’uli'],
++    fragmentedResult: 'O‘zaro bog‘lanmagan ishlar',
+     fazoLabel: 'FAZO modeli',
+     pillars: ['Strategiya', 'Kreativ', 'Reklama', 'Sotuv'],
+     fazoResult: 'Bitta o‘sish tizimi',
+@@ -131,7 +131,7 @@
+       { name: 'Strategiya', desc: 'Pozitsiyalash, taklif, mijoz yo‘li va jalb qilish rejasi.' },
+       { name: 'Tizimni qurish', desc: 'Kreativ tizim, kampaniyalar, voronka va sotuv infratuzilmasi.' },
+       { name: 'Ishga tushirish', desc: 'Kontent, pullik reklama va lidlar oqimi ishga tushadi.' },
+-      { name: 'Optimallashtirish va masshtablash', desc: 'O‘lchaymiz, sinaymiz, yaxshilaymiz va masshtablaymiz.' },
++      { name: 'Optimallashtirish va ko‘lamni kengaytirish', desc: 'O‘lchaymiz, sinaymiz, yaxshilaymiz va ko‘lamni kengaytiramiz.' },
+     ],
+   },
+   insights: {
+@@ -143,7 +143,7 @@
+       { tag: 'Tahlil', title: 'CPL’dan CAC’ga: qaysi raqamni kuzatish kerak' },
+     ],
+     cta: 'Barcha materiallar',
+-    readTime: 'daqiqa o‘qish',
++    readTime: 'daqiqa',
+   },
+   engagement: {
+     label: 'Hamkorlik',
+@@ -188,7 +188,7 @@
+     problem: 'Eng katta o‘sish muammosi',
+     problems: [
+       { value: 'lead-quality', label: 'Lidlar sifati past' }, { value: 'conversion', label: 'Lidlar sotuvga aylanmaydi' }, { value: 'cost', label: 'Reklama qimmatlashdi' },
+-      { value: 'strategy', label: 'Aniq strategiya yo‘q' }, { value: 'brand', label: 'Brend yetarlicha tanilmagan' }, { value: 'scale', label: 'Masshtablash qiyin' },
++      { value: 'strategy', label: 'Aniq strategiya yo‘q' }, { value: 'brand', label: 'Brend yetarlicha tanilmagan' }, { value: 'scale', label: 'Ko‘lamni kengaytirish qiyin' },
+     ],
+     problemDetail: 'Qisqacha izoh (ixtiyoriy)',
+     objective: 'Keyingi 6 oy uchun asosiy maqsad',
+@@ -200,8 +200,8 @@
+     decisions: [
+       { value: 'yes', label: 'Ha, qarorni men qabul qilaman' }, { value: 'shared', label: 'Qarorni sherigim bilan birga qabul qilamiz' }, { value: 'no', label: 'Yo‘q, men kompaniya vakiliman' },
+     ],
+-    contact: 'Telefon yoki Telegram', contactPh: '+998 90 000 00 00 yoki @username', contactHint: 'Faqat shu ariza bo‘yicha bog‘lanish uchun.',
+-    next: 'Keyingi', back: 'Orqaga', submit: 'Arizani yuborish', sending: 'Yuborilmoqda…', required: 'Davom etish uchun maydonlarni to‘ldiring', stepOf: 'Qadam',
++    contact: 'Telefon yoki Telegram', contactPh: '+998 90 000 00 00 yoki @foydalanuvchi', contactHint: 'Faqat shu ariza bo‘yicha bog‘lanish uchun.',
++    next: 'Keyingi', back: 'Orqaga', submit: 'Arizani yuborish', sending: 'Yuborilmoqda…', required: 'Davom etish uchun majburiy maydonlarni to‘g‘ri to‘ldiring.', stepOf: 'Qadam',
+     successTitle: 'Ariza qabul qilindi.', successText: 'Arizangizni ko‘rib chiqamiz va Telegram yoki telefon orqali bog‘lanamiz.', successCta: 'Telegram orqali bog‘lanish',
+     error: 'Yuborib bo‘lmadi. Iltimos, Telegram orqali yozing: @fazo_digital',
+   },
+--- original/index.html
++++ final/index.html
+@@ -3,8 +3,8 @@
+   <head>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+-    <title>FAZO Digital</title>
+-    <meta name="description" content="FAZO Digital — Toshkentdagi raqamli marketing agentligi. Strategiya, kreativ, Meta Ads, lidlar jalb qilish, sotuv tizimi va CRMni bitta o‘lchanadigan o‘sish tizimiga birlashtiramiz." />
++    <title>FAZO Digital — Raqamli marketing agentligi · Toshkent</title>
++    <meta name="description" content="FAZO Digital — Toshkentdagi raqamli marketing agentligi. Strategiya, kreativ, Meta Ads, lidlarni jalb qilish, sotuv tizimi va CRM’ni bitta o‘lchanadigan o‘sish tizimiga birlashtiramiz." />
+     <meta name="keywords" content="FAZO Digital, marketing agency Tashkent, digital marketing Uzbekistan, performance marketing Uzbekistan, SMM agency Tashkent, targeting agency Uzbekistan" />
+     <meta name="theme-color" content="#050505" />
+     <link rel="canonical" href="https://fazodigital.uz/" />

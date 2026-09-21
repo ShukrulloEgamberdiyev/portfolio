@@ -36,7 +36,7 @@ export function Nav() {
         initial={{ y: -24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className={`fixed inset-x-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${compact ? 'border-b border-line bg-ink/70 backdrop-blur-xl' : 'border-b border-transparent'}`}
         style={{ top: 0, paddingTop: 'env(safe-area-inset-top, 0px)' }}>
-        <nav aria-label="Primary" className={`shell flex items-center justify-between transition-[height] duration-500 ${compact ? 'h-16' : 'h-20 lg:h-24'}`}>
+        <nav aria-label={t.footer.navLabel} className={`shell flex items-center justify-between transition-[height] duration-500 ${compact ? 'h-16' : 'h-20 lg:h-24'}`}>
           <Link to="/" onClick={close} aria-label="FAZO Digital" data-cursor="hover"><Logo /></Link>
 
           <ul className="hidden items-center gap-7 whitespace-nowrap xl:flex 2xl:gap-9">

@@ -25,7 +25,7 @@ export function Headline({ lines, as = 'h2', className = '', immediate = false, 
           <motion.span
             className={`block ${line.outline ? 'outline-text' : ''}`}
             variants={{ hide: { y: '108%' }, show: { y: '0%', transition: { duration: 1.05, ease: [0.22, 1, 0.36, 1] } } }}>
-            {line.t}
+            {i > 0 && ' '}{line.t}
             {line.accent && <span className="text-violet" style={{ WebkitTextStroke: 0 }}>.</span>}
           </motion.span>
         </span>
