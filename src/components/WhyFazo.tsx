@@ -33,7 +33,7 @@ export function WhyFazo() {
   const gap = useTransform(p, [0, 1], [18, 0]);
   const systemScale = useTransform(p, [0.5, 1], [0.94, 1]);
   const systemOpacity = useTransform(p, [0.3, 1], [reduce ? 1 : 0.35, 1]);
-  const pillars = ['Strategy', 'Creative', 'Media', 'Sales'];
+  const pillars = t.why.pillars;
 
   return (
     <section id={SECTION_IDS.about} aria-labelledby="why-title" className="relative border-t border-line py-24 lg:py-40">

@@ -18,26 +18,18 @@ export const CLIENTS: { name: string; logo?: string }[] = [
   { name: 'Dilbar Restaurant' }, { name: 'ChefKatering' },
 ];
 
-export const SYSTEM_STEPS = [
-  { name: 'Strategy', output: 'Positioning map' },
-  { name: 'Offer', output: 'Offer architecture' },
-  { name: 'Creative', output: 'Creative matrix' },
-  { name: 'Performance', output: 'Media plan' },
-  { name: 'Leads', output: 'Lead scoring' },
-  { name: 'Sales', output: 'Sales playbook' },
-  { name: 'CRM', output: 'Pipeline' },
-  { name: 'Analytics', output: 'Revenue dashboard' },
-  { name: 'Scale', output: 'Scale plan' },
-];
+/** The growth system has nine stages. Stage names, outputs and descriptions live in the i18n dictionaries (t.system.steps). */
+export const SYSTEM_STAGE_COUNT = 9;
 
 export const EXPERTISE = [
-  { name: 'Growth Strategy', slug: 'growth-strategy', steps: [0, 1], cases: ['fazilat-estate', 'uz-style-catering'] },
-  { name: 'Creative & Content', slug: 'creative-content', steps: [2], cases: ['dilbar-restaurant', 'laminox-factory'] },
-  { name: 'Performance Marketing', slug: 'performance-marketing', steps: [3, 4], cases: ['exeed-buxoro-autocity', 'zk-academy'] },
-  { name: 'Sales System', slug: 'sales-system', steps: [5, 6, 7], cases: ['fazilat-estate', 'uz-style-catering'] },
+  // Display names live in the i18n dictionaries (t.expertise.modules[i].name).
+  { slug: 'growth-strategy', steps: [0, 1], cases: ['fazilat-estate', 'uz-style-catering'] },
+  { slug: 'creative-content', steps: [2], cases: ['dilbar-restaurant', 'laminox-factory'] },
+  { slug: 'performance-marketing', steps: [3, 4], cases: ['exeed-buxoro-autocity', 'zk-academy'] },
+  { slug: 'sales-system', steps: [5, 6, 7], cases: ['fazilat-estate', 'uz-style-catering'] },
 ];
 
-export const PHASES = ['Diagnose', 'Strategize', 'Build', 'Launch', 'Optimize & Scale'];
+/** Process phase names live in the i18n dictionaries (t.process.phases). */
 
 /** Case display names; copy lives in i18n. `media` accepts a poster image and/or a muted loop video. */
 export const CASES: { slug: string; name: string; media?: { poster?: string; video?: string } }[] = [

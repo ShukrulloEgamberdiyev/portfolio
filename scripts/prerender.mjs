@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 
-const { render, seoFor, routes } = await import(join(dist, 'server', 'entry-server.js'));
+const { render, seoFor, routes, dictionaries } = await import(join(dist, 'server', 'entry-server.js'));
 
 const template = readFileSync(join(dist, 'index.html'), 'utf8');
 const LANGS = ['uz', 'ru', 'en'];
@@ -36,6 +36,7 @@ function page(route, lang) {
     .replace(/<meta property="og:title"[^>]*>/, `<meta property="og:title" content="${escapeHtml(seo.title)}" />`)
     .replace(/<meta property="og:description"[^>]*>/, `<meta property="og:description" content="${escapeHtml(seo.description)}" />`)
     .replace(/<meta property="og:url"[^>]*>/, `<meta property="og:url" content="${seo.canonical}" />`)
+    .replace(/<noscript>[\s\S]*?<\/noscript>/, `<noscript>FAZO Digital — ${escapeHtml(dictionaries[lang].footer.tagline)}. ${escapeHtml(dictionaries[lang].footer.location)}. +998 93 040 10 70 · t.me/fazo_digital</noscript>`)
     .replace('<div id="root"></div>', `<div id="root" data-prerendered="true">${html}</div>`);
 }
 

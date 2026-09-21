@@ -1,7 +1,7 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useLang } from '../i18n';
-import { SECTION_IDS, SYSTEM_STEPS } from '../data/site';
+import { SECTION_IDS } from '../data/site';
 import { onAnchorClick } from '../lib/scroll';
 import { Button } from '../ui/Button';
 import { Headline } from '../ui/Headline';
@@ -9,17 +9,17 @@ import { Headline } from '../ui/Headline';
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /** Mono readout cycling through the growth system — tells the visitor in one glance this isn't "just SMM". */
-function SystemReadout() {
+function SystemReadout({ steps }: { steps: { name: string }[] }) {
   const [i, setI] = useState(0);
   const reduce = useReducedMotion();
   useEffect(() => {
     if (reduce) return;
-    const id = setInterval(() => setI((v) => (v + 1) % SYSTEM_STEPS.length), 1400);
+    const id = setInterval(() => setI((v) => (v + 1) % steps.length), 1400);
     return () => clearInterval(id);
-  }, [reduce]);
+  }, [reduce, steps.length]);
   return (
     <ol className="space-y-1.5 font-mono text-[11px] uppercase tracking-[0.14em]" aria-label="FAZO growth system">
-      {SYSTEM_STEPS.map((s, k) => (
+      {steps.map((s, k) => (
         <li key={s.name} className={`flex items-center gap-3 transition-colors duration-500 ${k === i ? 'text-bone' : k < i ? 'text-mist/60' : 'text-ash/60'}`}>
           <span className="tabular w-5">{String(k + 1).padStart(2, '0')}</span>
           <span className={`h-px transition-all duration-700 ${k === i ? 'w-8 bg-violet' : 'w-3 bg-line-strong'}`} />
@@ -51,7 +51,7 @@ export function Hero() {
             {t.hero.eyebrow}
           </motion.p>
           <motion.div className="absolute right-14 top-16 hidden xl:block" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.2, delay: 1.1, ease }}>
-            <SystemReadout />
+            <SystemReadout steps={t.system.steps} />
           </motion.div>
         </div>
 

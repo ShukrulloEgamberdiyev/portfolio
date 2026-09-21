@@ -12,7 +12,7 @@ export function AuthorityStrip() {
     { value: <span>{t.stats.funnelTop}</span>, label: t.stats.funnelBottom, small: true },
   ];
   return (
-    <section aria-label="FAZO in numbers" className="relative mt-20 lg:mt-28">
+    <section aria-label={t.stats.label} className="relative mt-20 lg:mt-28">
       <div className="shell">
         <dl className="grid grid-cols-2 border-t border-line lg:grid-cols-4">
           {items.map((it, i) => (

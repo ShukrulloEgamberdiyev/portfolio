@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { useLang } from '../i18n';
 import type { Option } from '../i18n/types';
 import { CONTACT, SECTION_IDS } from '../data/site';
@@ -10,6 +10,17 @@ import { Label } from '../ui/Label';
 import { Reveal } from '../ui/Reveal';
 
 type Data = Record<string, string>;
+
+const MIN_FILL_MS = 4000;
+const COOLDOWN_MS = 10 * 60 * 1000;
+const LAST_KEY = 'fazo.lastApplication';
+
+function recentlySubmitted() {
+  try { return Date.now() - Number(window.localStorage.getItem(LAST_KEY) || 0) < COOLDOWN_MS; } catch { return false; }
+}
+function markSubmitted() {
+  try { window.localStorage.setItem(LAST_KEY, String(Date.now())); } catch { /* storage unavailable */ }
+}
 const ease = [0.22, 1, 0.36, 1] as const;
 
 function TextField({ id, label, value, onChange, placeholder, hint, type = 'text', optional, autoComplete }: {
@@ -66,7 +77,12 @@ export function Application({ compact = false }: { compact?: boolean } = {}) {
   const [data, setData] = useState<Data>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
   const [showError, setShowError] = useState(false);
-  const set = (k: string) => (v: string) => { setData((d) => ({ ...d, [k]: v })); setShowError(false); };
+  const set = (k: string) => (v: string) => { setData((d) => ({ ...d, [k]: v.slice(0, k === 'problemDetail' ? 1000 : 160) })); setShowError(false); };
+
+  // Spam protection: a hidden honeypot field bots fill in, and a minimum time on the form.
+  const [honeypot, setHoneypot] = useState('');
+  const startedAt = useRef(0);
+  useEffect(() => { startedAt.current = Date.now(); }, []);
   const v = (k: string) => data[k] ?? '';
 
   const contactOk = /^(\+?\d[\d\s()-]{7,}|@?[a-zA-Z0-9_]{4,})$/.test(v('contact').trim());
@@ -83,7 +99,14 @@ export function Application({ compact = false }: { compact?: boolean } = {}) {
     if (!valid[step]) { setShowError(true); return; }
     if (step < last) { setDir(1); setStep(step + 1); return; }
     setStatus('sending');
-    try { await submitApplication(data, lang); setStatus('done'); } catch { setStatus('error'); }
+    const elapsed = Date.now() - startedAt.current;
+    // Bots get the same success screen, but nothing is sent.
+    if (honeypot || elapsed < MIN_FILL_MS || recentlySubmitted()) { setStatus('done'); return; }
+    try {
+      await submitApplication(data, lang, { hp: honeypot, elapsed });
+      markSubmitted();
+      setStatus('done');
+    } catch { setStatus('error'); }
   };
   const back = () => { setDir(-1); setStep(Math.max(0, step - 1)); setShowError(false); };
 
@@ -147,6 +170,11 @@ export function Application({ compact = false }: { compact?: boolean } = {}) {
               </motion.div>
             ) : (
               <form onSubmit={(e) => { e.preventDefault(); void next(); }} noValidate>
+                {/* Honeypot: invisible to people, tempting to bots. */}
+                <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+                  <label htmlFor="fax_number">Fax</label>
+                  <input id="fax_number" name="fax_number" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                </div>
                 <div className="flex items-center justify-between gap-4">
                   <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-mist">
                     {a.stepOf} <span className="tabular text-bone">{step + 1}</span> / {a.stepNames.length} · <span className="text-bone">{a.stepNames[step]}</span>

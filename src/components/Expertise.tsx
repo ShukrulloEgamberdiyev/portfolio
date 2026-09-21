@@ -1,5 +1,5 @@
 import { useLang } from '../i18n';
-import { EXPERTISE, SECTION_IDS, SYSTEM_STEPS } from '../data/site';
+import { EXPERTISE, SECTION_IDS } from '../data/site';
 import { Headline } from '../ui/Headline';
 import { Label } from '../ui/Label';
 import { Reveal } from '../ui/Reveal';
@@ -34,12 +34,12 @@ export function Expertise() {
                 <div className="relative flex items-start justify-between gap-4">
                   <span className="font-mono text-[11px] text-ash tabular">{String(i + 1).padStart(2, '0')} / 04</span>
                   <span className="text-right font-mono text-[10.5px] uppercase tracking-[0.14em] text-ash">
-                    {t.expertise.inSystem}: <span className="text-mist">{EXPERTISE[i].steps.map((s) => SYSTEM_STEPS[s].name).join(' · ')}</span>
+                    {t.expertise.inSystem}: <span className="text-mist">{EXPERTISE[i].steps.map((s) => t.system.steps[s].name).join(' · ')}</span>
                   </span>
                 </div>
                 <h3 className="relative mt-14 text-[2.3rem] font-bold uppercase leading-[0.92] tracking-[-0.045em] sm:text-[3rem] lg:mt-20 lg:text-[3.6rem]">
-                  <span className="block">{EXPERTISE[i].name.split(' ')[0]}</span>
-                  <span className="block outline-text transition-colors duration-700 group-hover:text-bone">{EXPERTISE[i].name.split(' ').slice(1).join(' ')}</span>
+                  <span className="block">{m.name[0]}</span>
+                  <span className="block outline-text transition-colors duration-700 group-hover:text-bone">{m.name[1]}</span>
                 </h3>
                 <p className="relative mt-6 max-w-[34ch] text-[1.08rem] text-mist">{m.summary}</p>
                 <ul className="relative mt-auto grid grid-cols-1 pt-12 sm:grid-cols-2 sm:gap-x-8">

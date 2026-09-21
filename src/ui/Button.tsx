@@ -32,7 +32,7 @@ const styles = {
 };
 
 export function Button({ children, to, href, onClick, variant = 'solid', arrow = true, type = 'button', disabled, magnetic = true, className = '', external }: Props) {
-  const cls = `group relative inline-flex h-14 items-center gap-4 overflow-hidden px-7 font-mono text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-300 disabled:opacity-40 ${styles[variant]} ${className}`;
+  const cls = `group relative inline-flex min-h-14 items-center gap-4 overflow-hidden px-7 py-3 text-left leading-snug font-mono text-[12px] font-medium uppercase tracking-[0.14em] transition-colors duration-300 disabled:opacity-40 ${styles[variant]} ${className}`;
   const inner = (
     <>
       {variant !== 'text' && (

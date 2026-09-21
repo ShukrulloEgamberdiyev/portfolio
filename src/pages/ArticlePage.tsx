@@ -8,7 +8,7 @@ import { Arrow } from '../ui/Button';
 
 export default function ArticlePage() {
   const { slug = '' } = useParams();
-  const { lang, p } = useLang();
+  const { lang, t, p } = useLang();
   const a = ARTICLES.find((x) => x.slug === slug);
   if (!a) return <Navigate to="/insights" replace />;
   const next = ARTICLES[(ARTICLES.indexOf(a) + 1) % ARTICLES.length];
@@ -16,7 +16,7 @@ export default function ArticlePage() {
   return (
     <>
       <PageHeader
-        label={`${a.tag} · ${a.minutes} ${p.insightsPage.minutes}`}
+        label={`${t.insights.items[ARTICLES.indexOf(a)]?.tag ?? a.tag} · ${a.minutes} ${p.insightsPage.minutes}`}
         title={[{ t: a.title, accent: true }]}
         intro={a.lead}
         back={{ to: '/insights', label: p.insightsPage.title }}

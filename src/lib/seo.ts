@@ -32,7 +32,7 @@ export function seoFor(path: string, lang: Lang): Seo {
   const expSlug = path.startsWith('/expertise/') ? path.slice(11) : null;
   if (expSlug) {
     const i = EXPERTISE.findIndex((e) => e.slug === expSlug);
-    if (i >= 0) return make(EXPERTISE[i].name, p.expertiseDetail.modules[i].lead);
+    if (i >= 0) return make(t.expertise.modules[i].name.join(' '), p.expertiseDetail.modules[i].lead);
   }
 
   const artSlug = path.startsWith('/insights/') ? path.slice(10) : null;

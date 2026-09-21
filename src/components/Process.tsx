@@ -1,11 +1,11 @@
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useLang } from '../i18n';
-import { PHASES, SECTION_IDS } from '../data/site';
+import { SECTION_IDS } from '../data/site';
 import { Headline } from '../ui/Headline';
 import { Label } from '../ui/Label';
 
-function Phase({ i, desc, onActive, active }: { i: number; desc: string; onActive: (i: number) => void; active: boolean }) {
+function Phase({ i, name, desc, onActive, active }: { i: number; name: string; desc: string; onActive: (i: number) => void; active: boolean }) {
   const ref = useRef<HTMLLIElement>(null);
   const inView = useInView(ref, { margin: '-45% 0px -45% 0px' });
   useEffect(() => { if (inView) onActive(i); }, [inView, i, onActive]);
@@ -15,7 +15,7 @@ function Phase({ i, desc, onActive, active }: { i: number; desc: string; onActiv
         {String(i + 1).padStart(2, '0')}
       </span>
       <div className={`transition-opacity duration-700 ${active ? 'opacity-100' : 'opacity-45'}`}>
-        <h3 className="text-[1.6rem] font-bold uppercase tracking-[-0.035em] sm:text-[2.2rem] lg:text-[2.8rem]">{PHASES[i]}</h3>
+        <h3 className="text-[1.3rem] font-bold uppercase leading-tight tracking-[-0.035em] [overflow-wrap:anywhere] sm:text-[2rem] lg:text-[2.4rem]">{name}</h3>
         <p className="mt-3 max-w-[38ch] text-[1.05rem] text-mist lg:text-[1.15rem]">{desc}</p>
       </div>
     </li>
@@ -39,7 +39,7 @@ export function Process() {
             <p className="mt-10 hidden items-center gap-4 font-mono text-[11px] uppercase tracking-[0.14em] text-ash lg:flex">
               <span className="tabular text-bone">{String(active + 1).padStart(2, '0')}</span>
               <span className="h-px w-10 bg-line-strong" />
-              <span className="text-mist">{PHASES[active]}</span>
+              <span className="text-mist">{t.process.phases[active].name}</span>
             </p>
           </div>
         </div>
@@ -47,7 +47,7 @@ export function Process() {
           <span aria-hidden className="absolute -left-6 bottom-0 top-0 hidden w-px bg-line lg:block" />
           <motion.span aria-hidden style={{ scaleY }} className="absolute -left-6 bottom-0 top-0 hidden w-px origin-top bg-violet lg:block" />
           <ol ref={list} className="border-b border-line">
-            {t.process.phases.map((p, i) => <Phase key={i} i={i} desc={p.desc} active={active === i} onActive={setActive} />)}
+            {t.process.phases.map((p, i) => <Phase key={i} i={i} name={p.name} desc={p.desc} active={active === i} onActive={setActive} />)}
           </ol>
         </div>
       </div>

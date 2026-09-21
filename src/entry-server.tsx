@@ -4,6 +4,7 @@ import App from './App';
 import type { Lang } from './i18n/types';
 import { ROUTES } from './lib/routes';
 export { seoFor } from './lib/seo';
+export { dictionaries } from './i18n';
 export const routes = ROUTES;
 
 export function render(path: string, lang: Lang) {

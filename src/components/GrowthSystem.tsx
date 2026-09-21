@@ -1,7 +1,6 @@
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { useLang } from '../i18n';
-import { SYSTEM_STEPS } from '../data/site';
 import { useMedia } from '../lib/useMedia';
 import { Headline } from '../ui/Headline';
 import { Label } from '../ui/Label';
@@ -9,14 +8,14 @@ import { Reveal } from '../ui/Reveal';
 
 const pad = (n: number) => String(n + 1).padStart(2, '0');
 
-function StepCard({ i, desc, outputLabel, active }: { i: number; desc: string; outputLabel: string; active: boolean }) {
-  const s = SYSTEM_STEPS[i];
+function StepCard({ i, step, outputLabel, active }: { i: number; step: { name: string; output: string; desc: string }; outputLabel: string; active: boolean }) {
+  const s = step;
   return (
     <article className={`relative flex h-full flex-col justify-between border-l border-line px-6 py-8 transition-colors duration-700 lg:px-10 lg:py-10 ${active ? 'bg-surface-1/80' : ''}`}>
       <div>
         <p className={`font-bold leading-none tracking-[-0.06em] transition-all duration-700 text-[5rem] lg:text-[8.5rem] ${active ? 'text-bone' : 'outline-text-faint'}`}>{pad(i)}</p>
-        <h3 className="mt-6 text-[1.8rem] font-bold uppercase tracking-[-0.035em] lg:mt-10 lg:text-[2.6rem]">{s.name}</h3>
-        <p className="mt-3 max-w-[30ch] text-[1.02rem] leading-relaxed text-mist lg:text-[1.1rem]">{desc}</p>
+        <h3 className="mt-6 text-[1.8rem] font-bold uppercase leading-[0.95] tracking-[-0.035em] [overflow-wrap:anywhere] lg:mt-10 lg:text-[1.9rem] xl:text-[2.1rem]">{s.name}</h3>
+        <p className="mt-3 max-w-[30ch] text-[1.02rem] leading-relaxed text-mist lg:text-[1.1rem]">{s.desc}</p>
       </div>
       <p className="mt-10 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-ash">
         <span className={`h-1.5 w-1.5 transition-colors duration-700 ${active ? 'bg-violet' : 'bg-line-strong'}`} />
@@ -73,7 +72,7 @@ function DesktopPipeline() {
               <div key={i} className="relative h-full w-[30vw] min-w-[340px] max-w-[460px]">
                 {/* connector: node + arrow between stages */}
                 <span aria-hidden className={`absolute -left-[5px] top-0 z-10 h-[9px] w-[9px] border transition-colors duration-700 ${i <= active ? 'border-violet bg-violet' : 'border-line-strong bg-ink'}`} />
-                <StepCard i={i} desc={s.desc} outputLabel={t.system.outputLabel} active={i === active} />
+                <StepCard i={i} step={s} outputLabel={t.system.outputLabel} active={i === active} />
               </div>
             ))}
           </motion.div>
@@ -102,10 +101,10 @@ function MobilePipeline() {
               <span aria-hidden className="absolute left-0 top-2 h-[9px] w-[9px] border border-violet bg-ink" />
               <div className="flex items-baseline gap-4">
                 <span className="font-mono text-[11px] text-ash tabular">{pad(i)}</span>
-                <h3 className="text-[1.7rem] font-bold uppercase tracking-[-0.035em]">{SYSTEM_STEPS[i].name}</h3>
+                <h3 className="text-[1.45rem] font-bold uppercase leading-tight tracking-[-0.035em] [overflow-wrap:anywhere]">{s.name}</h3>
               </div>
               <p className="mt-2 text-mist">{s.desc}</p>
-              <p className="mt-3 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ash">{t.system.outputLabel}: <span className="text-mist">{SYSTEM_STEPS[i].output}</span></p>
+              <p className="mt-3 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ash">{t.system.outputLabel}: <span className="text-mist">{s.output}</span></p>
             </Reveal>
           ))}
         </ol>

@@ -39,7 +39,7 @@ export function Nav() {
         <nav aria-label="Primary" className={`shell flex items-center justify-between transition-[height] duration-500 ${compact ? 'h-16' : 'h-20 lg:h-24'}`}>
           <Link to="/" onClick={close} aria-label="FAZO Digital" data-cursor="hover"><Logo /></Link>
 
-          <ul className="hidden items-center gap-9 lg:flex">
+          <ul className="hidden items-center gap-7 whitespace-nowrap xl:flex 2xl:gap-9">
             {links.map((l) => (
               <li key={l.to}>
                 <Link to={l.to} onClick={close} className={`group relative text-[14px] transition-colors hover:text-bone ${isActive(l.to) ? 'text-bone' : 'text-mist'}`}>
@@ -51,16 +51,16 @@ export function Nav() {
           </ul>
 
           <div className="flex items-center gap-4 lg:gap-6">
-            <div className="hidden items-center gap-1 font-mono text-[11px] uppercase tracking-[0.12em] sm:flex" role="group" aria-label="Language">
+            <div className="hidden items-center gap-1 font-mono text-[11px] uppercase tracking-[0.12em] sm:flex" role="group" aria-label={t.nav.language}>
               {LANGS.map((l) => (
                 <button key={l} onClick={() => setLang(l)} aria-pressed={lang === l}
                   className={`px-1.5 py-1 transition-colors ${lang === l ? 'text-bone' : 'text-ash hover:text-mist'}`}>{l}</button>
               ))}
             </div>
             <div className="hidden md:block">
-              <Button to="/apply" onClick={close} className={`${compact ? 'h-10' : 'h-11'} px-5 text-[11px]`}>{t.nav.cta}</Button>
+              <Button to="/apply" onClick={close} className={`${compact ? 'h-10' : 'h-11'} min-h-0! py-0! px-5 text-[11px] whitespace-nowrap`}>{t.nav.cta}</Button>
             </div>
-            <button onClick={() => setOpen(true)} className="flex h-11 items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] lg:hidden" aria-expanded={open} aria-controls="mobile-menu">
+            <button onClick={() => setOpen(true)} className="flex h-11 items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] xl:hidden" aria-expanded={open} aria-controls="mobile-menu">
               {t.nav.menu}
               <span aria-hidden className="flex flex-col gap-[5px]"><span className="block h-px w-5 bg-bone" /><span className="block h-px w-3 self-end bg-bone" /></span>
             </button>
@@ -94,7 +94,7 @@ export function Nav() {
                   <button key={l} onClick={() => setLang(l)} aria-pressed={lang === l} className={`px-2 py-2 ${lang === l ? 'text-bone' : 'text-ash'}`}>{l}</button>
                 ))}
               </div>
-              <Button to="/apply" onClick={close} magnetic={false} className="h-12 px-5 text-[11px]">{t.nav.cta}</Button>
+              <Button to="/apply" onClick={close} magnetic={false} className="h-12 min-h-0! py-0! px-5 text-[11px]">{t.nav.cta}</Button>
             </div>
           </motion.div>
         )}

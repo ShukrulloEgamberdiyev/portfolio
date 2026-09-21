@@ -1,6 +1,6 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { useLang } from '../i18n';
-import { CASES, EXPERTISE, SYSTEM_STEPS } from '../data/site';
+import { CASES, EXPERTISE } from '../data/site';
 import { PageHeader } from '../components/PageHeader';
 import { CtaBlock } from '../components/CtaBlock';
 import { Label } from '../ui/Label';
@@ -25,10 +25,10 @@ export default function ExpertiseDetail() {
     <>
       <PageHeader
         label={t.expertise.label}
-        title={[{ t: m.name.split(' ')[0] }, { t: m.name.split(' ').slice(1).join(' '), outline: true, accent: true }]}
+        title={[{ t: t.expertise.modules[i].name[0] }, { t: t.expertise.modules[i].name[1], outline: true, accent: true }]}
         intro={copy.lead}
         back={{ to: '/expertise', label: p.expertise.title }}
-        meta={[{ label: d.inSystem, value: m.steps.map((s) => `${String(s + 1).padStart(2, '0')} ${SYSTEM_STEPS[s].name}`).join('  ·  ') }]}
+        meta={[{ label: d.inSystem, value: m.steps.map((s) => `${String(s + 1).padStart(2, '0')} ${t.system.steps[s].name}`).join('  ·  ') }]}
       />
 
       <section className="shell mt-20 grid gap-14 lg:mt-28 lg:grid-cols-12">

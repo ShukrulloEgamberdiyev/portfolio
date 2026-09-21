@@ -1,5 +1,4 @@
 import { useLang } from '../i18n';
-import { PHASES } from '../data/site';
 import { PageHeader } from '../components/PageHeader';
 import { CtaBlock } from '../components/CtaBlock';
 import { Label } from '../ui/Label';
@@ -14,12 +13,12 @@ export default function ProcessPage() {
 
       <section className="shell mt-16 lg:mt-24">
         <ol className="border-t border-line">
-          {PHASES.map((phase, i) => (
+          {t.process.phases.map(({ name: phase }, i) => (
             <Reveal as="li" key={phase} delay={0.04 * i} className="grid gap-x-10 gap-y-6 border-b border-line py-10 lg:grid-cols-12 lg:py-16">
               <div className="lg:col-span-5">
                 <div className="flex items-baseline gap-5">
                   <span className="text-[3.5rem] font-bold leading-none tracking-[-0.06em] outline-text-faint sm:text-[5rem]">{String(i + 1).padStart(2, '0')}</span>
-                  <h2 className="text-[1.8rem] font-bold uppercase tracking-[-0.04em] sm:text-[2.4rem]">{phase}</h2>
+                  <h2 className="min-w-0 text-[1.35rem] font-bold uppercase leading-tight tracking-[-0.04em] [overflow-wrap:anywhere] sm:text-[2rem]">{phase}</h2>
                 </div>
                 <p className="mt-5 max-w-[40ch] text-[1.05rem] text-mist">{t.process.phases[i].desc}</p>
               </div>

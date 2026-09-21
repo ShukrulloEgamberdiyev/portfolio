@@ -17,16 +17,16 @@ export type Option = { value: string; label: string };
 
 export type Dict = {
   meta: { title: string; description: string };
-  nav: { expertise: string; work: string; process: string; about: string; insights: string; cta: string; menu: string; close: string };
+  nav: { expertise: string; work: string; process: string; about: string; insights: string; cta: string; menu: string; close: string; skip: string; language: string };
   hero: { eyebrow: string; lines: Line[]; sub: string; ctaPrimary: string; ctaSecondary: string; qualifier: string; scroll: string };
-  stats: { campaigns: string; clients: string; brands: string; funnelTop: string; funnelBottom: string };
+  stats: { label: string; campaigns: string; clients: string; brands: string; funnelTop: string; funnelBottom: string };
   clients: { title: string; note: string };
   problem: { label: string; title: Line[]; intro: string; rows: { has: string; gap: string }[]; transition: string };
-  system: { label: string; title: Line[]; intro: string; steps: { desc: string }[]; outputLabel: string; hint: string };
-  expertise: { label: string; title: Line[]; intro: string; inSystem: string; modules: { summary: string; items: string[] }[] };
+  system: { label: string; title: Line[]; intro: string; steps: { name: string; output: string; desc: string }[]; outputLabel: string; hint: string };
+  expertise: { label: string; title: Line[]; intro: string; inSystem: string; modules: { name: [string, string]; summary: string; items: string[] }[] };
   work: { label: string; title: Line[]; challenge: string; system: string; result: string; viewAll: string; openCase: string; mediaNote: string; cases: CaseCopy[] };
-  why: { label: string; title: Line[]; intro: string; fragmentedLabel: string; fragmented: string[]; fragmentedResult: string; fazoLabel: string; fazoResult: string; closing: string[] };
-  process: { label: string; title: Line[]; phases: { desc: string }[] };
+  why: { label: string; title: Line[]; intro: string; fragmentedLabel: string; fragmented: string[]; fragmentedResult: string; fazoLabel: string; pillars: string[]; fazoResult: string; closing: string[] };
+  process: { label: string; title: Line[]; phases: { name: string; desc: string }[] };
   insights: { label: string; title: Line[]; items: { tag: string; title: string }[]; cta: string; readTime: string };
   engagement: { label: string; title: Line[]; text: string; startsFrom: string; per: string; notJust: string; cta: string; qualifier: string; fitLabel: string; fit: string[]; notFitLabel: string; notFit: string[] };
   apply: {

@@ -18,12 +18,14 @@ function utm(): Record<string, string> {
  * Sent as text/plain on purpose: Apps Script web apps reject the CORS preflight that
  * an application/json POST triggers.
  */
-export async function submitApplication(data: Application, lang = 'uz'): Promise<void> {
+export async function submitApplication(data: Application, lang = 'uz', guard: { hp: string; elapsed: number } = { hp: '', elapsed: 0 }): Promise<void> {
   const endpoint = import.meta.env.VITE_APPLICATION_ENDPOINT as string | undefined;
   const payload = {
     ...data,
     ...utm(),
     lang,
+    hp: guard.hp,
+    elapsed: String(guard.elapsed),
     submittedAt: new Date().toISOString(),
     source: 'fazodigital.uz',
     page: location.href,

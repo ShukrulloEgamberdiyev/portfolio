@@ -10,6 +10,12 @@ import { Loader } from './components/Loader';
 import { Nav } from './components/Nav';
 import { Footer } from './components/Footer';
 import { ScrollToTop, Seo } from './components/Seo';
+import { useLang } from './i18n';
+
+function SkipLink() {
+  const { t } = useLang();
+  return <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[110] focus:bg-bone focus:px-4 focus:py-2 focus:text-ink">{t.nav.skip}</a>;
+}
 
 export default function App({ initialLang }: { initialLang?: Lang }) {
   useEffect(() => initSmoothScroll(), []);
@@ -19,7 +25,7 @@ export default function App({ initialLang }: { initialLang?: Lang }) {
         <Seo />
         <ScrollToTop />
         <div className="grain relative min-h-screen bg-ink text-bone">
-          <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[110] focus:bg-bone focus:px-4 focus:py-2 focus:text-ink">Skip to content</a>
+          <SkipLink />
           <Loader />
           <Atmosphere />
           <Cursor />

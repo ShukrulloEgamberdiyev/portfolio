@@ -1,6 +1,6 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { useLang } from '../i18n';
-import { CASES, SYSTEM_STEPS, EXPERTISE } from '../data/site';
+import { CASES, EXPERTISE } from '../data/site';
 import { PageHeader } from '../components/PageHeader';
 import { CtaBlock } from '../components/CtaBlock';
 import { Label } from '../ui/Label';
@@ -86,7 +86,7 @@ export default function CaseStudy() {
                 {usedStages.map((s) => (
                   <li key={s} className="flex items-center gap-3">
                     <span className="tabular text-ash">{String(s + 1).padStart(2, '0')}</span>
-                    <span className="h-px w-6 bg-violet" />{SYSTEM_STEPS[s].name}
+                    <span className="h-px w-6 bg-violet" />{t.system.steps[s].name}
                   </li>
                 ))}
               </ol>
