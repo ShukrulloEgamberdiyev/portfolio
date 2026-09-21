@@ -11,7 +11,7 @@ export const uz: Dict = {
     description: 'Strategiya, kreativ, reklama va sotuvni bitta o‘lchanadigan o‘sish tizimiga birlashtiramiz.',
   },
   nav: {
-    expertise: 'Ekspertiza', work: 'Natijalar', process: 'Jarayon', about: 'Biz haqimizda', insights: 'Foydali materiallar',
+    expertise: 'Yo‘nalishlar', work: 'Natijalar', process: 'Jarayon', about: 'Biz haqimizda', insights: 'Foydali materiallar',
     cta: 'Strategik uchrashuv', menu: 'Menyu', close: 'Yopish', skip: 'Asosiy qismga o‘tish', language: 'Til',
   },
   hero: {
@@ -61,19 +61,19 @@ export const uz: Dict = {
       { name: 'Sotuv tizimi', output: 'Sotuv qo‘llanmasi', desc: 'Skriptlar, jarayon va sotuv ijrosi.' },
       { name: 'CRM va avtomat\u00ADlashtirish', output: 'Sotuv voronkasi', desc: 'Har bir lid ustidan to‘liq nazorat.' },
       { name: 'Tahlil va hisobot', output: 'Daromad hisoboti', desc: 'Daromadga aslida nima ta’sir qilayotganini o‘lchaymiz.' },
-      { name: 'Masshtablash', output: 'Masshtablash rejasi', desc: 'Ishlayotganini kuchaytiramiz, ishlamayotganini olib tashlaymiz.' },
+      { name: 'Ko‘lamni kengaytirish', output: 'Kengaytirish rejasi', desc: 'Ishlayotganini kuchaytiramiz, ishlamayotganini olib tashlaymiz.' },
     ],
     outputLabel: 'Natija',
     hint: 'Aylantiring',
   },
   expertise: {
-    label: 'Ekspertiza',
+    label: 'Yo‘nalishlar',
     title: [{ t: 'To‘rt yo‘nalish.' }, { t: 'Bitta maqsad', outline: true, accent: true }],
     intro: 'Bular alohida xizmatlar emas. To‘rttasi bitta strategiya va bitta KPI atrofida, bitta jamoa sifatida ishlaydi.',
     inSystem: 'Tizimda',
     modules: [
       { name: ['Tahlil', 'va strategiya'], summary: 'Qayerda raqobatlashish va qanday yutishni aniqlaymiz.', items: ['Pozitsiyalash', 'Bozor tadqiqoti', 'Raqobatchilar tahlili', 'Taklifni shakllantirish', 'Sotuv voronkasi strategiyasi'] },
-      { name: ['Kreativ', 'va kontent'], summary: 'E’tiborni tortadigan va sotadigan kontent.', items: ['Kontent strategiyasi', 'Reels', 'Tijoriy video', 'Professional suratga olish', 'Kopirayting', 'Reklama kreativlari'] },
+      { name: ['Kreativ', 'va kontent'], summary: 'E’tiborni tortadigan va sotadigan kontent.', items: ['Kontent strategiyasi', 'Reels', 'Tijoriy video', 'Professional suratga olish', 'Reklama matnlari', 'Reklama kreativlari'] },
       { name: ['Reklama', 'boshqaruvi'], summary: 'Byudjetni o‘lchanadigan talabga aylantiramiz.', items: ['Meta Ads', 'Lidlar jalb qilish', 'Retargeting', 'Kreativlarni sinash', 'Kampaniyalarni optimallashtirish', 'Reklama tahlili'] },
       { name: ['Sotuv', 'tizimi'], summary: 'Lid pulga aylanadigan joy — biz u yerda ham ishlaymiz.', items: ['Sotuv tuzilmasi', 'Sotuv skriptlari', 'CRM jarayonlari', 'Lidlarni boshqarish', 'KPI', 'Sotuv jarayonini optimallashtirish'] },
     ],
@@ -116,7 +116,7 @@ export const uz: Dict = {
     title: [{ t: 'Yana bir marketing', outline: true }, { t: 'agentligi emas', accent: true }],
     intro: 'Odatda biznes marketingni bo‘laklab sotib oladi. Har bir ijrochi o‘z qismini optimallashtiradi — lekin umumiy natija uchun hech kim javob bermaydi.',
     fragmentedLabel: 'Odatiy model',
-    fragmented: ['SMM frilanser', 'Targetolog', 'Videograf', 'Sotuv bo‘limi', 'CRM mas’uli'],
+    fragmented: ['SMM mutaxassisi', 'Reklama mutaxassisi', 'Videograf', 'Sotuv bo‘limi', 'CRM mas’uli'],
     fragmentedResult: 'Uzilgan ijro',
     fazoLabel: 'FAZO modeli',
     pillars: ['Strategiya', 'Kreativ', 'Reklama', 'Sotuv'],
@@ -131,7 +131,7 @@ export const uz: Dict = {
       { name: 'Strategiya', desc: 'Pozitsiyalash, taklif, mijoz yo‘li va jalb qilish rejasi.' },
       { name: 'Tizimni qurish', desc: 'Kreativ tizim, kampaniyalar, voronka va sotuv infratuzilmasi.' },
       { name: 'Ishga tushirish', desc: 'Kontent, pullik reklama va lidlar oqimi ishga tushadi.' },
-      { name: 'Optimallashtirish va masshtablash', desc: 'O‘lchaymiz, sinaymiz, yaxshilaymiz va masshtablaymiz.' },
+      { name: 'Optimallashtirish va kengaytirish', desc: 'O‘lchaymiz, sinaymiz, yaxshilaymiz va ko‘lamini kengaytiramiz.' },
     ],
   },
   insights: {
@@ -162,7 +162,7 @@ export const uz: Dict = {
   apply: {
     label: 'Ariza qoldirish',
     title: [{ t: 'Mos kelamizmi?' }, { t: 'Keling, aniqlaymiz', outline: true }],
-    intro: 'Taxminan 2 daqiqa. Har bir arizani strateg shaxsan ko‘rib chiqadi. Mos kelsak, strategik uchrashuv uchun bog‘lanamiz.',
+    intro: 'Taxminan 2 daqiqa. Har bir arizani strategiya bo‘yicha mutaxassis shaxsan ko‘rib chiqadi. Mos kelsak, strategik uchrashuv uchun bog‘lanamiz.',
     stepNames: ['Siz haqingizda', 'Biznes', 'Byudjet', 'Maqsad', 'Aloqa'],
     name: 'Ismingiz', company: 'Kompaniya yoki brend', website: 'Veb-sayt yoki Instagram', websitePh: 'fazodigital.uz yoki @brend',
     industry: 'Soha',
@@ -188,7 +188,7 @@ export const uz: Dict = {
     problem: 'Eng katta o‘sish muammosi',
     problems: [
       { value: 'lead-quality', label: 'Lidlar sifati past' }, { value: 'conversion', label: 'Lidlar sotuvga aylanmaydi' }, { value: 'cost', label: 'Reklama qimmatlashdi' },
-      { value: 'strategy', label: 'Aniq strategiya yo‘q' }, { value: 'brand', label: 'Brend yetarlicha tanilmagan' }, { value: 'scale', label: 'Masshtablash qiyin' },
+      { value: 'strategy', label: 'Aniq strategiya yo‘q' }, { value: 'brand', label: 'Brend yetarlicha tanilmagan' }, { value: 'scale', label: 'Biznesni kengaytirish qiyin' },
     ],
     problemDetail: 'Qisqacha izoh (ixtiyoriy)',
     objective: 'Keyingi 6 oy uchun asosiy maqsad',
@@ -207,7 +207,7 @@ export const uz: Dict = {
   },
   final: {
     title: [{ t: 'O‘sish —' }, { t: 'tasodif emas.', outline: true }, { t: 'Bu tizim', accent: true }],
-    sub: 'Formani to‘ldirishni istamaysizmi? To‘g‘ridan-to‘g‘ri yozing — strateg javob beradi.',
+    sub: 'Formani to‘ldirishni istamaysizmi? To‘g‘ridan-to‘g‘ri yozing — strategiya bo‘yicha mutaxassis javob beradi.',
     cta: 'Strategik uchrashuv',
     telegram: 'Telegram orqali bog‘lanish',
     labels: { instagram: 'Instagram', telegram: 'Telegram', phone: 'Telefon', location: 'Manzil', web: 'Sayt' },

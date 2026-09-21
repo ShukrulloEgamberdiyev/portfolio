@@ -24,7 +24,7 @@ export const pagesUz: PageDict = {
       'dilbar-restaurant': 'Marosim — uzoq o‘ylanadigan qaror. Kontentda zalni, xizmatni va haqiqiy tadbirlarni ko‘rsatdik, arizaga javobni avtomatlashtirdik, bron so‘ragan mijoz esa menejerga darhol tushadigan qilib yo‘naltirdik.',
     },
   },
-  expertise: { title: 'Ekspertiza', intro: 'To‘rt yo‘nalish — bitta tizimning qismlari. Har biri alohida ham ishlaydi, lekin natija ular birga ishlaganda chiqadi.', open: 'Yo‘nalishni ochish' },
+  expertise: { title: 'Yo‘nalishlar', intro: 'To‘rt yo‘nalish — bitta tizimning qismlari. Har biri alohida ham ishlaydi, lekin natija ular birga ishlaganda chiqadi.', open: 'Yo‘nalishni ochish' },
   expertiseDetail: {
     inSystem: 'Tizimdagi o‘rni', deliverables: 'Nima olasiz', howLabel: 'Qanday ishlaymiz', relatedLabel: 'Shu yo‘nalish qo‘llangan loyihalar',
     modules: [
@@ -67,7 +67,7 @@ export const pagesUz: PageDict = {
     ],
   },
   processPage: {
-    title: 'Jarayon', intro: 'Ish qanday boradi — birinchi uchrashuvdan masshtablashgacha. Har bir bosqichning aniq natijasi bor.',
+    title: 'Jarayon', intro: 'Ish qanday boradi — birinchi uchrashuvdan ko‘lamni kengaytirishgacha. Har bir bosqichning aniq natijasi bor.',
     insideLabel: 'Ichida nima bor', outputLabel: 'Bosqich natijasi',
     inside: [
       ['Biznes va daromad tuzilmasini ko‘rib chiqamiz', 'Reklama akkauntidagi haqiqiy raqamlarni tekshiramiz', 'Sotuv bo‘limining javob vaqtini o‘lchaymiz', 'Kontent va raqobatchilarni tahlil qilamiz'],
@@ -90,7 +90,7 @@ export const pagesUz: PageDict = {
     story: [
       { h: 'Nimadan boshlangan', body: 'FAZO oddiy SMM bilan boshlangan. Vaqt o‘tib bir narsa aniq bo‘ldi: chiroyli kontent ham, arzon lid ham o‘z-o‘zidan pul keltirmaydi. Mijozning savoli har doim bitta edi — «sotuv qani?».' },
       { h: 'Nima o‘zgardi', body: 'Shundan keyin ish chegarasini kengaytirdik: reklamadan keyin sotuvga, CRM va tahlilga kirdik. Bugun biz kontent ishlab chiqaruvchi emas, mijozning o‘sish tizimiga javob beradigan jamoamiz.' },
-      { h: 'Qanday ishlaymiz', body: 'Har bir mijozga strateg, kreativ guruh va targetolog biriktiriladi. Ish haftalik ritmda boradi: reja, ijro, raqamlar, tuzatish. Hisobot layk emas, lid va sotuv tilida yoziladi.' },
+      { h: 'Qanday ishlaymiz', body: 'Har bir mijozga strategiya bo‘yicha mutaxassis, kreativ guruh va reklama mutaxassisi biriktiriladi. Ish haftalik ritmda boradi: reja, ijro, raqamlar, tuzatish. Hisobot layk emas, lid va sotuv tilida yoziladi.' },
     ],
     principlesTitle: 'Prinsiplar',
     principles: [
@@ -99,11 +99,11 @@ export const pagesUz: PageDict = {
       { h: 'Yomon xabarni ham aytamiz', body: 'Agar muammo reklamada emas, mahsulot yoki sotuvda bo‘lsa, buni to‘g‘ridan-to‘g‘ri aytamiz.' },
       { h: 'Bitta javobgar', body: 'Bo‘laklarga bo‘lingan ijro o‘rniga bitta jamoa va bitta natija.' },
     ],
-    teamTitle: 'Jamoa', teamText: 'Strateg, targetolog, kreativ prodyuser, kontent-menejer, videograf va sotuv bo‘yicha maslahatchi — loyihaga qarab guruh yig‘iladi.',
+    teamTitle: 'Jamoa', teamText: 'Strategiya bo‘yicha mutaxassis, reklama mutaxassisi, kreativ prodyuser, kontent-menejer, videograf va sotuv bo‘yicha maslahatchi — loyihaga qarab guruh yig‘iladi.',
     numbersTitle: 'Raqamlarda',
   },
   insightsPage: { title: 'Foydali materiallar', intro: 'Ish jarayonida takrorlanadigan xatolar va ularning yechimi haqida.', langNote: '', minutes: 'daqiqa o‘qish' },
-  applyPage: { title: 'Ariza qoldirish', intro: 'Formani to‘ldiring — arizani strateg ko‘rib chiqadi va mos bo‘lsa, uchrashuv uchun bog‘lanamiz.' },
+  applyPage: { title: 'Ariza qoldirish', intro: 'Formani to‘ldiring — arizani strategiya bo‘yicha mutaxassis ko‘rib chiqadi va mos bo‘lsa, uchrashuv uchun bog‘lanamiz.' },
   privacy: {
     title: 'Maxfiylik siyosati', updated: 'Yangilangan: 2026-yil sentabr',
     sections: [
