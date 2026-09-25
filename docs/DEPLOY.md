@@ -45,7 +45,7 @@ Ariza xizmati ishga tushirilgan; ushbu source’dagi endpoint tayyor. Qayta Apps
 
 ## 5. Ishga tushgandan keyin
 - Google Search Console'ga saytni qo‘shing va `https://fazodigital.uz/sitemap.xml` ni yuboring
-- Meta Pixel kodini `index.html` ga qo‘shing
+- Meta Pixel: `index.html` ga kod qo‘shmang. Vercel → Settings → Environment Variables → `VITE_META_PIXEL_ID` = Pixel ID → Redeploy.
 - Instagram va Telegram profillariga sayt havolasini qo‘ying
 
 ## Keyinchalik o‘zgartirish kiritish

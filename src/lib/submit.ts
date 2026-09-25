@@ -20,9 +20,13 @@ function utm(): Record<string, string> {
  * Sent as text/plain on purpose: Apps Script web apps reject the CORS preflight that
  * an application/json POST triggers.
  */
+export const APPLICATION_ENDPOINT = (import.meta.env.VITE_APPLICATION_ENDPOINT as string | undefined)
+  || 'https://script.google.com/macros/s/AKfycbzBvnC8i5tglLCg_7ZX2op1BuAQ79c2mRHAYtX__XJfQa4aD3htuXs9lUYWWam_mylr1Q/exec';
+// Public identifier, not a secret: the Apps Script validates and limits writes.
+export const APPLICATION_TOKEN = import.meta.env.VITE_APPLICATION_TOKEN || 'fazo-2026-maxfiy';
+
 export async function submitApplication(data: Application, lang = 'uz', guard: { hp: string; elapsed: number } = { hp: '', elapsed: 0 }): Promise<void> {
-  const endpoint = (import.meta.env.VITE_APPLICATION_ENDPOINT as string | undefined)
-    || 'https://script.google.com/macros/s/AKfycbzBvnC8i5tglLCg_7ZX2op1BuAQ79c2mRHAYtX__XJfQa4aD3htuXs9lUYWWam_mylr1Q/exec';
+  const endpoint = APPLICATION_ENDPOINT;
   const payload = {
     ...data,
     ...utm(),
@@ -32,8 +36,7 @@ export async function submitApplication(data: Application, lang = 'uz', guard: {
     submittedAt: new Date().toISOString(),
     source: 'fazodigital.uz',
     page: location.href,
-    // Public identifier, not a secret: the Apps Script validates and limits writes.
-    token: import.meta.env.VITE_APPLICATION_TOKEN || 'fazo-2026-maxfiy',
+    token: APPLICATION_TOKEN,
   };
   await deliverApplication(endpoint, payload);
 }

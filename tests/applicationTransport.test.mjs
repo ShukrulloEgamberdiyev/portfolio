@@ -37,7 +37,49 @@ test('HTTP errors, invalid JSON and network failures never report success', asyn
   const mocked = t.mock.method(globalThis, 'fetch', async () => new Response('unavailable', { status: 503 }));
   await assert.rejects(deliverApplication(endpoint, {}), /503/);
   mocked.mock.mockImplementation(async () => new Response('<html>Sign in</html>'));
-  await assert.rejects(deliverApplication(endpoint, {}), SyntaxError);
+  await assert.rejects(deliverApplication(endpoint, {}), (e) => e.code === 'bad_response' && /SyntaxError/.test(e.message));
   mocked.mock.mockImplementation(async () => { throw new TypeError('network failed'); });
   await assert.rejects(deliverApplication(endpoint, {}), /network failed/);
+});
+
+test('timeouts and rejections carry a machine-readable reason', async (t) => {
+  t.mock.method(globalThis, 'fetch', (url, options) => new Promise((_, reject) => options.signal.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError')))));
+  await assert.rejects(deliverApplication(endpoint, {}, 30), (e) => e.code === 'timeout');
+  t.mock.restoreAll();
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({ ok: false, error: 'rate_limited' })));
+  await assert.rejects(deliverApplication(endpoint, {}), (e) => e.code === 'rejected' && e.detail === 'rate_limited');
+});
+
+test('a duplicate acknowledgement is still a confirmed success', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({ ok: true, duplicate: true })));
+  const res = await deliverApplication(endpoint, {});
+  assert.equal(res.duplicate, true);
+});
+
+test('6. a body that stalls after the headers still times out, and the timer is cleared', async (t) => {
+  let cancelled = false;
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    const body = new ReadableStream({ start(c) { c.enqueue(new TextEncoder().encode('{"ok":')); }, cancel() { cancelled = true; } });
+    options.signal.addEventListener('abort', () => { cancelled = true; });
+    return new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } });
+  });
+  const started = Date.now();
+  await assert.rejects(deliverApplication(endpoint, {}, 60), (e) => e.code === 'timeout');
+  assert.ok(Date.now() - started < 1000, 'must not hang');
+  assert.ok(cancelled, 'request is aborted');
+});
+
+test('a json() that never settles (non-abortable body) is still cut off by the time limit', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => ({ ok: true, status: 200, json: () => new Promise(() => {}) }));
+  await assert.rejects(deliverApplication(endpoint, {}, 40), (e) => e.code === 'timeout');
+});
+
+test('server rejection carries the offending field', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({ ok: false, error: 'invalid', field: 'phone' })));
+  await assert.rejects(deliverApplication(endpoint, {}), (e) => e.code === 'rejected' && e.detail === 'invalid' && e.field === 'phone');
+});
+
+test('network failure is distinguished from timeout', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => { throw new TypeError('Failed to fetch'); });
+  await assert.rejects(deliverApplication(endpoint, {}, 1000), (e) => e.code === 'network');
 });

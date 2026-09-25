@@ -24,6 +24,7 @@ npm run preview      # build natijasini lokalda ko‘rish
 /insights/:slug        3 ta maqola (o‘zbek tilida)
 /apply                 Ariza formasi
 /privacy               Maxfiylik siyosati
+/avtosalon             Avtosalonlar uchun landing (faqat UZ, alohida header/footer, 4 bosqichli ariza)
 ```
 Har biri `/ru/...` va `/en/...` ko‘rinishida ham mavjud.
 
@@ -48,6 +49,20 @@ Amaldagi endpoint `src/lib/submit.ts` ichida tayyor. Ushbu versiyani build va de
 
 Muvaffaqiyat ekrani faqat xizmat `{ok:true}` qaytarganda chiqadi. Telegram bildirishnomasi ulanmagan. Google Apps Script kodi `docs/apps-script.gs` ichida; xizmat yangilanganda mavjud deployment uchun yangi versiya chiqaring.
 
+## /avtosalon landing
+- Alohida sahifa: `avtosalon.html` → `src/avtosalon-main.tsx` → `src/AvtosalonApp.tsx`. Reklama trafigi asosiy sayt JS'ini yuklamaydi. Build `dist/avtosalon.html` va `dist/avtosalon/index.html` ni prerender qiladi.
+- Asosiy manzil: `https://fazodigital.uz/avtosalon`. `/avtosalon/` → 308 bilan `/avtosalon` ga (query, UTM, fbclid saqlanadi) — `vercel.json`.
+- Arizalar o‘sha Apps Script orqali **Targeting Xizmat → AVTOSALON LEADLAR** varag‘iga yoziladi (`formType: 'avtosalon'`). Varaq birinchi arizada yaratiladi; mavjud ustunlar sarlavha nomi bo‘yicha to‘ldiriladi.
+- Muvaffaqiyat faqat server shu arizani saqlaganini tasdiqlaganda (`{ok:true, saved:true, submissionId}`) ko‘rsatiladi; oddiy `{ok:true}` (health) tasdiq hisoblanmaydi.
+- Har bir ariza bitta `Ariza ID` oladi; timeout, internet uzilishi, qayta bosish yoki sahifani yangilashdan keyingi retry shu ID bilan ketadi. Server ID'ni jadvaldagi **Ariza ID** ustunidan (lock ichida) tekshiradi — bir ID uchun bitta qator, payload o‘zgargan yoki cache yo‘qolgan bo‘lsa ham. `Lead` bitta ID uchun bir marta.
+- Server validatsiyasi: majburiy maydonlar, uzunliklar, +998 telefon, Instagram/sayt/Telegram formati, barcha variantlar frontend ro‘yxatiga (`tests/avtosalonContract.test.mjs` ikkala ro‘yxat bir xilligini tekshiradi), `Boshqa` → izoh majburiy.
+- Limitlar (`LIMITS` in `docs/apps-script.gs`): har forma alohida; avtosalon — bitta telefon/Telegram 6 soatda 3 ta yangi ariza, favqulodda umumiy chegara soatiga 200. Retry limitni sarflamaydi.
+- `TOKEN` / `VITE_APPLICATION_TOKEN` brauzerda ochiq — maxfiy kalit emas; himoya honeypot, minimal vaqt, validatsiya va limitlardan iborat.
+- `docs/apps-script.gs` o‘zgarsa: Apps Script → Deploy → Manage deployments → Edit → **New version** (URL o‘zgarmaydi).
+- UTM (`utm_source/medium/campaign/content/term`), `fbclid`, landing URL va referrer sessiya davomida saqlanadi va arizaga qo‘shiladi.
+- Meta Pixel: Vercel → Environment Variables → `VITE_META_PIXEL_ID` (so‘ng redeploy). Hodisalar: PageView, ViewContent, `AvtosalonCTA`, `AvtosalonFormStart`, `AvtosalonFormStep`, `Lead`. ID bo‘lmasa pixel yuklanmaydi.
+- Lokal: `npm run dev` → `http://localhost:5173/avtosalon`; `npm run build && npm run preview` → `http://localhost:4173/avtosalon`.
+
 ## Deploy (GitHub + Vercel)
 ```bash
 git init && git add -A && git commit -m "FAZO Digital website"
@@ -65,5 +80,5 @@ ahost hostingiga qo‘yish kerak bo‘lsa: `npm run build` dan keyin `dist/` ich
 ## Qolgan ishlar (kontent)
 - **Mijoz logotiplari:** `src/data/site.ts` dagi `CLIENTS` ro‘yxatiga `logo: '/logos/nom.svg'` qo‘shing va fayllarni `public/logos/` ga soling.
 - **Case media:** `CASES` ichida `media: { poster: '/work/nom.jpg', video: '/work/nom.mp4' }`. Video ovozsiz, 6–10 soniya, 2MB gacha.
-- **Meta Pixel:** `index.html` ga pixel kodini qo‘ying va `src/lib/submit.ts` ichida muvaffaqiyatli yuborilgandan keyin `Lead` hodisasini yuboring.
+- **Meta Pixel:** `index.html` ga pixel kodi **qo‘yilmaydi** (dublikat bo‘ladi). Faqat Vercel → Environment Variables → `VITE_META_PIXEL_ID` ni to‘ldiring va redeploy qiling; pixel `/avtosalon` da `src/lib/tracking.ts` orqali bir marta yuklanadi, `Lead` faqat server arizani saqlaganini tasdiqlagandan keyin yuboriladi.
 - **Maqolalar:** `src/content/articles.ts`. Hozir 3 ta maqola o‘zbek tilida; RU/EN sahifalarida shu matn ko‘rsatiladi va til haqida qisqa izoh chiqadi.

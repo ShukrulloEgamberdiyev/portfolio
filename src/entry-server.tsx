@@ -1,11 +1,13 @@
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import App from './App';
+import AvtosalonApp from './AvtosalonApp';
 import type { Lang } from './i18n/types';
-import { ROUTES } from './lib/routes';
+import { ROUTES, UZ_ONLY_ROUTES } from './lib/routes';
 export { seoFor } from './lib/seo';
 export { dictionaries } from './i18n';
 export const routes = ROUTES;
+export const uzOnlyRoutes = UZ_ONLY_ROUTES;
 
 export function render(path: string, lang: Lang) {
   return renderToString(
@@ -13,4 +15,9 @@ export function render(path: string, lang: Lang) {
       <App initialLang={lang} />
     </StaticRouter>,
   );
+}
+
+/** Prerender for the standalone /avtosalon landing (its own client entry: src/avtosalon-main.tsx). */
+export function renderAvtosalon() {
+  return renderToString(<AvtosalonApp />);
 }

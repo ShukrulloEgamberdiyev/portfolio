@@ -15,3 +15,6 @@ export const ROUTES: string[] = [
   '/apply',
   '/privacy',
 ];
+
+/** Uzbek-only landing pages: prerendered once (no /ru, /en copies) and listed in the sitemap. */
+export const UZ_ONLY_ROUTES: string[] = ['/avtosalon'];

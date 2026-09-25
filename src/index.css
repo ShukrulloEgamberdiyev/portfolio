@@ -13,6 +13,8 @@
   --color-line-strong: rgb(245 245 245 / 0.18);
   --color-violet: #7a6bff;   /* accent — used as light, rarely as fill */
   --color-cobalt: #2f45ff;
+  --color-signal: #f5c33b;   /* yellow accent — used by the /avtosalon landing */
+  --color-alert: #ff7a6b;    /* form validation messages on /avtosalon */
 
   --font-sans: "Onest", "Helvetica Neue", Arial, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
