@@ -9,6 +9,11 @@
       "source": "/avtosalon/",
       "destination": "/avtosalon",
       "permanent": true
+    },
+    {
+      "source": "/qurilish/",
+      "destination": "/qurilish",
+      "permanent": true
     }
   ],
   "headers": [

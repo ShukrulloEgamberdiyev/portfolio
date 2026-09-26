@@ -14,7 +14,8 @@
   --color-violet: #7a6bff;   /* accent — used as light, rarely as fill */
   --color-cobalt: #2f45ff;
   --color-signal: #f5c33b;   /* yellow accent — used by the /avtosalon landing */
-  --color-alert: #ff7a6b;    /* form validation messages on /avtosalon */
+  --color-alert: #ff7a6b;    /* form validation messages on /avtosalon, /qurilish */
+  --color-lamp: #e8b86a;     /* warm window light — /qurilish architectural drawings only */
 
   --font-sans: "Onest", "Helvetica Neue", Arial, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -78,6 +79,13 @@
 @keyframes drift-b { 0%,100% { transform: translate3d(0,0,0) scale(1.05); } 50% { transform: translate3d(-5%, -3%, 0) scale(0.95); } }
 @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
 
+/* /qurilish — skyline windows light up once; the dimension line draws once. */
+@keyframes qr-lamp { from { opacity: 0; } to { opacity: var(--qr-o, 0.8); } }
+@keyframes qr-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.qr-lamp { opacity: var(--qr-o, 0.8); animation: qr-lamp 1.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.qr-draw { stroke-dasharray: 1; animation: qr-draw 2.4s cubic-bezier(0.65, 0, 0.35, 1) 0.4s both; }
+
 @media (prefers-reduced-motion: reduce) {
+  .qr-lamp, .qr-draw { animation: none !important; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
 }

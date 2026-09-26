@@ -4,9 +4,10 @@
  * Ushbu kod aynan maqsad jadvalining Extensions → Apps Script loyihasiga qo‘yiladi.
  * Web app: Execute as Me; Who has access: Anyone.
  *
- * Ikki forma bitta endpointga keladi:
+ * Uch forma bitta endpointga keladi:
  *   - umumiy sayt arizasi              → "Sayt arizalari" varag‘i (avvalgidek)
  *   - /avtosalon (formType=avtosalon)  → "AVTOSALON LEADLAR" varag‘i (alohida, aralashmaydi)
+ *   - /qurilish  (formType=qurilish)   → "QURILISH LEADLAR" varag‘i (alohida, aralashmaydi)
  *
  * Kod yangilanganda: Deploy → Manage deployments → (mavjud deployment) Edit →
  * Version: New version → Deploy. URL o‘zgarmaydi, saytni qayta build qilish shart emas.
@@ -18,6 +19,7 @@
 const SPREADSHEET_ID = '1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo';
 const SHEET_NAME = 'Sayt arizalari';
 const AVTOSALON_SHEET_NAME = 'AVTOSALON LEADLAR';
+const QURILISH_SHEET_NAME = 'QURILISH LEADLAR';
 const TOKEN = 'fazo-2026-maxfiy';
 const MIN_FILL_MS = 4000;
 
@@ -105,6 +107,40 @@ const AV = {
     'Sotuv bo‘limini noldan qurish', 'Marketing va sotuvni bitta tizimga bog‘lash', 'Kompleks marketing va sotuv boshqaruvi', 'Boshqa'],
 };
 
+/* ───────── Qurilish (turar joy quruvchilari) arizasi ───────── */
+
+const QURILISH_COLUMNS = [
+  ['submittedAt', 'Sana va vaqt'],
+  ['name', 'Ism'],
+  ['phone', 'Telefon'],
+  ['company', 'Kompaniya'],
+  ['region', 'Hudud / shahar'],
+  ['stage', 'Loyiha bosqichi'],
+  ['problem', 'Asosiy muammo'],
+  ['problemOther', 'Muammo — izoh'],
+  ['budget', 'Oylik reklama budjeti'],
+  ['contactTime', 'Qulay aloqa vaqti'],
+  ['utm_source', 'UTM Source'],
+  ['utm_medium', 'UTM Medium'],
+  ['utm_campaign', 'UTM Campaign'],
+  ['utm_content', 'UTM Content'],
+  ['utm_term', 'UTM Term'],
+  ['fbclid', 'fbclid'],
+  ['page', 'Landing / sahifa manbasi'],
+  ['referrer', 'Referrer'],
+  ['submissionId', 'Ariza ID'],
+];
+
+/* Frontend (src/content/qurilish.ts) bilan bir xil ruxsat etilgan qiymatlar. */
+const QR = {
+  regions: AV.regions,
+  stage: ['Qurilish jarayonida', 'Sotuv boshlangan', 'Qurilish tugagan / sotuv davom etmoqda', 'Yangi loyiha'],
+  problem: ['Murojaatlar kam', 'Murojaatlar sifati past', 'Sotuv sust', 'Marketing tizimi yo‘q', 'Sotuv bo‘limi yo‘q',
+    'Reklama ishlayapti, lekin natija qoniqtirmaydi', 'Boshqa'],
+  budget: ['$1,000 gacha', '$1,000–$3,000', '$3,000–$5,000', '$5,000+'],
+  contactTime: ['Imkon qadar tezroq', 'Ertalab (9:00–12:00)', 'Tushdan keyin (12:00–18:00)', 'Kechqurun (18:00–20:00)'],
+};
+
 /* ───────── Limitlar (sozlanadi) ─────────
  * Har forma alohida hisoblanadi — biri ikkinchisini bloklamaydi. Bir xil Ariza ID bilan qayta
  * urinish (retry) yangi ariza hisoblanmaydi va limitni sarflamaydi.
@@ -117,6 +153,7 @@ const AV = {
 const LIMITS = {
   site: { perHour: 30, duplicateTtlSec: 600 },
   avtosalon: { globalPerHour: 200, perContact: 3, perContactWindowSec: 21600 },
+  qurilish: { globalPerHour: 200, perContact: 3, perContactWindowSec: 21600 },
 };
 
 const MAX_LEN = {
@@ -139,7 +176,9 @@ function doPost(e) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return out({ ok: false, error: 'invalid', field: 'payload' });
   if (data.token !== TOKEN) return out({ ok: false, error: 'forbidden' });
   if (isSpam(data)) return out({ ok: false, error: 'spam' });
-  return data.formType === 'avtosalon' ? handleAvtosalon(data) : handleSite(data);
+  if (data.formType === 'avtosalon') return handleAvtosalon(data);
+  if (data.formType === 'qurilish') return handleQurilish(data);
+  return handleSite(data);
 }
 
 /** Honeypot va minimal vaqt. Noto‘g‘ri/son bo‘lmagan elapsed tekshiruvni chetlab o‘tmaydi. */
@@ -282,6 +321,74 @@ function validateAvtosalon(d) {
   if (!within('position', 2, MAX_LEN.position)) return 'position';
   if (!/^\+998\d{9}$/.test((str('phone') || '').replace(/[\s()-]/g, ''))) return 'phone';
   if (!/^@[A-Za-z][A-Za-z0-9_]{4,31}$/.test(str('telegram') || '')) return 'telegram';
+
+  const extras = { utm_source: MAX_LEN.utm, utm_medium: MAX_LEN.utm, utm_campaign: MAX_LEN.utm, utm_content: MAX_LEN.utm,
+    utm_term: MAX_LEN.utm, fbclid: MAX_LEN.fbclid, page: MAX_LEN.page, referrer: MAX_LEN.referrer };
+  for (const k in extras) if (!optional(k, extras[k])) return k;
+  return null;
+}
+
+/* ───────── Qurilish formasi ───────── */
+
+function handleQurilish(data) {
+  const problem = validateQurilish(data);
+  if (problem) return out({ ok: false, error: 'invalid', field: problem });
+  const id = data.submissionId;
+
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) return out({ ok: false, error: 'busy' });
+  try {
+    const sheet = getSheetByConfig(QURILISH_SHEET_NAME, QURILISH_COLUMNS, AVTOSALON_STATUS_HEADER);
+    const header = ensureHeader(sheet, QURILISH_COLUMNS, AVTOSALON_STATUS_HEADER);
+    if (findRowById(sheet, header, id)) return out({ ok: true, saved: true, duplicate: true, submissionId: id });
+
+    const cache = CacheService.getScriptCache();
+    const hourKey = 'h_qurilish_' + Utilities.formatDate(new Date(), 'Asia/Tashkent', 'yyyyMMddHH');
+    const hourCount = Number(cache.get(hourKey) || 0);
+    if (hourCount >= LIMITS.qurilish.globalPerHour) return out({ ok: false, error: 'rate_limited' });
+    const phone = String(data.phone || '').replace(/\D/g, '');
+    const contactKey = 'c_qurilish_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, 'p:' + phone));
+    const contactCount = Number(cache.get(contactKey) || 0);
+    if (contactCount >= LIMITS.qurilish.perContact) return out({ ok: false, error: 'contact_rate_limited' });
+
+    appendMapped(sheet, header, QURILISH_COLUMNS, AVTOSALON_STATUS_HEADER, data);
+    SpreadsheetApp.flush();
+    if (!findRowById(sheet, header, id)) throw new Error('Row not found after append');
+
+    cache.put(hourKey, String(hourCount + 1), 3600);
+    cache.put(contactKey, String(contactCount + 1), LIMITS.qurilish.perContactWindowSec);
+    return out({ ok: true, saved: true, submissionId: id });
+  } catch (error) {
+    console.error(error);
+    return out({ ok: false, error: 'storage_failed' });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/** Birinchi xato maydon nomini qaytaradi yoki null. */
+function validateQurilish(d) {
+  const str = function (k) { return typeof d[k] === 'string' ? d[k].trim() : null; };
+  const within = function (k, min, max) { const v = str(k); return v !== null && v.length >= min && v.length <= max; };
+  const oneOf = function (k, list) { const v = str(k); return v !== null && list.indexOf(v) >= 0; };
+  const optional = function (k, max) { return d[k] === undefined || d[k] === null || (typeof d[k] === 'string' && d[k].length <= max); };
+
+  if (!/^QR-[A-Z0-9]{6,14}-[A-Z0-9]{6,14}$/.test(str('submissionId') || '')) return 'submissionId';
+  if (!within('name', 2, MAX_LEN.name)) return 'name';
+  if (!/^\+998\d{9}$/.test((str('phone') || '').replace(/[\s()-]/g, ''))) return 'phone';
+  if (!within('company', 2, MAX_LEN.dealer)) return 'company';
+
+  const region = str('region');
+  if (region === null || region.length > MAX_LEN.region) return 'region';
+  const sep = region.indexOf(' — ');
+  const regionName = sep >= 0 ? region.slice(0, sep) : region;
+  if (QR.regions.indexOf(regionName) < 0 || (sep >= 0 && region.slice(sep + 3).trim().length > 80)) return 'region';
+
+  const selects = ['stage', 'problem', 'budget', 'contactTime'];
+  for (let i = 0; i < selects.length; i++) if (!oneOf(selects[i], QR[selects[i]])) return selects[i];
+  if (str('problem') === 'Boshqa') {
+    if (!within('problemOther', 2, MAX_LEN.goalsOther)) return 'problemOther';
+  } else if (!optional('problemOther', MAX_LEN.goalsOther)) return 'problemOther';
 
   const extras = { utm_source: MAX_LEN.utm, utm_medium: MAX_LEN.utm, utm_campaign: MAX_LEN.utm, utm_content: MAX_LEN.utm,
     utm_term: MAX_LEN.utm, fbclid: MAX_LEN.fbclid, page: MAX_LEN.page, referrer: MAX_LEN.referrer };

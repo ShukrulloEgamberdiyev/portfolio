@@ -29,6 +29,14 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
       image: `${SITE_URL}/og-avtosalon.jpg`,
     };
   }
+  if (path === '/qurilish') {
+    return {
+      title: 'Qurilish kompaniyalari uchun marketing va sotuv tizimi | FAZO Digital',
+      description: 'FAZO Digital qurilish kompaniyalari uchun marketing, Meta Ads, Google Ads, landing, CRM va sotuv tizimini yagona jarayonga bog‘laydi.',
+      canonical: `${SITE_URL}/qurilish`,
+      image: `${SITE_URL}/og-qurilish.jpg`,
+    };
+  }
   if (path === '/') return { title: t.meta.title, description: t.meta.description, canonical };
   if (path === '/work') return make(p.work.title, p.work.intro);
   if (path === '/expertise') return make(p.expertise.title, p.expertise.intro);

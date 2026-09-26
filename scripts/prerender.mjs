@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 
-const { render, renderAvtosalon, seoFor, routes, uzOnlyRoutes = [], dictionaries } = await import(join(dist, 'server', 'entry-server.js'));
+const { render, renderAvtosalon, renderQurilish, seoFor, routes, uzOnlyRoutes = [], dictionaries } = await import(join(dist, 'server', 'entry-server.js'));
 
 const template = readFileSync(join(dist, 'index.html'), 'utf8');
 const LANGS = ['uz', 'ru', 'en'];
@@ -76,6 +76,26 @@ if (uzOnlyRoutes.includes('/avtosalon')) {
   writeFileSync(join(dist, 'avtosalon.html'), html);
   mkdirSync(join(dist, 'avtosalon'), { recursive: true });
   writeFileSync(join(dist, 'avtosalon', 'index.html'), html);
+  count += 1;
+}
+
+// Standalone Uzbek-only landing (/qurilish) — same treatment as /avtosalon.
+if (uzOnlyRoutes.includes('/qurilish')) {
+  const qrTemplate = readFileSync(join(dist, 'qurilish.html'), 'utf8');
+  const seo = seoFor('/qurilish', 'uz');
+  const html = qrTemplate
+    .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(seo.title)}</title>`)
+    .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${escapeHtml(seo.description)}" />`)
+    .replace(/<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${seo.canonical}" />`)
+    .replace('</head>', `  <link rel="alternate" hreflang="uz" href="${seo.canonical}" />\n  </head>`)
+    .replace(/<meta property="og:title"[^>]*>/, `<meta property="og:title" content="${escapeHtml(seo.title)}" />`)
+    .replace(/<meta property="og:description"[^>]*>/, `<meta property="og:description" content="${escapeHtml(seo.description)}" />`)
+    .replace(/<meta property="og:url"[^>]*>/, `<meta property="og:url" content="${seo.canonical}" />`)
+    .replace(/<meta property="og:image"[^>]*>/, `<meta property="og:image" content="${seo.image}" />`)
+    .replace('<div id="root"></div>', `<div id="root" data-prerendered="true">${renderQurilish()}</div>`);
+  writeFileSync(join(dist, 'qurilish.html'), html);
+  mkdirSync(join(dist, 'qurilish'), { recursive: true });
+  writeFileSync(join(dist, 'qurilish', 'index.html'), html);
   count += 1;
 }
 

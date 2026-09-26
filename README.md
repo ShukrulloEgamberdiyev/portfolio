@@ -25,6 +25,7 @@ npm run preview      # build natijasini lokalda ko‘rish
 /apply                 Ariza formasi
 /privacy               Maxfiylik siyosati
 /avtosalon             Avtosalonlar uchun landing (faqat UZ, alohida header/footer, 4 bosqichli ariza)
+/qurilish              Turar joy quruvchilari uchun landing (faqat UZ, alohida header/footer, 1 bosqichli ariza)
 ```
 Har biri `/ru/...` va `/en/...` ko‘rinishida ham mavjud.
 
@@ -62,6 +63,16 @@ Muvaffaqiyat ekrani faqat xizmat `{ok:true}` qaytarganda chiqadi. Telegram bildi
 - UTM (`utm_source/medium/campaign/content/term`), `fbclid`, landing URL va referrer sessiya davomida saqlanadi va arizaga qo‘shiladi.
 - Meta Pixel: Vercel → Environment Variables → `VITE_META_PIXEL_ID` (so‘ng redeploy). Hodisalar: PageView, ViewContent, `AvtosalonCTA`, `AvtosalonFormStart`, `AvtosalonFormStep`, `Lead`. ID bo‘lmasa pixel yuklanmaydi.
 - Lokal: `npm run dev` → `http://localhost:5173/avtosalon`; `npm run build && npm run preview` → `http://localhost:4173/avtosalon`.
+
+## /qurilish landing
+- Alohida sahifa: `qurilish.html` → `src/qurilish-main.tsx` → `src/QurilishApp.tsx` → `src/pages/QurilishPage.tsx`. Matnlar va forma variantlari: `src/content/qurilish.ts`. Komponentlar: `src/components/qurilish/` (QrUi, QrForm, Skyline).
+- Asosiy manzil: `https://fazodigital.uz/qurilish`; `/qurilish/` → `/qurilish` (vercel.json). Build `dist/qurilish.html` va `dist/qurilish/index.html` ni prerender qiladi, sitemap'ga qo‘shiladi.
+- Hero vizual — kodda chizilgan arxitektura SVG (`Skyline.tsx`), rasm yuklanmaydi. Real loyiha foto/renderi bo‘lsa, `Skyline` o‘rniga qo‘yish mumkin.
+- Arizalar o‘sha Apps Script orqali **Targeting Xizmat → QURILISH LEADLAR** varag‘iga yoziladi (`formType: 'qurilish'`, ID `QR-...`). **Muhim:** `docs/apps-script.gs` yangilangan — Apps Script → Deploy → Manage deployments → Edit → **New version** qilinmaguncha /qurilish arizalari qabul qilinmaydi (forma xato ko‘rsatadi, lead yo‘qolmaydi — foydalanuvchi Telegram'ga yo‘naltiriladi).
+- Muvaffaqiyat faqat server `{ok:true, saved:true, submissionId}` qaytarganda ko‘rsatiladi. Retry bir xil ID bilan — dublikat qator bo‘lmaydi. Bitta telefon 6 soatda 3 ta yangi ariza.
+- Meta Pixel hodisalari (`VITE_META_PIXEL_ID` bo‘lsa): PageView, ViewContent, `QurilishCTA`, `QurilishFormStart`, `Lead` (eventID = Ariza ID).
+- Case qo‘shish: `src/content/qurilish.ts` → `proof.cases` (faqat tasdiqlangan, mijoz nomisiz ma’lumot).
+- `npm test` — `tests/qurilish.test.mjs` forma va server variantlari bir xilligini, narx va budjet variantlarini tekshiradi.
 
 ## Deploy (GitHub + Vercel)
 ```bash
