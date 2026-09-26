@@ -4,10 +4,11 @@
  * Ushbu kod aynan maqsad jadvalining Extensions → Apps Script loyihasiga qo‘yiladi.
  * Web app: Execute as Me; Who has access: Anyone.
  *
- * Uch forma bitta endpointga keladi:
+ * To‘rt forma bitta endpointga keladi:
  *   - umumiy sayt arizasi              → "Sayt arizalari" varag‘i (avvalgidek)
  *   - /avtosalon (formType=avtosalon)  → "AVTOSALON LEADLAR" varag‘i (alohida, aralashmaydi)
  *   - /qurilish  (formType=qurilish)   → "QURILISH LEADLAR" varag‘i (alohida, aralashmaydi)
+ *   - /ishlab-chiqarish (formType=ishlab_chiqarish) → "ISHLAB CHIQARISH LEADLAR" varag‘i (alohida)
  *
  * Kod yangilanganda: Deploy → Manage deployments → (mavjud deployment) Edit →
  * Version: New version → Deploy. URL o‘zgarmaydi, saytni qayta build qilish shart emas.
@@ -20,6 +21,7 @@ const SPREADSHEET_ID = '1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo';
 const SHEET_NAME = 'Sayt arizalari';
 const AVTOSALON_SHEET_NAME = 'AVTOSALON LEADLAR';
 const QURILISH_SHEET_NAME = 'QURILISH LEADLAR';
+const ISHLAB_SHEET_NAME = 'ISHLAB CHIQARISH LEADLAR';
 const TOKEN = 'fazo-2026-maxfiy';
 const MIN_FILL_MS = 4000;
 
@@ -141,6 +143,40 @@ const QR = {
   contactTime: ['Imkon qadar tezroq', 'Ertalab (9:00–12:00)', 'Tushdan keyin (12:00–18:00)', 'Kechqurun (18:00–20:00)'],
 };
 
+/* ───────── Ishlab chiqarish arizasi ───────── */
+
+const ISHLAB_COLUMNS = [
+  ['submittedAt', 'Sana va vaqt'],
+  ['name', 'Ism'],
+  ['phone', 'Telefon'],
+  ['product', 'Nima ishlab chiqaradi'],
+  ['region', 'Hudud'],
+  ['channel', 'Sotuv yo‘nalishi'],
+  ['budget', 'Oylik reklama budjeti'],
+  ['problem', 'Asosiy muammo'],
+  ['utm_source', 'UTM Source'],
+  ['utm_medium', 'UTM Medium'],
+  ['utm_campaign', 'UTM Campaign'],
+  ['utm_content', 'UTM Content'],
+  ['utm_term', 'UTM Term'],
+  ['fbclid', 'fbclid'],
+  ['page', 'Landing / sahifa manbasi'],
+  ['referrer', 'Referrer'],
+  ['submissionId', 'Ariza ID'],
+  ['fingerprint', 'Ma’lumot izi'],
+  ['correctedAt', 'Tuzatilgan vaqt'],
+  ['corrections', 'Tuzatishlar soni'],
+];
+/* Tuzatishda (bir xil Ariza ID, boshqa ma’lumot) qayta yoziladigan maydonlar. Sana, UTM va manba o‘zgarmaydi. */
+const ISHLAB_EDITABLE = ['name', 'phone', 'product', 'region', 'channel', 'budget', 'problem'];
+const ISHLAB_MAX_CORRECTIONS = 5;
+
+/* Frontend (src/content/ishlab.ts → OPT) bilan bir xil ruxsat etilgan qiymatlar. */
+const IC = {
+  channel: ['Chakana', 'Optom / B2B', 'Chakana + Optom'],
+  budget: ['$500–$1,000', '$1,000–$3,000', '$3,000+', 'Budjet bo‘yicha tavsiya kerak'],
+};
+
 /* ───────── Limitlar (sozlanadi) ─────────
  * Har forma alohida hisoblanadi — biri ikkinchisini bloklamaydi. Bir xil Ariza ID bilan qayta
  * urinish (retry) yangi ariza hisoblanmaydi va limitni sarflamaydi.
@@ -154,6 +190,7 @@ const LIMITS = {
   site: { perHour: 30, duplicateTtlSec: 600 },
   avtosalon: { globalPerHour: 200, perContact: 3, perContactWindowSec: 21600 },
   qurilish: { globalPerHour: 200, perContact: 3, perContactWindowSec: 21600 },
+  ishlab: { globalPerHour: 200, perContact: 3, perContactWindowSec: 21600 },
 };
 
 const MAX_LEN = {
@@ -178,6 +215,7 @@ function doPost(e) {
   if (isSpam(data)) return out({ ok: false, error: 'spam' });
   if (data.formType === 'avtosalon') return handleAvtosalon(data);
   if (data.formType === 'qurilish') return handleQurilish(data);
+  if (data.formType === 'ishlab_chiqarish') return handleIshlab(data);
   return handleSite(data);
 }
 
@@ -389,6 +427,136 @@ function validateQurilish(d) {
   if (str('problem') === 'Boshqa') {
     if (!within('problemOther', 2, MAX_LEN.goalsOther)) return 'problemOther';
   } else if (!optional('problemOther', MAX_LEN.goalsOther)) return 'problemOther';
+
+  const extras = { utm_source: MAX_LEN.utm, utm_medium: MAX_LEN.utm, utm_campaign: MAX_LEN.utm, utm_content: MAX_LEN.utm,
+    utm_term: MAX_LEN.utm, fbclid: MAX_LEN.fbclid, page: MAX_LEN.page, referrer: MAX_LEN.referrer };
+  for (const k in extras) if (!optional(k, extras[k])) return k;
+  return null;
+}
+
+/* ───────── Ishlab chiqarish formasi ───────── */
+
+function handleIshlab(data) {
+  normalizeAttribution(data); // /ishlab-chiqarish: uzun UTM/sahifa rad etilmaydi, qisqartiriladi
+  const problem = validateIshlab(data);
+  if (problem) return out({ ok: false, error: 'invalid', field: problem });
+  const id = data.submissionId;
+  const fp = icFingerprint(data);
+  data.fingerprint = fp; // server o‘zi hisoblaydi — mijoz yuborgan qiymatga ishonilmaydi
+
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) return out({ ok: false, error: 'busy' });
+  try {
+    const sheet = getSheetByConfig(ISHLAB_SHEET_NAME, ISHLAB_COLUMNS, AVTOSALON_STATUS_HEADER);
+    const header = ensureHeader(sheet, ISHLAB_COLUMNS, AVTOSALON_STATUS_HEADER);
+    const existing = findRowById(sheet, header, id);
+    if (existing) return correctIshlabRow(sheet, header, existing, data, fp);
+
+    const cache = CacheService.getScriptCache();
+    const hourKey = 'h_ishlab_' + Utilities.formatDate(new Date(), 'Asia/Tashkent', 'yyyyMMddHH');
+    const hourCount = Number(cache.get(hourKey) || 0);
+    if (hourCount >= LIMITS.ishlab.globalPerHour) return out({ ok: false, error: 'rate_limited' });
+    const phone = String(data.phone || '').replace(/\D/g, '');
+    const contactKey = 'c_ishlab_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, 'p:' + phone));
+    const contactCount = Number(cache.get(contactKey) || 0);
+    if (contactCount >= LIMITS.ishlab.perContact) return out({ ok: false, error: 'contact_rate_limited' });
+
+    data.correctedAt = '';
+    data.corrections = '0';
+    appendMapped(sheet, header, ISHLAB_COLUMNS, AVTOSALON_STATUS_HEADER, data);
+    SpreadsheetApp.flush();
+    const row = findRowById(sheet, header, id);
+    if (!row || storedFingerprint(sheet, header, row) !== fp) throw new Error('Row not confirmed after append');
+
+    cache.put(hourKey, String(hourCount + 1), 3600);
+    cache.put(contactKey, String(contactCount + 1), LIMITS.ishlab.perContactWindowSec);
+    return out({ ok: true, saved: true, submissionId: id, fingerprint: fp });
+  } catch (error) {
+    console.error(error);
+    return out({ ok: false, error: 'storage_failed' });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * Bir xil Ariza ID qayta keldi. Ma’lumot bir xil bo‘lsa — oddiy retry (dublikat yaratilmaydi).
+ * Farq qilsa — o‘sha qator joyida tuzatiladi (yangi lead emas) va javobda yangi izi qaytariladi.
+ */
+function correctIshlabRow(sheet, header, row, data, fp) {
+  const width = header.length;
+  const values = sheet.getRange(row, 1, 1, width).getValues()[0].slice();
+  const fpCol = header.indexOf('Ma’lumot izi');
+  if (String(values[fpCol]) === fp) return out({ ok: true, saved: true, duplicate: true, submissionId: data.submissionId, fingerprint: fp });
+
+  const countCol = header.indexOf('Tuzatishlar soni');
+  const count = Number(values[countCol] || 0);
+  if (count >= ISHLAB_MAX_CORRECTIONS) return out({ ok: false, error: 'too_many_corrections' });
+
+  const byKey = {};
+  ISHLAB_COLUMNS.forEach(function (c) { byKey[c[0]] = c[1]; });
+  ISHLAB_EDITABLE.forEach(function (k) { values[header.indexOf(byKey[k])] = clean(data[k]); });
+  values[fpCol] = fp;
+  values[header.indexOf('Tuzatilgan vaqt')] = new Date();
+  values[countCol] = count + 1;
+  sheet.getRange(row, 1, 1, width).setValues([values]);
+  SpreadsheetApp.flush();
+  if (storedFingerprint(sheet, header, row) !== fp) throw new Error('Correction not confirmed');
+  return out({ ok: true, saved: true, updated: true, submissionId: data.submissionId, fingerprint: fp });
+}
+
+function storedFingerprint(sheet, header, row) {
+  const col = header.indexOf('Ma’lumot izi') + 1;
+  return col > 0 ? String(sheet.getRange(row, 1, 1, header.length).getValues()[0][col - 1]) : '';
+}
+
+/**
+ * src/lib/leadFingerprint.ts dagi icFingerprint bilan AYNAN bir xil bo‘lishi shart (test tekshiradi).
+ * Faqat arizaning o‘z maydonlari; UTM/manba kirmaydi.
+ */
+function icFingerprint(d) {
+  const s = ISHLAB_EDITABLE.map(function (k) {
+    const v = d[k] == null ? '' : String(d[k]);
+    return k === 'phone' ? v.replace(/\D/g, '').slice(-9) : v.trim().replace(/\s+/g, ' ');
+  }).join('\u241f');
+  let h1 = 0x811c9dc5;
+  let h2 = 0x01000193 ^ 0x5bd1e995;
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i);
+    h1 = Math.imul(h1 ^ c, 0x01000193) >>> 0;
+    h2 = Math.imul(h2 ^ c, 0x5bd1e995) >>> 0;
+  }
+  return ('0000000' + h1.toString(16)).slice(-8) + ('0000000' + h2.toString(16)).slice(-8);
+}
+
+/**
+ * UTM/sahifa/referrer — yordamchi ma’lumot. Ular sababli to‘g‘ri ariza rad etilmasligi kerak:
+ * matn bo‘lmasa bo‘sh qilinadi, limitdan uzun bo‘lsa qisqartiriladi (rad etilmaydi).
+ */
+function normalizeAttribution(d) {
+  const limits = { utm_source: MAX_LEN.utm, utm_medium: MAX_LEN.utm, utm_campaign: MAX_LEN.utm, utm_content: MAX_LEN.utm,
+    utm_term: MAX_LEN.utm, fbclid: MAX_LEN.fbclid, page: MAX_LEN.page, referrer: MAX_LEN.referrer };
+  for (const k in limits) {
+    if (d[k] === undefined || d[k] === null) continue;
+    d[k] = typeof d[k] === 'string' ? d[k].slice(0, limits[k]) : '';
+  }
+}
+
+/** Birinchi xato maydon nomini qaytaradi yoki null. */
+function validateIshlab(d) {
+  const str = function (k) { return typeof d[k] === 'string' ? d[k].trim() : null; };
+  const within = function (k, min, max) { const v = str(k); return v !== null && v.length >= min && v.length <= max; };
+  const oneOf = function (k, list) { const v = str(k); return v !== null && list.indexOf(v) >= 0; };
+  const optional = function (k, max) { return d[k] === undefined || d[k] === null || (typeof d[k] === 'string' && d[k].length <= max); };
+
+  if (!/^IC-[A-Z0-9]{6,14}-[A-Z0-9]{6,14}$/.test(str('submissionId') || '')) return 'submissionId';
+  if (!within('name', 2, MAX_LEN.name)) return 'name';
+  if (!/^\+998\d{9}$/.test((str('phone') || '').replace(/[\s()-]/g, ''))) return 'phone';
+  if (!within('product', 2, MAX_LEN.dealer)) return 'product';
+  if (!within('region', 2, 120)) return 'region';
+  if (!oneOf('channel', IC.channel)) return 'channel';
+  if (!oneOf('budget', IC.budget)) return 'budget';
+  if (!optional('problem', MAX_LEN.problem)) return 'problem';
 
   const extras = { utm_source: MAX_LEN.utm, utm_medium: MAX_LEN.utm, utm_campaign: MAX_LEN.utm, utm_content: MAX_LEN.utm,
     utm_term: MAX_LEN.utm, fbclid: MAX_LEN.fbclid, page: MAX_LEN.page, referrer: MAX_LEN.referrer };

@@ -1,5 +1,6 @@
 import { DeliveryError, deliverApplication, type DeliveryResult } from './applicationTransport';
 import { APPLICATION_ENDPOINT, APPLICATION_TOKEN } from './submit';
+import { normalizeLanding } from './attribution';
 import { getAttribution, track } from './tracking';
 
 export type AvData = {
@@ -46,7 +47,7 @@ export function buildAvtosalonPayload(d: AvData, guard: { hp: string; elapsed: n
     utm_content: a.utm_content ?? '',
     utm_term: a.utm_term ?? '',
     fbclid: a.fbclid ?? '',
-    page: a.landing || (typeof location !== 'undefined' ? location.href : ''),
+    page: a.landing || (typeof location !== 'undefined' ? normalizeLanding(location.href) : ''),
     referrer: a.referrer ?? '',
     submissionId,
     lang: 'uz',

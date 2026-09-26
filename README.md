@@ -26,6 +26,7 @@ npm run preview      # build natijasini lokalda ko‘rish
 /privacy               Maxfiylik siyosati
 /avtosalon             Avtosalonlar uchun landing (faqat UZ, alohida header/footer, 4 bosqichli ariza)
 /qurilish              Turar joy quruvchilari uchun landing (faqat UZ, alohida header/footer, 1 bosqichli ariza)
+/ishlab-chiqarish      Ishlab chiqarish bizneslari uchun landing (faqat UZ, alohida header/footer, 1 bosqichli ariza)
 ```
 Har biri `/ru/...` va `/en/...` ko‘rinishida ham mavjud.
 
@@ -63,6 +64,7 @@ Muvaffaqiyat ekrani faqat xizmat `{ok:true}` qaytarganda chiqadi. Telegram bildi
 - UTM (`utm_source/medium/campaign/content/term`), `fbclid`, landing URL va referrer sessiya davomida saqlanadi va arizaga qo‘shiladi.
 - Meta Pixel: Vercel → Environment Variables → `VITE_META_PIXEL_ID` (so‘ng redeploy). Hodisalar: PageView, ViewContent, `AvtosalonCTA`, `AvtosalonFormStart`, `AvtosalonFormStep`, `Lead`. ID bo‘lmasa pixel yuklanmaydi.
 - Lokal: `npm run dev` → `http://localhost:5173/avtosalon`; `npm run build && npm run preview` → `http://localhost:4173/avtosalon`.
+- `npm run preview` Vercel kabi ishlaydi: `/about`, `/ru/work` va h.k. o‘z prerender HTML'ini qaytaradi, `/about/` → `/about` (308), noma’lum yo‘l → `404.html` (404).
 
 ## /qurilish landing
 - Alohida sahifa: `qurilish.html` → `src/qurilish-main.tsx` → `src/QurilishApp.tsx` → `src/pages/QurilishPage.tsx`. Matnlar va forma variantlari: `src/content/qurilish.ts`. Komponentlar: `src/components/qurilish/` (QrUi, QrForm, Skyline).
@@ -73,6 +75,17 @@ Muvaffaqiyat ekrani faqat xizmat `{ok:true}` qaytarganda chiqadi. Telegram bildi
 - Meta Pixel hodisalari (`VITE_META_PIXEL_ID` bo‘lsa): PageView, ViewContent, `QurilishCTA`, `QurilishFormStart`, `Lead` (eventID = Ariza ID).
 - Case qo‘shish: `src/content/qurilish.ts` → `proof.cases` (faqat tasdiqlangan, mijoz nomisiz ma’lumot).
 - `npm test` — `tests/qurilish.test.mjs` forma va server variantlari bir xilligini, narx va budjet variantlarini tekshiradi.
+
+## /ishlab-chiqarish landing
+- Alohida sahifa: `ishlab-chiqarish.html` → `src/ishlab-chiqarish-main.tsx` → `src/IshlabApp.tsx` → `src/pages/IshlabPage.tsx`. Matnlar, case raqamlari va forma variantlari: `src/content/ishlab.ts`. Komponentlar: `src/components/ishlab/` (IcUi, IcForm, ProductionLine). Section/SectionHead/Eyebrow va forma maydonlari /qurilish bilan umumiy.
+- Asosiy manzil: `https://fazodigital.uz/ishlab-chiqarish`; `/ishlab-chiqarish/` → `/ishlab-chiqarish` (vercel.json). Build `dist/ishlab-chiqarish.html` va `dist/ishlab-chiqarish/index.html` ni prerender qiladi, sitemap'ga qo‘shiladi. OG rasm: `public/og-ishlab-chiqarish.jpg`.
+- Arizalar o‘sha Apps Script orqali **Targeting Xizmat → ISHLAB CHIQARISH LEADLAR** varag‘iga yoziladi (`formType: 'ishlab_chiqarish'`, ID `IC-...`). **Muhim:** `docs/apps-script.gs` yangilangan — Apps Script'ga yangi kodni qo‘yib, Deploy → Manage deployments → Edit → **New version** qilinmaguncha /ishlab-chiqarish arizalari qabul qilinmaydi (forma xato ko‘rsatadi va Telegram'ga yo‘naltiradi, kiritilgan ma’lumot saqlanib qoladi).
+- Majburiy maydonlar: ism, telefon (+998), nima ishlab chiqaradi, hudud, sotuv yo‘nalishi, reklama budjeti. "Hozirgi asosiy muammo" — ixtiyoriy.
+- Budjet variantlari: `$500–$1,000`, `$1,000–$3,000`, `$3,000+`, `Budjet bo‘yicha tavsiya kerak` (frontend `OPT.budget` = server `IC.budget`, test tekshiradi).
+- Qayta yuborish: bitta ariza — bitta Ariza ID. Server har arizaning **ma’lumot izi**ni (`src/lib/leadFingerprint.ts` = `icFingerprint` in apps-script) saqlaydi va javobda qaytaradi; brauzer muvaffaqiyatni (va Meta `Lead`ni) faqat server aynan shu ma’lumotni saqlaganini tasdiqlagandan keyin ko‘rsatadi. Bir xil ma’lumot bilan retry — dublikat yaratilmaydi; javob yo‘qolgandan keyin ma’lumot o‘zgartirilsa — o‘sha qator joyida tuzatiladi (`Tuzatilgan vaqt`, `Tuzatishlar soni`, ko‘pi bilan 5 marta), ikkinchi lead yaratilmaydi.
+- UTM/landing: `src/lib/attribution.ts` landing URL'dan faqat UTM/gclid/fbclid parametrlarini qoldiradi va barcha maydonlarni server limitlariga (utm 200, fbclid 500, page 1000, referrer 500) moslaydi — uch landing uchun ham. /ishlab-chiqarish serveri uzun qiymatlarni rad etmaydi, qisqartiradi.
+- Meta Pixel hodisalari (`VITE_META_PIXEL_ID` bo‘lsa): PageView, ViewContent, `IshlabCTA`, `IshlabFormStart`, `Lead` (eventID = Ariza ID).
+- Case raqamlari ($902 / 190 mijoz / 404 dona, 15–28 avgust 2026) — tasdiqlangan ma’lumot; `tests/ishlabChiqarish.test.mjs` ularning o‘zgarmaganini va forma/server variantlari bir xilligini tekshiradi.
 
 ## Deploy (GitHub + Vercel)
 ```bash

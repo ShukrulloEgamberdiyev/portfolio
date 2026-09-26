@@ -9,37 +9,31 @@
  * call is a no-op, so nothing breaks and no pixel is invented.
  */
 
-const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'] as const;
+import { clampAttribution, normalizeLanding, normalizeReferrer, utmFromSearch, type Attribution } from './attribution';
+
+export type { Attribution } from './attribution';
+
 const STORAGE_KEY = 'fazo.attribution';
 
-export type Attribution = Partial<Record<(typeof UTM_KEYS)[number], string>> & {
-  landing?: string;
-  referrer?: string;
-};
-
+/** Stored values are clamped on read too, so sessions saved by an older build can't carry oversized fields. */
 function read(): Attribution {
-  try { return JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '{}') as Attribution; } catch { return {}; }
+  try { return clampAttribution(JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '{}') as Attribution); } catch { return {}; }
 }
 
 /** Call once when a landing page mounts. */
 export function captureAttribution(): Attribution {
   if (typeof window === 'undefined') return {};
-  const q = new URLSearchParams(window.location.search);
-  const fresh: Attribution = {};
-  for (const k of UTM_KEYS) {
-    const v = q.get(k);
-    if (v) fresh[k] = v.slice(0, 200);
-  }
+  const fresh = utmFromSearch(window.location.search);
   const stored = read();
   const hasFresh = Object.keys(fresh).length > 0;
   const next: Attribution = hasFresh || !stored.landing
-    ? { ...fresh, landing: window.location.origin + window.location.pathname + window.location.search, referrer: document.referrer.slice(0, 300) }
+    ? { ...fresh, landing: normalizeLanding(window.location.href), referrer: normalizeReferrer(document.referrer) }
     : stored;
   try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* storage unavailable */ }
   return next;
 }
 
-/** Attribution for the current session, falling back to the current URL. */
+/** Attribution for the current session, falling back to the current URL. Always within server limits. */
 export function getAttribution(): Attribution {
   const stored = read();
   return stored.landing ? stored : captureAttribution();

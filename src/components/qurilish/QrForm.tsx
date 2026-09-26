@@ -38,36 +38,43 @@ export function validateQurilish(d: QrData): Errors {
 
 /* ───────── field primitives ───────── */
 
-function Field({ id, label, optional, error, children }: { id: string; label: string; optional?: boolean; error?: string; children: ReactNode }) {
+/** ids for aria-describedby: the field's hint and/or error message, when shown. */
+export const describedBy = (id: string, error?: string, hint?: boolean) =>
+  [hint ? `${id}-hint` : '', error ? `${id}-err` : ''].filter(Boolean).join(' ') || undefined;
+
+export function Field({ id, label, optional, error, hint, children }: { id: string; label: string; optional?: boolean; error?: string; hint?: ReactNode; children: ReactNode }) {
   return (
     <div data-field={id}>
       <label htmlFor={id} className="block text-[0.95rem] font-medium text-bone">
-        {label}{optional ? <span className="ml-2 text-[0.8rem] font-normal text-ash">ixtiyoriy</span> : <span className="text-violet"> *</span>}
+        {label}{optional ? <span className="ml-2 text-[0.8rem] font-normal text-ash">ixtiyoriy</span> : <span aria-hidden className="text-violet"> *</span>}
       </label>
+      {hint && <p id={`${id}-hint`} className="mt-1.5 text-[0.85rem] leading-snug text-ash">{hint}</p>}
       <div className="mt-2.5">{children}</div>
-      {error && <p id={`${id}-err`} className="mt-2 text-[0.85rem] text-alert" role="alert">{error}</p>}
+      {error && <p id={`${id}-err`} className="mt-2 text-[0.85rem] text-alert">{error}</p>}
     </div>
   );
 }
 
-const inputCls = (err?: string) =>
+export const inputCls = (err?: string) =>
   `w-full min-h-[52px] border bg-ink/60 px-4 text-[16px] text-bone outline-none transition-colors placeholder:text-ash/70 focus:border-violet focus:bg-ink ${err ? 'border-alert/70' : 'border-line-strong'}`;
 
-function Chips({ id, label, options, value, onChange, error, hint, columns }: {
+/** Single-choice group. Semantics: a required radiogroup named by its legend, described by hint + error. */
+export function Chips({ id, label, options, value, onChange, error, hint, columns }: {
   id: string; label: string; options: string[]; value: string; onChange: (v: string) => void; error?: string; hint?: ReactNode; columns?: string;
 }) {
   const gid = useId();
   return (
-    <fieldset data-field={id} aria-describedby={error ? `${id}-err` : undefined} className="min-w-0">
-      <legend className="text-[0.95rem] font-medium text-bone">{label}<span className="text-violet"> *</span></legend>
-      {hint && <div className="mt-1.5 text-[0.85rem] leading-snug text-ash">{hint}</div>}
+    <fieldset data-field={id} role="radiogroup" aria-labelledby={`${id}-legend`} aria-describedby={describedBy(id, error, !!hint)}
+      aria-required="true" aria-invalid={error ? true : undefined} className="min-w-0">
+      <legend id={`${id}-legend`} className="text-[0.95rem] font-medium text-bone">{label}<span aria-hidden className="text-violet"> *</span></legend>
+      {hint && <div id={`${id}-hint`} className="mt-1.5 text-[0.85rem] leading-snug text-ash">{hint}</div>}
       <div className={`mt-3 grid gap-2 ${columns ?? 'grid-cols-1 sm:grid-cols-2'}`}>
         {options.map((o, i) => {
           const on = value === o;
           return (
             <label key={o} data-cursor="hover"
-              className={`relative flex min-h-[50px] cursor-pointer items-center gap-3 border px-3.5 py-2.5 text-[0.93rem] leading-snug transition-[background-color,border-color,color] duration-200 has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-violet ${on ? 'border-bone bg-bone text-ink' : 'border-line-strong text-bone/90 hover:border-bone/45'}`}>
-              <input id={i === 0 ? id : `${gid}-${i}`} type="radio" name={id} value={o} checked={on} onChange={() => onChange(o)} className="sr-only" />
+              className={`relative flex min-h-[50px] cursor-pointer items-center gap-3 border px-3.5 py-2.5 text-[0.93rem] leading-snug transition-[background-color,border-color,color] duration-200 has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-violet ${on ? 'border-bone bg-bone text-ink' : error ? 'border-alert/60 text-bone/90 hover:border-bone/45' : 'border-line-strong text-bone/90 hover:border-bone/45'}`}>
+              <input id={i === 0 ? id : `${gid}-${i}`} type="radio" name={id} value={o} checked={on} required onChange={() => onChange(o)} className="sr-only" />
               <span aria-hidden className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${on ? 'border-ink' : 'border-bone/40'}`}>
                 {on && <span className="h-2 w-2 rounded-full bg-violet" />}
               </span>
@@ -76,7 +83,7 @@ function Chips({ id, label, options, value, onChange, error, hint, columns }: {
           );
         })}
       </div>
-      {error && <p id={`${id}-err`} className="mt-2 text-[0.85rem] text-alert" role="alert">{error}</p>}
+      {error && <p id={`${id}-err`} className="mt-2 text-[0.85rem] text-alert">{error}</p>}
     </fieldset>
   );
 }
@@ -207,24 +214,24 @@ export function QrForm() {
               <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-mist"><span className="text-violet">A</span> · Siz va kompaniya</p>
               <div className="grid gap-7 sm:grid-cols-2">
                 <Field id="name" label="Ismingiz" error={E('name')}>
-                  <input id="name" name="name" className={inputCls(E('name'))} value={d.name} onChange={text('name', 80)} autoComplete="name" aria-invalid={!!E('name')} />
+                  <input id="name" name="name" required className={inputCls(E('name'))} value={d.name} onChange={text('name', 80)} autoComplete="name" aria-invalid={!!E('name')} aria-describedby={describedBy('name', E('name'))} />
                 </Field>
                 <Field id="phone" label="Telefon raqamingiz" error={E('phone')}>
                   <div className={`flex min-h-[52px] items-center border bg-ink/60 transition-colors focus-within:border-violet ${E('phone') ? 'border-alert/70' : 'border-line-strong'}`}>
                     <span className="select-none border-r border-line pl-4 pr-3 text-[16px] text-mist">+998</span>
-                    <input id="phone" name="phone" type="tel" inputMode="tel" autoComplete="tel-national" placeholder="90 123 45 67" aria-invalid={!!E('phone')}
+                    <input id="phone" name="phone" type="tel" inputMode="tel" autoComplete="tel-national" placeholder="90 123 45 67" required aria-invalid={!!E('phone')} aria-describedby={describedBy('phone', E('phone'))}
                       className="h-full min-h-[50px] w-full min-w-0 bg-transparent px-3 text-[16px] tracking-[0.02em] text-bone outline-none placeholder:text-ash/70"
                       value={formatPhone(phoneDigits(d.phone))} onChange={(e) => update('phone', phoneDigits(e.target.value))} />
                   </div>
                 </Field>
               </div>
               <Field id="company" label="Kompaniya nomi" error={E('company')}>
-                <input id="company" name="company" className={inputCls(E('company'))} value={d.company} onChange={text('company', 160)} autoComplete="organization" aria-invalid={!!E('company')} />
+                <input id="company" name="company" required className={inputCls(E('company'))} value={d.company} onChange={text('company', 160)} autoComplete="organization" aria-invalid={!!E('company')} aria-describedby={describedBy('company', E('company'))} />
               </Field>
               <div className="grid gap-7 sm:grid-cols-2">
                 <Field id="region" label="Loyihangiz qaysi hududda?" error={E('region')}>
                   <div className="relative">
-                    <select id="region" name="region" className={`${inputCls(E('region'))} appearance-none pr-10 ${d.region ? '' : 'text-ash/80'}`} value={d.region} onChange={text('region')} aria-invalid={!!E('region')}>
+                    <select id="region" name="region" className={`${inputCls(E('region'))} appearance-none pr-10 ${d.region ? '' : 'text-ash/80'}`} value={d.region} onChange={text('region')} required aria-invalid={!!E('region')} aria-describedby={describedBy('region', E('region'))}>
                       <option value="" disabled>Hududni tanlang</option>
                       {REGIONS.map((r) => <option key={r} value={r} className="bg-surface-2 text-bone">{r}</option>)}
                     </select>
@@ -245,7 +252,7 @@ export function QrForm() {
                 {d.problem === 'Boshqa' && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3, ease }} className="overflow-hidden">
                     <Field id="problemOther" label="Qisqacha yozing" error={E('problemOther')}>
-                      <input id="problemOther" name="problemOther" className={inputCls(E('problemOther'))} value={d.problemOther} onChange={text('problemOther', 300)} aria-invalid={!!E('problemOther')} />
+                      <input id="problemOther" name="problemOther" required className={inputCls(E('problemOther'))} value={d.problemOther} onChange={text('problemOther', 300)} aria-invalid={!!E('problemOther')} aria-describedby={describedBy('problemOther', E('problemOther'))} />
                     </Field>
                   </motion.div>
                 )}

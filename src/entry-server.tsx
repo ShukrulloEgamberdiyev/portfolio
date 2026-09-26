@@ -3,6 +3,7 @@ import { StaticRouter } from 'react-router-dom/server';
 import App from './App';
 import AvtosalonApp from './AvtosalonApp';
 import QurilishApp from './QurilishApp';
+import IshlabApp from './IshlabApp';
 import type { Lang } from './i18n/types';
 import { ROUTES, UZ_ONLY_ROUTES } from './lib/routes';
 export { seoFor } from './lib/seo';
@@ -26,4 +27,9 @@ export function renderAvtosalon() {
 /** Prerender for the standalone /qurilish landing (its own client entry: src/qurilish-main.tsx). */
 export function renderQurilish() {
   return renderToString(<QurilishApp />);
+}
+
+/** Prerender for the standalone /ishlab-chiqarish landing (its own client entry: src/ishlab-chiqarish-main.tsx). */
+export function renderIshlab() {
+  return renderToString(<IshlabApp />);
 }

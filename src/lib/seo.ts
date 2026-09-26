@@ -37,6 +37,14 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
       image: `${SITE_URL}/og-qurilish.jpg`,
     };
   }
+  if (path === '/ishlab-chiqarish') {
+    return {
+      title: 'Ishlab chiqarish bizneslari uchun marketing | FAZO Digital',
+      description: 'FAZO Digital ishlab chiqarish bizneslari uchun strategiya, kontent, target reklama, landing, CRM va sotuv jarayonlarini yagona tizimga bog‘laydi.',
+      canonical: `${SITE_URL}/ishlab-chiqarish`,
+      image: `${SITE_URL}/og-ishlab-chiqarish.jpg`,
+    };
+  }
   if (path === '/') return { title: t.meta.title, description: t.meta.description, canonical };
   if (path === '/work') return make(p.work.title, p.work.intro);
   if (path === '/expertise') return make(p.expertise.title, p.expertise.intro);

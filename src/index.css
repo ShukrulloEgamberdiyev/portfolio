@@ -16,6 +16,7 @@
   --color-signal: #f5c33b;   /* yellow accent — used by the /avtosalon landing */
   --color-alert: #ff7a6b;    /* form validation messages on /avtosalon, /qurilish */
   --color-lamp: #e8b86a;     /* warm window light — /qurilish architectural drawings only */
+  --color-forge: #ff9447;    /* machine/heat accent — /ishlab-chiqarish landing only */
 
   --font-sans: "Onest", "Helvetica Neue", Arial, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -85,7 +86,18 @@
 .qr-lamp { opacity: var(--qr-o, 0.8); animation: qr-lamp 1.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .qr-draw { stroke-dasharray: 1; animation: qr-draw 2.4s cubic-bezier(0.65, 0, 0.35, 1) 0.4s both; }
 
+/* /ishlab-chiqarish — conveyor moves, rollers turn, the cutting head travels, the lead line draws once. */
+@keyframes ic-belt { from { transform: translateX(0); } to { transform: translateX(var(--ic-cycle, 0px)); } }
+@keyframes ic-roll { to { transform: rotate(360deg); } }
+@keyframes ic-head { from { transform: translateX(0); } to { transform: translateX(104px); } }
+@keyframes ic-pulse { 0%,100% { opacity: 0.25; } 50% { opacity: 1; } }
+.ic-belt { animation: ic-belt 40s linear infinite; will-change: transform; }
+.ic-roll { transform-box: view-box; animation: ic-roll 2.4s linear infinite; }
+.ic-head { animation: ic-head 5s ease-in-out infinite alternate; }
+.ic-pulse { animation: ic-pulse 2.6s ease-in-out infinite; }
+.ic-draw { stroke-dasharray: 1; animation: qr-draw 2.2s cubic-bezier(0.65, 0, 0.35, 1) 0.8s both; }
+
 @media (prefers-reduced-motion: reduce) {
-  .qr-lamp, .qr-draw { animation: none !important; }
+  .qr-lamp, .qr-draw, .ic-belt, .ic-roll, .ic-head, .ic-pulse, .ic-draw { animation: none !important; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
 }
