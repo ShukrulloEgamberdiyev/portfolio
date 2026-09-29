@@ -26,10 +26,11 @@ function Header() {
   return (
     <header className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color] duration-500 ${solid ? 'border-b border-line bg-ink/75 backdrop-blur-xl' : 'border-b border-transparent'}`}
       style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
-      <div className="shell flex h-16 items-center justify-between lg:h-20">
+      <div className="shell flex h-14 items-center justify-between sm:h-16 lg:h-20">
         <span aria-label="FAZO Digital"><Logo /></span>
+        {/* Mobile: the hero CTA is the primary action, so the header button appears only after scrolling. */}
         <a href={`#${AV_FORM_ID}`} onClick={(e) => { e.preventDefault(); goToForm('header'); }} data-cursor="hover"
-          className="inline-flex h-10 items-center rounded-full border border-line-strong px-4 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-bone transition-colors hover:border-signal hover:text-signal sm:px-5">
+          className={`${solid ? 'inline-flex' : 'hidden sm:inline-flex'} h-10 items-center rounded-full border border-line-strong px-4 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-bone transition-colors hover:border-signal hover:text-signal sm:px-5`}>
           Ariza qoldirish
         </a>
       </div>
@@ -41,15 +42,15 @@ function Header() {
 function Hero() {
   const reduce = useReducedMotion();
   return (
-    <section aria-labelledby="av-hero" className="relative isolate overflow-hidden pb-14 pt-16 sm:pb-20 lg:flex lg:min-h-[100svh] lg:items-end lg:pb-16 lg:pt-28">
-      {/* Mobile / tablet visual: full car in frame, text flows below */}
-      <div aria-hidden className="relative -z-10 lg:hidden">
+    <section aria-labelledby="av-hero" className="av-hero relative isolate overflow-hidden pt-14 sm:pt-16 lg:flex lg:min-h-[100svh] lg:items-end lg:pb-16 lg:pt-28">
+      {/* Mobile / tablet visual: flexes to the space left after header + copy + CTA, so the CTA stays in the first screen */}
+      <div aria-hidden className="av-hero-media relative -z-10 lg:hidden">
         <picture>
           <source media="(max-width: 1023.98px)" srcSet={heroMid} />
           <img src={BLANK} alt="" width={960} height={539} decoding="async" {...{ fetchpriority: 'high' }}
-            className="aspect-[16/10] w-full object-cover object-center sm:aspect-[16/8]" />
+            className="absolute inset-0 h-full w-full object-cover object-[50%_30%]" />
         </picture>
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.6)_0%,rgba(5,5,5,0)_28%,rgba(5,5,5,0)_60%,#050505_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,#050505_0%,rgba(5,5,5,0.35)_18%,rgba(5,5,5,0)_34%,rgba(5,5,5,0)_62%,#050505_100%)]" />
       </div>
       {/* Desktop visual: showroom on the right, fades into the page on the left */}
       <div aria-hidden className="absolute inset-y-0 left-[18%] right-0 -z-10 hidden lg:block">
@@ -63,23 +64,23 @@ function Hero() {
         <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink/80 to-transparent" />
       </div>
 
-      <div className="shell grid w-full items-end gap-12 lg:grid-cols-12">
+      <div className="av-hero-copy shell grid w-full items-end gap-12 lg:grid-cols-12">
         <div className="lg:col-span-7 xl:col-span-7">
           <motion.div initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease }}>
-            <Eyebrow>{hero.eyebrow}</Eyebrow>
+            <Eyebrow>{hero.audience}<span className="hidden sm:inline"> · {hero.region}</span></Eyebrow>
           </motion.div>
           <motion.h1 id="av-hero" initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08, ease }}
-            className="mt-6 max-w-[16ch] text-[2.35rem] font-bold leading-[1.02] tracking-[-0.04em] sm:text-[3.4rem] lg:text-[3.5rem] xl:text-[4.2rem] 2xl:text-[4.8rem]">
+            className="av-hero-title mt-3 max-w-[16ch] font-bold leading-[1.02] tracking-[-0.04em] sm:mt-6 sm:text-[3.4rem] lg:text-[3.5rem] xl:text-[4.2rem] 2xl:text-[4.8rem]">
             Avtosaloningiz uchun <span className="text-signal">marketing va sotuv</span> tizimini quramiz
           </motion.h1>
           <motion.p initial={reduce ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.16, ease }}
-            className="mt-6 max-w-[52ch] text-[1.05rem] leading-relaxed text-bone/75 sm:text-[1.15rem]">
-            {hero.text}
+            className="mt-3 max-w-[52ch] text-[1rem] leading-snug text-bone/75 sm:mt-6 sm:text-[1.15rem] sm:leading-relaxed">
+            <span className="sm:hidden">{hero.textShort}</span><span className="hidden sm:inline">{hero.text}</span>
           </motion.p>
 
           {/* System indicator */}
           <motion.ol initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.9, delay: 0.3 }}
-            aria-label="Tizim zanjiri" className="mt-8 flex flex-wrap items-center gap-x-1.5 gap-y-2">
+            aria-label="Tizim zanjiri" className="mt-8 hidden flex-wrap sm:flex items-center gap-x-1.5 gap-y-2">
             {hero.chain.map((c, i) => (
               <li key={c} className="flex items-center gap-1.5">
                 <motion.span initial={reduce ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 + i * 0.09, ease }}
@@ -91,9 +92,9 @@ function Hero() {
             ))}
           </motion.ol>
 
-          <motion.div initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.45, ease }} className="mt-10">
+          <motion.div initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.45, ease }} className="mt-5 sm:mt-10">
             <AvCta location="hero" className="w-full sm:w-auto">{hero.cta}</AvCta>
-            <p className="mt-4 max-w-[46ch] text-[0.9rem] leading-snug text-mist">{hero.note}</p>
+            <p className="mt-4 hidden max-w-[46ch] sm:block text-[0.9rem] leading-snug text-mist">{hero.note}</p>
           </motion.div>
         </div>
 
