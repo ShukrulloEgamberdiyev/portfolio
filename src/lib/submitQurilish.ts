@@ -22,7 +22,7 @@ export function buildQurilishPayload(d: QrData, guard: { hp: string; elapsed: nu
     problem: d.problem,
     problemOther: d.problem === 'Boshqa' ? d.problemOther.trim() : '',
     budget: d.budget,
-    contactTime: d.contactTime,
+    contactTime: d.contactTime, // no longer asked on the page; '' is accepted by the server
     utm_source: a.utm_source ?? '',
     utm_medium: a.utm_medium ?? '',
     utm_campaign: a.utm_campaign ?? '',
