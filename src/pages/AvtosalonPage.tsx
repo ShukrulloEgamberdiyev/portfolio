@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Logo } from '../components/Logo';
 import { AvForm } from '../components/avtosalon/AvForm';
 import { AvCta, Eyebrow, Icon, Section, SectionCta, SectionHead, goToForm } from '../components/avtosalon/AvUi';
-import { AV_FORM_ID, bridge, expectations, form, hero, how, problems, salesDept, strategy, system, team } from '../content/avtosalon';
+import { AV_FORM_ID, SYSTEM_ID, expectations, form, hero, how, problems, system } from '../content/avtosalon';
 import { captureAttribution, initPixel, track } from '../lib/tracking';
 import { Reveal } from '../ui/Reveal';
 import heroWide from '../assets/avtosalon/hero-1600.jpg';
@@ -102,206 +102,119 @@ function Hero() {
   );
 }
 
-/* ───────── 2. Problems ───────── */
-const PROBLEM_ICONS = ['quality', 'budget', 'content', 'lost', 'team', 'chart'];
+/* ───────── 2. Problems (4) ───────── */
+const PROBLEM_ICONS = ['quality', 'chart', 'lost', 'team'];
 function Problems() {
   return (
     <Section labelledBy="av-problems">
-      <SectionHead index="01" eyebrow={problems.eyebrow} title={problems.title} text={problems.intro} id="av-problems" />
-      <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-4">
+      <SectionHead index="01" eyebrow={problems.eyebrow} title={problems.title} id="av-problems" />
+      <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-4">
         {problems.cards.map((c, i) => (
-          <Reveal as="li" key={c.t} delay={(i % 3) * 0.06}
-            className="group relative overflow-hidden rounded-[16px] border border-line bg-surface-1/70 p-5 transition-[border-color,transform] duration-500 hover:-translate-y-1 hover:border-line-strong sm:p-7">
+          <Reveal as="li" key={c.t} delay={i * 0.06}
+            className="group relative overflow-hidden rounded-[16px] border border-line bg-surface-1/70 p-5 transition-[border-color,transform] duration-500 hover:-translate-y-1 hover:border-signal/40 sm:p-7">
+            <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-signal/0 to-transparent transition-colors duration-500 group-hover:via-signal/60" />
             <span className="absolute right-5 top-5 font-mono text-[11px] text-ash sm:right-7 sm:top-7">0{i + 1}</span>
             <div className="flex gap-4 sm:block">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] border border-line-strong text-signal"><Icon name={PROBLEM_ICONS[i]} /></span>
               <div className="pr-6 sm:pr-0">
-                <h3 className="text-[1.1rem] font-semibold leading-snug tracking-[-0.015em] text-bone sm:mt-6 sm:text-[1.2rem]">{c.t}</h3>
+                <h3 className="text-[1.1rem] font-semibold uppercase leading-snug tracking-[0.01em] text-bone sm:mt-8 sm:text-[1.15rem]">{c.t}</h3>
                 <p className="mt-1.5 text-[0.95rem] leading-relaxed text-mist sm:mt-2">{c.d}</p>
               </div>
             </div>
           </Reveal>
         ))}
       </ul>
-      <SectionCta label={problems.cta} location="problems" />
+      <SectionCta label={problems.cta} location="problems" target={SYSTEM_ID} />
     </Section>
   );
 }
 
-/* ───────── 3. System flow ───────── */
-function SystemFlow() {
+/* ───────── 3. Marketing → Sotuv — one system (was: system flow + bridge + team) ───────── */
+function FlowColumn({ title, items, tone }: { title: string; items: string[]; tone: 'marketing' | 'sales' }) {
   const reduce = useReducedMotion();
-  const groupOf = (i: number) => system.groups.findIndex((g) => i >= g.from && i <= g.to);
+  const accent = tone === 'sales';
   return (
-    <Section labelledBy="av-system" className="overflow-hidden">
-      <SectionHead index="02" eyebrow={system.eyebrow} title={system.title} text={system.text} id="av-system" />
-
-      {/* Desktop: one horizontal track in three groups */}
-      <div className="mt-16 hidden xl:block">
-        <div className="grid grid-cols-9 gap-3">
-          {system.groups.map((g) => (
-            <div key={g.name} style={{ gridColumn: `${g.from + 1} / ${g.to + 2}` }} className="flex items-center gap-3 font-mono text-[10.5px] uppercase tracking-[0.14em] text-mist">
-              <span className="whitespace-nowrap">{g.name}</span><span className="h-px flex-1 bg-line-strong" />
-            </div>
-          ))}
-        </div>
-        <div className="relative mt-6">
-          <div className="absolute left-[5.5%] right-[5.5%] top-[22px] h-px bg-line-strong" />
-          <motion.div aria-hidden className="absolute left-[5.5%] right-[5.5%] top-[22px] h-px origin-left bg-gradient-to-r from-signal via-signal to-signal/40"
-            initial={reduce ? false : { scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true, margin: '0px 0px -20% 0px' }} transition={{ duration: 2.2, ease: [0.65, 0, 0.35, 1] }} />
-          <ol className="relative grid grid-cols-9 gap-3">
-            {system.stages.map((s, i) => (
-              <motion.li key={s.t} initial={reduce ? false : { opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '0px 0px -20% 0px' }}
-                transition={{ duration: 0.6, delay: 0.15 + i * 0.2, ease }} className="flex flex-col items-center text-center">
-                <span className={`flex h-11 w-11 items-center justify-center rounded-full border font-mono text-[12px] ${i === 5 ? 'border-signal bg-signal text-ink' : 'border-line-strong bg-ink text-bone'}`}>{String(i + 1).padStart(2, '0')}</span>
-                <div className="mt-5 flex h-full w-full flex-col rounded-[14px] border border-line bg-surface-1/70 px-3 py-4">
-                  <h3 className="break-words text-[0.92rem] font-semibold leading-tight tracking-[-0.01em] text-bone [hyphens:auto] 2xl:text-[1rem]">{s.t}</h3>
-                  <p className="mt-2 text-[0.8rem] leading-snug text-ash">{s.d}</p>
-                </div>
-              </motion.li>
-            ))}
-          </ol>
-        </div>
+    <div className={`relative h-full rounded-[18px] border p-6 sm:p-8 ${accent ? 'border-signal/35 bg-[linear-gradient(160deg,rgba(245,195,59,0.08),rgba(11,11,13,0.9)_55%)]' : 'border-line-strong bg-surface-1/80'}`}>
+      <div className="flex items-center justify-between">
+        <h3 className="text-[1.6rem] font-bold uppercase tracking-[-0.03em] sm:text-[2rem]">{title}</h3>
+        <span className="font-mono text-[11px] text-ash">{accent ? '02' : '01'}</span>
       </div>
-
-      {/* Mobile / tablet: vertical timeline grouped */}
-      <ol className="relative mt-12 max-w-[720px] space-y-2.5 xl:hidden">
-        <span aria-hidden className="absolute bottom-6 left-[21px] top-6 w-px bg-gradient-to-b from-signal via-line-strong to-signal/40" />
-        {system.stages.map((s, i) => {
-          const g = groupOf(i);
-          const first = system.groups[g].from === i;
-          return (
-            <li key={s.t} className="relative">
-              {first && <p className={`pl-14 font-mono text-[10.5px] uppercase tracking-[0.14em] text-mist ${i === 0 ? '' : 'pt-4'} pb-2`}>{system.groups[g].name}</p>}
-              <Reveal y={14} className="flex items-center gap-4">
-                <span className={`relative z-10 flex h-[43px] w-[43px] shrink-0 items-center justify-center rounded-full border font-mono text-[12px] ${i === 5 ? 'border-signal bg-signal text-ink' : 'border-line-strong bg-ink text-bone'}`}>{String(i + 1).padStart(2, '0')}</span>
-                <div className="flex-1 rounded-[12px] border border-line bg-surface-1/70 px-4 py-3">
-                  <h3 className="text-[0.98rem] font-semibold uppercase tracking-[0.01em] text-bone">{s.t}</h3>
-                  <p className="mt-0.5 text-[0.85rem] text-ash">{s.d}</p>
-                </div>
-              </Reveal>
-            </li>
-          );
-        })}
+      <ol className="relative mt-6">
+        <span aria-hidden className={`absolute bottom-5 left-[15px] top-5 w-px ${accent ? 'bg-gradient-to-b from-signal/70 to-signal/15' : 'bg-gradient-to-b from-bone/30 to-line'}`} />
+        {items.map((it, i) => (
+          <motion.li key={it} initial={reduce ? false : { opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '0px 0px -10% 0px' }}
+            transition={{ duration: 0.5, delay: i * 0.06, ease }} className="relative flex items-center gap-4 py-1.5">
+            <span className={`relative z-10 flex h-[31px] w-[31px] shrink-0 items-center justify-center rounded-full border font-mono text-[10.5px] ${accent ? 'border-signal/70 bg-ink text-signal' : i === items.length - 1 ? 'border-signal bg-signal font-semibold text-ink' : 'border-line-strong bg-ink text-mist'}`}>{String(i + 1).padStart(2, '0')}</span>
+            <span className="text-[1rem] font-medium text-bone/90 sm:text-[1.05rem]">{it}</span>
+          </motion.li>
+        ))}
       </ol>
+    </div>
+  );
+}
+
+function SystemSection() {
+  const reduce = useReducedMotion();
+  return (
+    <Section id={SYSTEM_ID} labelledBy="av-system" className="scroll-mt-16">
+      <SectionHead index="02" eyebrow={system.eyebrow} title={system.title} text={system.text} id="av-system" />
+      <div className="mt-12 grid items-stretch gap-4 lg:mt-16 lg:grid-cols-[1fr_120px_1fr] lg:gap-0">
+        <Reveal><FlowColumn title="Marketing" items={system.marketing} tone="marketing" /></Reveal>
+        {/* Connector: Lead passes from marketing into sales */}
+        <div aria-hidden className="relative flex h-20 items-center justify-center lg:h-auto">
+          <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-line-strong lg:inset-x-0 lg:inset-y-auto lg:left-0 lg:top-1/2 lg:h-px lg:w-full lg:translate-x-0" />
+          <motion.span className="absolute left-1/2 top-0 h-6 w-px -translate-x-1/2 bg-signal lg:hidden"
+            animate={reduce ? undefined : { y: [0, 56], opacity: [0, 1, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }} />
+          <motion.span className="absolute left-0 top-1/2 hidden h-px w-8 bg-signal lg:block"
+            animate={reduce ? undefined : { x: [0, 88], opacity: [0, 1, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }} />
+          <span className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full border border-signal bg-ink text-[1.1rem] text-signal shadow-[0_0_40px_-6px_rgba(245,195,59,0.5)] lg:h-16 lg:w-16">
+            <span className="lg:hidden">↓</span><span className="hidden lg:inline">→</span>
+          </span>
+        </div>
+        <Reveal delay={0.1}><FlowColumn title="Sotuv" items={system.sales} tone="sales" /></Reveal>
+      </div>
+      <Reveal className="mt-10">
+        <div className="rounded-[16px] border border-signal/30 bg-signal/[0.05] px-6 py-6 text-center sm:py-7">
+          <p className="text-[1.2rem] font-semibold tracking-[-0.015em] text-bone sm:text-[1.5rem]">{system.statement}</p>
+          <p className="mx-auto mt-2 max-w-[62ch] text-[0.9rem] leading-relaxed text-mist">{system.sub}</p>
+        </div>
+      </Reveal>
       <SectionCta label={system.cta} location="system" />
     </Section>
   );
 }
 
-/* ───────── 4. Marketing + Sales bridge ───────── */
-function Bridge() {
-  const reduce = useReducedMotion();
-  const Panel = ({ title, items, tone }: { title: string; items: string[]; tone: 'a' | 'b' }) => (
-    <div className="relative h-full rounded-[18px] border border-line-strong bg-surface-1/80 p-6 sm:p-8">
-      <div className="flex items-center justify-between">
-        <h3 className="text-[1.6rem] font-bold uppercase tracking-[-0.03em] sm:text-[2rem]">{title}</h3>
-        <span className="font-mono text-[11px] text-ash">{tone === 'a' ? '01' : '02'}</span>
-      </div>
-      <ul className="mt-6 grid grid-cols-2 gap-2">
-        {items.map((it) => (
-          <li key={it} className="flex items-center gap-2.5 rounded-[10px] border border-line bg-ink/40 px-3 py-2.5 text-[0.86rem] leading-snug text-bone/90 sm:gap-3 sm:px-3.5 sm:text-[0.95rem]">
-            <span aria-hidden className={`h-1.5 w-1.5 shrink-0 rounded-full ${tone === 'a' ? 'bg-bone/60' : 'bg-signal'}`} />{it}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-  return (
-    <Section labelledBy="av-bridge">
-      <SectionHead index="03" eyebrow={bridge.eyebrow} title={bridge.title} text={bridge.text} id="av-bridge" />
-      <div className="mt-12 grid items-stretch gap-4 lg:mt-16 lg:grid-cols-[1fr_120px_1fr] lg:gap-0">
-        <Reveal><Panel title="Marketing" items={bridge.marketing} tone="a" /></Reveal>
-        {/* Connector */}
-        <div aria-hidden className="relative flex h-24 items-center justify-center lg:h-auto">
-          <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-line-strong lg:inset-x-0 lg:inset-y-auto lg:left-0 lg:top-1/2 lg:h-px lg:w-full lg:translate-x-0" />
-          <motion.span className="absolute left-1/2 top-0 h-6 w-px -translate-x-1/2 bg-signal lg:hidden"
-            animate={reduce ? undefined : { y: [0, 72], opacity: [0, 1, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }} />
-          <motion.span className="absolute left-0 top-1/2 hidden h-px w-8 bg-signal lg:block"
-            animate={reduce ? undefined : { x: [0, 88], opacity: [0, 1, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }} />
-          <span className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full border border-signal bg-ink font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-signal shadow-[0_0_40px_-6px_rgba(245,195,59,0.5)]">{bridge.joint}</span>
-        </div>
-        <Reveal delay={0.1}><Panel title="Sotuv" items={bridge.sales} tone="b" /></Reveal>
-      </div>
-      <Reveal className="mt-10">
-        <p className="rounded-[16px] border border-signal/30 bg-signal/[0.05] px-6 py-6 text-center text-[1.2rem] font-semibold tracking-[-0.015em] text-bone sm:text-[1.5rem]">{bridge.closing}</p>
-      </Reveal>
-      <SectionCta label={bridge.cta} location="bridge" />
-    </Section>
-  );
-}
-
-/* ───────── 5. Team capabilities ───────── */
-const TEAM_ICONS = ['strategy', 'copy', 'design', 'video', 'performance', 'crm'];
-function Team() {
-  return (
-    <Section labelledBy="av-team">
-      <SectionHead index="04" eyebrow={team.eyebrow} title={team.title} text={team.text} id="av-team" />
-      <ul className="mt-12 grid gap-px overflow-hidden rounded-[18px] border border-line bg-line sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
-        {team.cards.map((c, i) => (
-          <Reveal as="li" key={c.t} delay={(i % 3) * 0.06} className="group relative bg-ink p-5 transition-colors duration-500 hover:bg-surface-1 sm:p-8">
-            <div className="flex items-center gap-4 sm:block">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line-strong text-bone transition-colors duration-500 group-hover:border-signal group-hover:text-signal"><Icon name={TEAM_ICONS[i]} /></span>
-              <h3 className="text-[1.15rem] font-semibold tracking-[-0.02em] text-bone sm:mt-8 sm:text-[1.25rem]">{c.t}</h3>
-            </div>
-            <p className="mt-3 text-[0.95rem] leading-relaxed text-mist sm:mt-2">{c.d}</p>
-          </Reveal>
-        ))}
-      </ul>
-      <SectionCta label={team.cta} location="team" />
-    </Section>
-  );
-}
-
-/* ───────── 6. Strategy first ───────── */
-function StrategyFirst() {
-  return (
-    <Section labelledBy="av-strategy">
-      <SectionHead index="05" eyebrow={strategy.eyebrow} title={strategy.title} id="av-strategy" />
-      <ol className="mt-12 grid gap-3 lg:mt-16 lg:grid-cols-5 lg:gap-4">
-        {strategy.steps.map((s, i) => (
-          <Reveal as="li" key={s.t} delay={i * 0.07} className="relative flex gap-5 rounded-[16px] border border-line bg-surface-1/70 p-6 lg:flex-col lg:gap-0 lg:p-6">
-            <span className={`font-mono text-[2rem] font-medium leading-none tracking-[-0.04em] lg:text-[2.6rem] ${i === 4 ? 'text-signal' : 'text-bone/25'}`}>{String(i + 1).padStart(2, '0')}</span>
-            <div className="lg:mt-10">
-              <h3 className="text-[1.15rem] font-semibold tracking-[-0.015em] text-bone">{s.t}</h3>
-              <p className="mt-2 text-[0.93rem] leading-relaxed text-mist">{s.d}</p>
-            </div>
-            {i < 4 && <span aria-hidden className="absolute -right-[11px] top-1/2 z-10 hidden h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border border-line-strong bg-ink text-[10px] text-signal lg:flex">→</span>}
-          </Reveal>
-        ))}
-      </ol>
-      <SectionCta label={strategy.cta} location="strategy" />
-    </Section>
-  );
-}
-
-/* ───────── 7. Expectations ───────── */
+/* ───────── 4. Expectations (4) ───────── */
+const EXPECT_ICONS = ['quality', 'performance', 'crm', 'chart'];
 function Expectations() {
   return (
     <Section labelledBy="av-expect">
-      <div className="grid gap-12 lg:grid-cols-12">
+      <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-14">
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-28">
-            <SectionHead index="06" eyebrow={expectations.eyebrow} title={expectations.title} id="av-expect" />
-            <Reveal delay={0.1}><p className="mt-6 text-[1.25rem] font-semibold tracking-[-0.015em] text-signal sm:text-[1.4rem]">{expectations.sub}</p></Reveal>
+            <SectionHead index="03" eyebrow={expectations.eyebrow} title={expectations.title} id="av-expect" />
+            <Reveal delay={0.1}><p className="mt-6 text-[1.15rem] font-semibold leading-snug tracking-[-0.015em] text-signal sm:text-[1.3rem]">{expectations.sub}</p></Reveal>
+            <Reveal delay={0.15} className="mt-8 hidden lg:block">
+              <div className="relative overflow-hidden rounded-[18px] border border-line">
+                <img src={detailImg} alt="Avtosalon shourumidagi avtomobil detali" loading="lazy" decoding="async" width={720} height={900} className="aspect-[16/11] w-full object-cover object-[50%_40%]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
+              </div>
+            </Reveal>
           </div>
         </div>
         <div className="lg:col-span-7">
-          <ul className="divide-y divide-line border-y border-line">
-            {expectations.items.map((it, i) => (
-              <Reveal as="li" key={it} delay={0.03 * i} className="flex items-start gap-5 py-5 sm:py-6">
-                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-signal/60 text-signal">
-                  <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden><path d="m2 6.3 2.6 2.5L10 3.2" stroke="currentColor" strokeWidth="1.6" fill="none" /></svg>
-                </span>
-                <span className="text-[1.08rem] leading-snug text-bone sm:text-[1.2rem]">{it}</span>
+          <ul className="grid gap-3 sm:grid-cols-2 lg:gap-4">
+            {expectations.cards.map((c, i) => (
+              <Reveal as="li" key={c.t} delay={i * 0.06} className="group relative rounded-[16px] border border-line bg-surface-1/70 p-6 transition-[border-color,transform] duration-500 hover:-translate-y-1 hover:border-signal/40 sm:p-7">
+                <div className="flex items-center justify-between">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-signal/50 text-signal"><Icon name={EXPECT_ICONS[i]} /></span>
+                  <span className="font-mono text-[11px] text-ash">0{i + 1}</span>
+                </div>
+                <h3 className="mt-7 text-[1.15rem] font-semibold uppercase leading-snug tracking-[0.01em] text-bone">{c.t}</h3>
+                <p className="mt-2 text-[0.95rem] leading-relaxed text-mist">{c.d}</p>
               </Reveal>
             ))}
           </ul>
-          <Reveal className="mt-8">
-            <div className="relative overflow-hidden rounded-[16px] border border-signal/40 bg-[linear-gradient(135deg,rgba(245,195,59,0.12),rgba(245,195,59,0.02)_60%)] p-6 sm:p-8">
-              <p className="text-[1.15rem] font-semibold leading-snug tracking-[-0.015em] text-bone sm:text-[1.35rem]">{expectations.highlight}</p>
-            </div>
-          </Reveal>
           <SectionCta label={expectations.cta} location="expectations" />
         </div>
       </div>
@@ -309,52 +222,18 @@ function Expectations() {
   );
 }
 
-/* ───────── 8. Sales department ───────── */
-function SalesDept() {
-  return (
-    <Section labelledBy="av-sales">
-      <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
-        <Reveal className="order-2 lg:order-1 lg:col-span-5">
-          <div className="relative overflow-hidden rounded-[18px] border border-line bg-surface-1/70">
-            <img src={detailImg} alt="Avtosalon shourumidagi avtomobil detali" loading="lazy" decoding="async" width={720} height={900}
-              className="aspect-[4/5] w-full object-cover max-lg:aspect-[16/10]" />
-            <div className="absolute inset-x-0 top-0 aspect-[16/10] bg-gradient-to-t from-ink/80 via-transparent to-transparent lg:inset-0 lg:aspect-auto lg:from-ink lg:via-ink/10" />
-            <div className="grid grid-cols-2 gap-2 p-3 lg:absolute lg:inset-x-0 lg:bottom-0 lg:p-5">
-              {salesDept.modes.map((m) => (
-                <div key={m.t} className="rounded-[12px] border border-line-strong bg-ink/70 p-3.5 backdrop-blur-md sm:p-4">
-                  <h3 className="text-[0.95rem] font-semibold text-bone">{m.t}</h3>
-                  <p className="mt-1 text-[0.8rem] leading-snug text-mist">{m.d}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-        <div className="order-1 lg:order-2 lg:col-span-7">
-          <SectionHead index="07" eyebrow={salesDept.eyebrow} title={salesDept.title} text={salesDept.text} id="av-sales" />
-          <Reveal delay={0.1}>
-            <ul className="mt-10 flex flex-wrap gap-2">
-              {salesDept.items.map((it) => (
-                <li key={it} className="rounded-full border border-line-strong bg-surface-1/60 px-4 py-2.5 text-[0.93rem] text-bone/90">{it}</li>
-              ))}
-            </ul>
-          </Reveal>
-          <SectionCta label={salesDept.cta} location="sales" />
-        </div>
-      </div>
-    </Section>
-  );
-}
-
-/* ───────── 9. How we work ───────── */
+/* ───────── 5. How we work (4) ───────── */
 function How() {
   return (
     <Section labelledBy="av-how">
-      <SectionHead index="08" eyebrow={how.eyebrow} title={how.title} id="av-how" />
-      <ol className="mt-12 grid grid-cols-1 gap-2.5 min-[480px]:grid-cols-2 min-[480px]:gap-3 lg:mt-16 lg:grid-cols-3 xl:grid-cols-6">
+      <SectionHead index="04" eyebrow={how.eyebrow} title={how.title} id="av-how" />
+      <ol className="relative mt-12 grid gap-3 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-4">
+        <span aria-hidden className="absolute left-[12%] right-[12%] top-[46px] hidden h-px bg-gradient-to-r from-signal/70 via-line-strong to-line-strong lg:block" />
         {how.steps.map((s, i) => (
-          <Reveal as="li" key={s} delay={i * 0.05} className="relative flex items-center gap-4 rounded-[16px] border border-line bg-surface-1/70 p-4 min-[480px]:block sm:p-6">
-            <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-mono text-[12px] ${i === 0 ? 'bg-signal text-ink' : 'border border-line-strong text-bone'}`}>{String(i + 1).padStart(2, '0')}</span>
-            <h3 className="text-[1.02rem] font-semibold leading-snug tracking-[-0.01em] text-bone min-[480px]:mt-6 sm:text-[1.05rem]">{s}</h3>
+          <Reveal as="li" key={s.t} delay={i * 0.07} className="relative rounded-[16px] border border-line bg-surface-1/80 p-6 sm:p-7">
+            <span className={`relative z-10 flex h-11 w-11 items-center justify-center rounded-full font-mono text-[12px] ${i === 0 ? 'bg-signal text-ink' : 'border border-line-strong bg-ink text-bone'}`}>{String(i + 1).padStart(2, '0')}</span>
+            <h3 className="mt-6 text-[1.1rem] font-semibold uppercase leading-snug tracking-[0.01em] text-bone">{s.t}</h3>
+            <p className="mt-2 text-[0.95rem] leading-relaxed text-mist">{s.d}</p>
           </Reveal>
         ))}
       </ol>
@@ -371,7 +250,7 @@ function ApplicationSection() {
       <div className="shell relative grid gap-10 lg:grid-cols-12 lg:gap-14">
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-28">
-            <Eyebrow index="09">{form.eyebrow}</Eyebrow>
+            <Eyebrow index="05">{form.eyebrow}</Eyebrow>
             <h2 id="av-form-title" className="mt-6 text-[2rem] font-bold leading-[1.05] tracking-[-0.035em] sm:text-[2.6rem] lg:text-[3rem]">{form.title}</h2>
             <p className="mt-5 max-w-[46ch] text-[1.05rem] leading-relaxed text-mist">{form.text}</p>
             <ul className="mt-8 hidden space-y-3 sm:block">
@@ -451,12 +330,8 @@ export default function AvtosalonPage() {
       <Header />
       <Hero />
       <Problems />
-      <SystemFlow />
-      <Bridge />
-      <Team />
-      <StrategyFirst />
+      <SystemSection />
       <Expectations />
-      <SalesDept />
       <How />
       <ApplicationSection />
       <MiniFooter />
