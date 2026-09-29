@@ -13,7 +13,7 @@ const MIN_FILL_MS = 4000;
 type Errors = Partial<Record<keyof QrData, string>>;
 
 const EMPTY: QrData = { name: '', phone: '', company: '', region: '', city: '', stage: '', problem: '', problemOther: '', budget: '', contactTime: '' };
-const ORDER: (keyof QrData)[] = ['name', 'phone', 'company', 'region', 'city', 'stage', 'problem', 'problemOther', 'budget', 'contactTime'];
+const ORDER: (keyof QrData)[] = ['name', 'phone', 'company', 'region', 'stage', 'problem', 'problemOther', 'budget'];
 
 export const phoneDigits = (v: string) => {
   let digits = v.replace(/\D/g, '');
@@ -26,13 +26,12 @@ export function validateQurilish(d: QrData): Errors {
   const e: Errors = {};
   if (d.name.trim().length < 2) e.name = 'Ismingizni kiriting';
   if (phoneDigits(d.phone).length !== 9) e.phone = 'Raqamni to‘liq kiriting: +998 XX XXX XX XX';
-  if (d.company.trim().length < 2) e.company = 'Kompaniya nomini kiriting';
+  if (d.company.trim().length < 2) e.company = 'Kompaniya yoki loyiha nomini kiriting';
   if (!d.region) e.region = 'Hududni tanlang';
   if (!d.stage) e.stage = 'Loyiha bosqichini tanlang';
   if (!d.problem) e.problem = 'Asosiy muammoni tanlang';
   if (d.problem === 'Boshqa' && d.problemOther.trim().length < 2) e.problemOther = 'Qisqacha yozing';
   if (!d.budget) e.budget = 'Budjet oralig‘ini tanlang';
-  if (!d.contactTime) e.contactTime = 'Qulay vaqtni tanlang';
   return e;
 }
 
@@ -210,8 +209,7 @@ export function QrForm() {
           </div>
 
           <fieldset disabled={status === 'sending'} className="min-w-0 border-0 p-0 disabled:opacity-60">
-            <div className="space-y-7 px-5 py-8 sm:px-10 sm:py-10">
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-mist"><span className="text-violet">A</span> · Siz va kompaniya</p>
+            <div className="space-y-6 px-5 py-7 sm:px-10 sm:py-9">
               <div className="grid gap-7 sm:grid-cols-2">
                 <Field id="name" label="Ismingiz" error={E('name')}>
                   <input id="name" name="name" required className={inputCls(E('name'))} value={d.name} onChange={text('name', 80)} autoComplete="name" aria-invalid={!!E('name')} aria-describedby={describedBy('name', E('name'))} />
@@ -225,10 +223,10 @@ export function QrForm() {
                   </div>
                 </Field>
               </div>
-              <Field id="company" label="Kompaniya nomi" error={E('company')}>
-                <input id="company" name="company" required className={inputCls(E('company'))} value={d.company} onChange={text('company', 160)} autoComplete="organization" aria-invalid={!!E('company')} aria-describedby={describedBy('company', E('company'))} />
-              </Field>
               <div className="grid gap-7 sm:grid-cols-2">
+                <Field id="company" label="Kompaniya yoki loyiha nomi" error={E('company')}>
+                  <input id="company" name="company" required className={inputCls(E('company'))} value={d.company} onChange={text('company', 160)} autoComplete="organization" aria-invalid={!!E('company')} aria-describedby={describedBy('company', E('company'))} />
+                </Field>
                 <Field id="region" label="Loyihangiz qaysi hududda?" error={E('region')}>
                   <div className="relative">
                     <select id="region" name="region" className={`${inputCls(E('region'))} appearance-none pr-10 ${d.region ? '' : 'text-ash/80'}`} value={d.region} onChange={text('region')} required aria-invalid={!!E('region')} aria-describedby={describedBy('region', E('region'))}>
@@ -238,14 +236,10 @@ export function QrForm() {
                     <svg aria-hidden className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-mist" width="12" height="8" viewBox="0 0 12 8"><path d="m1 1.5 5 5 5-5" stroke="currentColor" strokeWidth="1.5" fill="none" /></svg>
                   </div>
                 </Field>
-                <Field id="city" label="Shahar / tuman" optional>
-                  <input id="city" name="city" className={inputCls()} value={d.city} onChange={text('city', 80)} placeholder="Masalan: Yunusobod" autoComplete="address-level2" />
-                </Field>
               </div>
             </div>
 
-            <div className="space-y-8 border-t border-line px-5 py-8 sm:px-10 sm:py-10">
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-mist"><span className="text-violet">B</span> · Loyiha holati</p>
+            <div className="space-y-7 border-t border-line px-5 py-7 sm:px-10 sm:py-9">
               <Chips id="stage" label="Loyiha qaysi bosqichda?" options={OPT.stage} value={d.stage} onChange={pick('stage')} error={E('stage')} />
               <Chips id="problem" label="Hozirgi asosiy muammo nima?" options={OPT.problem} value={d.problem} onChange={pick('problem')} error={E('problem')} />
               <AnimatePresence initial={false}>
@@ -259,7 +253,6 @@ export function QrForm() {
               </AnimatePresence>
               <Chips id="budget" label="Oylik reklama budjeti" options={OPT.budget} value={d.budget} onChange={pick('budget')} error={E('budget')} columns="grid-cols-2"
                 hint="Meta Ads va Google Ads uchun ajratiladigan reklama budjeti. Bu FAZO Digital xizmati narxi emas." />
-              <Chips id="contactTime" label="Siz bilan qachon bog‘lansak qulay?" options={OPT.contactTime} value={d.contactTime} onChange={pick('contactTime')} error={E('contactTime')} />
             </div>
           </fieldset>
 
