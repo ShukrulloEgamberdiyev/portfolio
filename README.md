@@ -69,7 +69,8 @@ Muvaffaqiyat ekrani faqat xizmat `{ok:true}` qaytarganda chiqadi. Telegram bildi
 ## /qurilish landing
 - Alohida sahifa: `qurilish.html` → `src/qurilish-main.tsx` → `src/QurilishApp.tsx` → `src/pages/QurilishPage.tsx`. Matnlar va forma variantlari: `src/content/qurilish.ts`. Komponentlar: `src/components/qurilish/` (QrUi, QrForm, Skyline).
 - Asosiy manzil: `https://fazodigital.uz/qurilish`; `/qurilish/` → `/qurilish` (vercel.json). Build `dist/qurilish.html` va `dist/qurilish/index.html` ni prerender qiladi, sitemap'ga qo‘shiladi.
-- Hero vizual — kodda chizilgan arxitektura SVG (`Skyline.tsx`), rasm yuklanmaydi. Real loyiha foto/renderi bo‘lsa, `Skyline` o‘rniga qo‘yish mumkin.
+- Sahifa 6 bo‘limdan iborat: Hero → Muammo → Jarayon → Nimani qilamiz → Hamkorlik ($5,000–7,000/oy) → Ariza. Hero rasmi: `src/assets/qurilish/hero-1920.*` (desktop) va `hero-960.*` (mobil kesim), manba — Unsplash (bepul litsenziya).
+- Forma 7 savol: ism, telefon, kompaniya/loyiha, hudud, loyiha holati, asosiy muammo, oylik reklama budjeti. `contactTime` endi so‘ralmaydi — server bo‘sh qiymatni qabul qiladi.
 - Arizalar o‘sha Apps Script orqali **Targeting Xizmat → QURILISH LEADLAR** varag‘iga yoziladi (`formType: 'qurilish'`, ID `QR-...`). **Muhim:** `docs/apps-script.gs` yangilangan — Apps Script → Deploy → Manage deployments → Edit → **New version** qilinmaguncha /qurilish arizalari qabul qilinmaydi (forma xato ko‘rsatadi, lead yo‘qolmaydi — foydalanuvchi Telegram'ga yo‘naltiriladi).
 - Muvaffaqiyat faqat server `{ok:true, saved:true, submissionId}` qaytarganda ko‘rsatiladi. Retry bir xil ID bilan — dublikat qator bo‘lmaydi. Bitta telefon 6 soatda 3 ta yangi ariza.
 - Meta Pixel hodisalari (`VITE_META_PIXEL_ID` bo‘lsa): PageView, ViewContent, `QurilishCTA`, `QurilishFormStart`, `Lead` (eventID = Ariza ID).

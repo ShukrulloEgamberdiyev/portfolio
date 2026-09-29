@@ -96,6 +96,13 @@ test('invalid fields are rejected with the field name and no row', () => {
   assert.equal(r.tabs.get('QURILISH LEADLAR'), undefined);
 });
 
+test('contact time is optional (no longer asked), but must be a known option when sent', () => {
+  const r = receiver();
+  assert.equal(r.send(valid({ contactTime: '' })).ok, true);
+  assert.equal(r.send(valid({ submissionId: 'QR-MFX12AB-ABCDEF9999', contactTime: undefined })).ok, true);
+  assert.equal(r.send(valid({ submissionId: 'QR-MFX12AB-ABCDEF8888', contactTime: 'har doim' })).field, 'contactTime');
+});
+
 test('per-phone limit applies to new submissions', () => {
   const r = receiver();
   for (let i = 0; i < 3; i++) assert.equal(r.send(valid({ submissionId: `QR-MFX12AB-ABCDEF12${i}0` })).ok, true);
