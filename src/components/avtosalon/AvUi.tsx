@@ -5,19 +5,19 @@ import { track } from '../../lib/tracking';
 import { Reveal } from '../../ui/Reveal';
 
 /** Every CTA on the landing scrolls to the one application form. */
-export function goToForm(location: string) {
+export function goToForm(location: string, target: string = AV_FORM_ID) {
   track('AvtosalonCTA', { location }, { custom: true });
-  scrollToId(AV_FORM_ID);
+  scrollToId(target);
 }
 
-export function AvCta({ children, location, variant = 'solid', className = '' }: { children: ReactNode; location: string; variant?: 'solid' | 'ghost'; className?: string }) {
+export function AvCta({ children, location, variant = 'solid', className = '', target = AV_FORM_ID }: { children: ReactNode; location: string; variant?: 'solid' | 'ghost'; className?: string; target?: string }) {
   const base = 'group inline-flex min-h-[54px] items-center justify-center gap-3 rounded-full px-7 font-mono text-[12px] font-semibold uppercase tracking-[0.12em] transition-[background-color,border-color,color,transform] duration-300 active:scale-[0.98]';
   const look = variant === 'solid'
     ? 'bg-signal text-ink hover:bg-[#ffd35c] shadow-[0_10px_40px_-12px_rgba(245,195,59,0.55)]'
     : 'border border-line-strong text-bone hover:border-signal/70 hover:text-signal';
   return (
-    <a href={`#${AV_FORM_ID}`} data-cursor="hover" className={`${base} ${look} ${className}`}
-      onClick={(e) => { e.preventDefault(); goToForm(location); }}>
+    <a href={`#${target}`} data-cursor="hover" className={`${base} ${look} ${className}`}
+      onClick={(e) => { e.preventDefault(); goToForm(location, target); }}>
       <span>{children}</span>
       <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
     </a>
@@ -54,8 +54,8 @@ export function Section({ id, labelledBy, children, className = '' }: { id?: str
   );
 }
 
-export function SectionCta({ label, location }: { label: string; location: string }) {
-  return <Reveal className="mt-12 lg:mt-16"><AvCta location={location}>{label}</AvCta></Reveal>;
+export function SectionCta({ label, location, target }: { label: string; location: string; target?: string }) {
+  return <Reveal className="mt-12 lg:mt-16"><AvCta location={location} target={target}>{label}</AvCta></Reveal>;
 }
 
 /* ───────── line icons (24px, 1.5 stroke) ───────── */
