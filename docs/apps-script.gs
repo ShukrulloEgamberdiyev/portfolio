@@ -422,8 +422,10 @@ function validateQurilish(d) {
   const regionName = sep >= 0 ? region.slice(0, sep) : region;
   if (QR.regions.indexOf(regionName) < 0 || (sep >= 0 && region.slice(sep + 3).trim().length > 80)) return 'region';
 
-  const selects = ['stage', 'problem', 'budget', 'contactTime'];
+  const selects = ['stage', 'problem', 'budget'];
   for (let i = 0; i < selects.length; i++) if (!oneOf(selects[i], QR[selects[i]])) return selects[i];
+  // Qulay aloqa vaqti sahifada endi so‘ralmaydi: bo‘sh bo‘lishi mumkin, to‘ldirilgan bo‘lsa ro‘yxatdan bo‘lishi shart.
+  if (!(d.contactTime === undefined || d.contactTime === null || d.contactTime === '' || oneOf('contactTime', QR.contactTime))) return 'contactTime';
   if (str('problem') === 'Boshqa') {
     if (!within('problemOther', 2, MAX_LEN.goalsOther)) return 'problemOther';
   } else if (!optional('problemOther', MAX_LEN.goalsOther)) return 'problemOther';
