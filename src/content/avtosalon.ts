@@ -4,8 +4,12 @@ export const AV_FORM_ID = 'ariza';
 
 export const hero = {
   eyebrow: 'Avtosalonlar uchun · Butun O‘zbekiston bo‘ylab',
+  audience: 'Avtosalonlar uchun',
+  region: 'Butun O‘zbekiston bo‘ylab',
   title: 'Avtosaloningiz uchun marketing va sotuv tizimini quramiz',
   text: 'Strategiya, kontent, target, leadlar, CRM va sotuv jarayonlarini bitta tizimga bog‘laymiz.',
+  /** Mobile hero: shorter line so the CTA fits the first screen (Instagram in-app browser). */
+  textShort: 'Strategiya, target, lead, CRM va sotuvni bitta tizimga bog‘laymiz.',
   chain: ['Strategiya', 'Kontent', 'Target', 'Lead', 'CRM', 'Sotuv'],
   cta: 'Ariza qoldirish',
   note: 'Avtosaloningiz haqida qisqacha ma’lumot qoldiring — jamoamiz siz bilan bog‘lanadi.',
