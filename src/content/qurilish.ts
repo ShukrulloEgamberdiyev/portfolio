@@ -3,145 +3,76 @@
 export const QR_FORM_ID = 'loyiha';
 
 export const nav = [
-  { id: 'tizim', label: 'Tizim' },
-  { id: 'yonalishlar', label: 'Yo‘nalishlar' },
+  { id: 'jarayon', label: 'Jarayon' },
   { id: 'hamkorlik', label: 'Hamkorlik' },
 ];
 
+/** One CTA label everywhere: every primary button leads to the same form. */
+export const CTA = 'Loyiham uchun yechim olish';
+
 export const hero = {
-  eyebrow: 'Turar joy quruvchilari uchun · O‘zbekiston bo‘ylab',
-  title: 'Qurayotgan uylaringiz uchun potensial xaridorlar oqimini yo‘lga qo‘yamiz.',
-  text: 'Marketing, Meta Ads, Google Ads, landing, CRM va sotuv bo‘limini yagona tizimga bog‘laymiz.',
+  eyebrow: 'Turar joy quruvchilari uchun',
+  title: 'Uylar qurilyapti. Xaridorlarni olib kelishni bizga qo‘ying.',
+  text: 'Qurilish loyihalari uchun Meta Ads, Google Ads va sotuv tizimini birlashtirib, potensial mijozlar oqimini yo‘lga qo‘yamiz.',
   context: 'O‘zbekiston bo‘ylab yangi qurilayotgan va sotuvdagi turar joy loyihalari bilan ishlaymiz.',
-  cta: 'Loyiham uchun strategiya olish',
-  callouts: [
-    { k: 'Talab', v: 'Meta Ads · Google Ads' },
-    { k: 'Murojaat', v: 'Landing · Ariza' },
-    { k: 'Nazorat', v: 'CRM · Sotuv bo‘limi' },
-  ],
+  imageAlt: 'Kunduzgi yorug‘likdagi zamonaviy ko‘p qavatli turar joy binosi',
 };
 
 export const problem = {
   eyebrow: 'Muammo',
-  title: 'Reklama bor. Lekin xaridor oqimi tizimli emasmi?',
+  title: 'Qurilish bor, lekin sotuv sustmi?',
   cards: [
-    { t: 'Murojaatlar kam yoki qimmat', d: 'Reklamaga budjet sarflanadi, ammo kerakli auditoriyadan yetarli murojaat kelmaydi.' },
-    { t: 'Raqobatchilardan farq sezilmaydi', d: 'Bir hududdagi ko‘plab qurilish loyihalari deyarli bir xil taklif bilan reklama qilinadi.' },
-    { t: 'Murojaatlar yo‘qoladi', d: 'Murojaat keladi, ammo CRM, tezkor aloqa va follow-up tizimi yetarli emas.' },
-    { t: 'Marketing va sotuv alohida ishlaydi', d: 'Marketing murojaat olib keladi, ammo sotuv bo‘limidagi keyingi jarayon to‘liq nazorat qilinmaydi.' },
+    { t: 'Murojaatlar kam', d: 'Potensial xaridorlar muntazam kelmaydi.' },
+    { t: 'Reklama bor, lekin sifatli mijoz kam', d: 'Budjet sarflanadi, kerakli auditoriyadan foydali murojaat kam.' },
+    { t: 'Murojaatlar sotuv jarayonida yo‘qoladi', d: 'CRM, tezkor javob yoki follow-up yetarli emas.' },
   ],
-  statement: 'Muammoni faqat ko‘proq reklama yoqish bilan hal qilib bo‘lmaydi.',
 };
 
-export const system = {
-  eyebrow: 'FAZO tizimi',
-  title: 'FAZO Digital marketingdan sotuv bo‘limigacha bo‘lgan tizimni birlashtiradi.',
-  text: 'Maqsadimiz reklamada ko‘p ko‘rish olish emas. Loyihangizga qiziqayotgan potensial xaridorlarning murojaatlarini olib kelish va ularni keyingi bosqichlarda yo‘qotmaslik uchun tizim qurish.',
-  stages: [
-    { t: 'Strategiya', d: 'Bozor, raqobat va maqsad' },
-    { t: 'Offer + kontent', d: 'Nima uchun aynan shu loyiha' },
-    { t: 'Meta Ads + Google Ads', d: 'Talabni shakllantirish va ushlash' },
-    { t: 'Landing', d: 'Obyektni ko‘rsatish, murojaat olish' },
-    { t: 'Potensial mijoz', d: 'Qiziqqan xaridor murojaati' },
-    { t: 'CRM', d: 'Har bir murojaat nazoratda' },
-    { t: 'Sotuv bo‘limi', d: 'Tezkor aloqa va uchrashuv' },
-    { t: 'Follow-up', d: 'Qaror qabul qilguncha aloqa' },
-  ],
-  focus: 4,
-  groups: [
-    { name: 'Marketing', from: 0, to: 3 },
-    { name: 'Murojaat', from: 4, to: 4 },
-    { name: 'Sotuv', from: 5, to: 7 },
-  ],
-  loop: 'Analitika va optimizatsiya — natijalar asosida tizim doimiy yaxshilanadi',
-};
-
-export const pillars = {
-  eyebrow: 'Nimani quramiz',
-  title: 'Bitta agentlik. To‘rtta yo‘nalish. Bitta tizim.',
-  items: [
-    { t: 'Marketing strategiyasi', role: 'Yo‘nalishni belgilaydi', list: ['Bozor va raqobatchilar tahlili', 'Pozitsioning', 'Offer', 'Sotuv takliflari', 'Marketing strategiyasi'] },
-    { t: 'Mijoz jalb qilish', role: 'Talabni yaratadi', list: ['Meta Ads', 'Google Ads', 'Kontent va kreativlar', 'Syomka / production'] },
-    { t: 'Digital infratuzilma', role: 'Murojaatni ushlaydi', list: ['Landing', 'Murojaat formalari', 'CRM', 'Tracking', 'Analitika'] },
-    { t: 'Sotuv tizimi', role: 'Murojaatni sotuv jarayoniga olib boradi', list: ['Sotuv strukturasi', 'Skriptlar', 'KPI', 'Follow-up', 'Menejerlarni o‘qitish', 'Nazorat'] },
-  ],
-  statement: 'Sotuv bo‘limingiz yo‘q bo‘lsa — uni ham noldan qurib beramiz.',
-};
-
-export const journey = {
-  eyebrow: 'Xaridor yo‘li',
-  title: 'Potensial xaridorni topishdan menejergacha.',
-  sources: [
-    { n: '01', t: 'Meta Ads', d: 'Loyihaga mos auditoriyaga chiqamiz va talabni shakllantiramiz.' },
-    { n: '02', t: 'Google Ads', d: 'Uy qidirayotgan mavjud talabni ushlaymiz.' },
-  ],
+export const process = {
+  eyebrow: 'Jarayon',
+  title: 'Potensial xaridor qanday keladi?',
   steps: [
-    { n: '03', t: 'Landing', d: 'Obyekt, lokatsiya, afzalliklar va taklif bilan tanishtiramiz.' },
-    { n: '04', t: 'Ariza', d: 'Qiziqqan potensial mijoz ma’lumotlarini qoldiradi.' },
-    { n: '05', t: 'CRM', d: 'Murojaat avtomatik CRM tizimiga tushadi va nazoratga olinadi.' },
-    { n: '06', t: 'Sotuv bo‘limi', d: 'Menejer mijoz bilan aloqa qiladi va keyingi jarayonni olib boradi.' },
+    { t: 'Meta Ads + Google Ads', d: 'Uy qidirayotgan va loyihaga mos auditoriya' },
+    { t: 'Landing', d: 'Obyekt, lokatsiya va taklif' },
+    { t: 'Murojaat', d: 'Qiziqqan mijoz ma’lumot qoldiradi' },
+    { t: 'CRM', d: 'Har bir murojaat nazoratda' },
+    { t: 'Sotuv bo‘limi', d: 'Menejer tezda bog‘lanadi' },
   ],
+  statement: 'Bizning asosiy vazifamiz — loyihangizga potensial xaridorlarni olib kelish va murojaatlar yo‘qolmaydigan tizim qurish.',
 };
 
-export const promise = {
-  eyebrow: 'Mas’uliyat',
-  title: 'Biz nimani va’da qilamiz?',
-  statement: 'Potensial mijoz olib keladigan marketing tizimini qurishni.',
-  text: 'Marketing, reklama, landing, CRM va sotuv jarayonini bir tizimga bog‘laymiz.',
-  honestTitle: 'Biz “falon dona kvartira sotib beramiz” deb va’da bermaymiz.',
-  honestText: 'Yakuniy sotuv natijasi obyektning narxi, lokatsiyasi, taklifi, to‘lov shartlari va sotuv bo‘limining ishlashiga ham bog‘liq.',
-  factors: ['Narx', 'Lokatsiya', 'Taklif', 'To‘lov shartlari', 'Sotuv bo‘limi'],
-  ours: 'Bizning mas’uliyatimiz',
-  oursList: ['Strategiya va offer', 'Reklama va kreativlar', 'Landing va tracking', 'CRM va murojaatlar nazorati', 'Sotuv jarayonini tizimlash'],
-};
-
-/** `result` is optional and must only hold verified, documented outcomes. */
-export type ProofCase = { label: string; task: string; did: string[]; ads: string[]; result?: string[] };
-
-export const proof = {
-  eyebrow: 'Tajriba',
-  title: 'Ko‘chmas mulk auditoriyasi bilan ishlash tajribamiz bor.',
-  text: 'Uy va ko‘chmas mulk sotuviga oid loyihalarda auditoriya bilan ishlaganmiz va potensial xaridorlardan murojaatlar olib kelganmiz. Mijozlarimiz nomi kelishuvga ko‘ra oshkor qilinmaydi.',
-  steps: ['Vazifa', 'Nima qildik', 'Strategiya / reklama'],
-  /**
-   * Anonymous cases: task and work done only, no client names.
-   * Add a `result` list ONLY with verified, documented figures — never estimates or unconfirmed claims.
-   */
-  cases: ([
-    {
-      label: 'Ko‘chmas mulk · Kvartiralar sotuvi',
-      task: 'Kvartira izlayotgan auditoriyadan maqsadli murojaatlar oqimini shakllantirish.',
-      did: ['Marketing strategiyasi', 'Kontent', 'Sotuv voronkasi'],
-      ads: ['Maqsadli reklama', 'SMM'],
-    },
-  ] as ProofCase[]),
-  note: 'Natija ko‘rsatkichlari faqat tasdiqlangan ma’lumotlar va mijoz roziligi bilan e’lon qilinadi.',
+export const handle = {
+  eyebrow: 'Mas’uliyatimiz',
+  title: 'Nimani o‘zimiz qilamiz?',
+  items: [
+    { t: 'Strategiya + offer', d: 'Loyiha, bozor va auditoriyaga mos marketing yo‘nalishini ishlab chiqamiz.' },
+    { t: 'Reklama + kreativ', d: 'Meta Ads, Google Ads va reklama kreativlarini boshqaramiz.' },
+    { t: 'Landing + CRM', d: 'Murojaat olish va uni nazorat qilish tizimini quramiz.' },
+    { t: 'Sotuv tizimi', d: 'Kerak bo‘lsa, sotuv bo‘limini ham noldan qurib beramiz.' },
+  ],
 };
 
 export const pricing = {
   eyebrow: 'Hamkorlik',
   title: 'Bu oddiy SMM paketi emas.',
-  text: 'FAZO Digital qurilish loyihangizning marketing va sotuv infratuzilmasi ustida ishlaydi.',
   price: '$5,000 – $7,000',
   per: '/ oy',
-  priceNote: 'Yakuniy narx loyiha hajmi va kerakli tizimga qarab belgilanadi.',
+  priceNote: 'Yakuniy narx loyiha hajmi va quriladigan tizimga qarab belgilanadi.',
   adBudget: 'Meta Ads va Google Ads reklama budjeti xizmat narxiga kirmaydi va alohida ajratiladi.',
-  qualify: 'O‘zbekiston bo‘ylab marketing va sotuviga jiddiy investitsiya qilishga tayyor qurilish loyihalari bilan ishlaymiz.',
-  includes: ['Strategiya va pozitsioning', 'Kontent va kreativlar', 'Meta Ads va Google Ads boshqaruvi', 'Landing, CRM va tracking', 'Sotuv tizimi va nazorat', 'Muntazam hisobot va optimizatsiya'],
+  honest: 'Biz potensial mijozlar oqimi va uni qabul qiladigan tizim uchun javob beramiz. Yakuniy sotuv obyekt, narx, lokatsiya, to‘lov shartlari va sotuv bo‘limining ishiga ham bog‘liq.',
 };
 
 export const finalCta = {
-  eyebrow: 'Loyihani muhokama qilish',
-  title: 'Qurilish loyihangiz uchun qanday tizim kerakligini birga aniqlaymiz.',
-  text: 'Loyihangiz haqida qisqacha ma’lumot qoldiring. Jamoamiz ma’lumotlarni ko‘rib chiqib, siz bilan bog‘lanadi.',
-  cta: 'Loyihani muhokama qilish',
-  aside: ['Ariza 1–2 daqiqa oladi', 'Ma’lumotlaringiz faqat siz bilan bog‘lanish uchun ishlatiladi'],
+  eyebrow: 'Ariza',
+  title: 'Loyihangizni ko‘rib chiqamiz.',
+  text: 'Qisqacha ma’lumot qoldiring. Jamoamiz loyihangizni ko‘rib chiqib, siz bilan bog‘lanadi.',
+  aside: ['7 ta savol, 1 daqiqa', 'Ma’lumotlaringiz faqat siz bilan bog‘lanish uchun ishlatiladi'],
 };
 
 /* ───────── Form ───────── */
 
 export const form = {
-  submit: 'Loyihani yuborish',
+  submit: 'Loyihamni tahlil qilish',
   sending: 'Yuborilmoqda…',
   required: 'Belgilangan maydonlarni to‘ldiring.',
   errors: {
@@ -154,7 +85,7 @@ export const form = {
   retry: 'Qayta yuborish',
   errorAlt: 'Muammo takrorlansa, Telegram orqali yozing:',
   successTitle: 'Loyihangiz qabul qilindi.',
-  successText: 'Jamoamiz ma’lumotlarni ko‘rib chiqadi va siz tanlagan vaqtga moslab bog‘lanadi.',
+  successText: 'Jamoamiz loyihangizni ko‘rib chiqadi va siz bilan bog‘lanadi.',
   privacy: 'Yuborish orqali ma’lumotlaringiz',
   privacyLink: 'maxfiylik siyosati',
   privacyTail: 'asosida qayta ishlanishiga rozilik bildirasiz.',
@@ -178,5 +109,6 @@ export const OPT = {
     'Boshqa',
   ],
   budget: ['$1,000 gacha', '$1,000–$3,000', '$3,000–$5,000', '$5,000+'],
+  /** No longer asked on the page (shorter form); kept so the server contract and older drafts stay valid. */
   contactTime: ['Imkon qadar tezroq', 'Ertalab (9:00–12:00)', 'Tushdan keyin (12:00–18:00)', 'Kechqurun (18:00–20:00)'],
 };
