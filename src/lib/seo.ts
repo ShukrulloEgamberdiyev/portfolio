@@ -31,8 +31,8 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
   }
   if (path === '/qurilish') {
     return {
-      title: 'Qurilish kompaniyalari uchun marketing va sotuv tizimi | FAZO Digital',
-      description: 'FAZO Digital qurilish kompaniyalari uchun marketing, Meta Ads, Google Ads, landing, CRM va sotuv tizimini yagona jarayonga bog‘laydi.',
+      title: 'Qurilish kompaniyalari uchun mijoz jalb qilish | FAZO Digital',
+      description: 'FAZO Digital turar joy loyihalari uchun Meta Ads, Google Ads, landing, CRM va sotuv tizimi orqali potensial mijozlar oqimini yo‘lga qo‘yadi.',
       canonical: `${SITE_URL}/qurilish`,
       image: `${SITE_URL}/og-qurilish.jpg`,
     };
