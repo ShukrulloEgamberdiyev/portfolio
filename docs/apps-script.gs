@@ -136,11 +136,16 @@ const QURILISH_COLUMNS = [
 /* Frontend (src/content/qurilish.ts) bilan bir xil ruxsat etilgan qiymatlar. */
 const QR = {
   regions: AV.regions,
-  stage: ['Qurilish jarayonida', 'Sotuv boshlangan', 'Qurilish tugagan / sotuv davom etmoqda', 'Yangi loyiha'],
-  problem: ['Murojaatlar kam', 'Murojaatlar sifati past', 'Sotuv sust', 'Marketing tizimi yo‘q', 'Sotuv bo‘limi yo‘q',
-    'Reklama ishlayapti, lekin natija qoniqtirmaydi', 'Boshqa'],
+  stage: ['Qurilish jarayonida', 'Sotuv boshlangan', 'Qurilish tugagan, sotuv davom etmoqda', 'Yangi loyiha'],
+  problem: ['Murojaatlar kam', 'Murojaatlar sifati past', 'Sotuv sust', 'Marketing tizimi yo‘q', 'Sotuv bo‘limi yo‘q', 'Boshqa'],
+  // Sahifada endi so‘ralmaydi: bo‘sh bo‘lishi mumkin, to‘ldirilgan bo‘lsa ro‘yxatdan bo‘lishi shart.
   budget: ['$1,000 gacha', '$1,000–$3,000', '$3,000–$5,000', '$5,000+'],
   contactTime: ['Imkon qadar tezroq', 'Ertalab (9:00–12:00)', 'Tushdan keyin (12:00–18:00)', 'Kechqurun (18:00–20:00)'],
+  // Oldingi forma variantlari: eski sahifa yoki ochiq qolgan tablar yuborsa ham qabul qilinadi.
+  legacy: {
+    stage: ['Qurilish tugagan / sotuv davom etmoqda'],
+    problem: ['Reklama ishlayapti, lekin natija qoniqtirmaydi'],
+  },
 };
 
 /* ───────── Ishlab chiqarish arizasi ───────── */
@@ -422,10 +427,17 @@ function validateQurilish(d) {
   const regionName = sep >= 0 ? region.slice(0, sep) : region;
   if (QR.regions.indexOf(regionName) < 0 || (sep >= 0 && region.slice(sep + 3).trim().length > 80)) return 'region';
 
-  const selects = ['stage', 'problem', 'budget'];
-  for (let i = 0; i < selects.length; i++) if (!oneOf(selects[i], QR[selects[i]])) return selects[i];
-  // Qulay aloqa vaqti sahifada endi so‘ralmaydi: bo‘sh bo‘lishi mumkin, to‘ldirilgan bo‘lsa ro‘yxatdan bo‘lishi shart.
-  if (!(d.contactTime === undefined || d.contactTime === null || d.contactTime === '' || oneOf('contactTime', QR.contactTime))) return 'contactTime';
+  const selects = ['stage', 'problem'];
+  for (let i = 0; i < selects.length; i++) {
+    const k = selects[i];
+    if (!oneOf(k, QR[k]) && !oneOf(k, QR.legacy[k])) return k;
+  }
+  // Budjet va qulay aloqa vaqti sahifada endi so‘ralmaydi: bo‘sh bo‘lishi mumkin, to‘ldirilgan bo‘lsa ro‘yxatdan bo‘lishi shart.
+  const optionalSelects = ['budget', 'contactTime'];
+  for (let i = 0; i < optionalSelects.length; i++) {
+    const k = optionalSelects[i];
+    if (!(d[k] === undefined || d[k] === null || d[k] === '' || oneOf(k, QR[k]))) return k;
+  }
   if (str('problem') === 'Boshqa') {
     if (!within('problemOther', 2, MAX_LEN.goalsOther)) return 'problemOther';
   } else if (!optional('problemOther', MAX_LEN.goalsOther)) return 'problemOther';
