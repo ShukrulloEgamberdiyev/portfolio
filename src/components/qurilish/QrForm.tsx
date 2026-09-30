@@ -13,7 +13,7 @@ const MIN_FILL_MS = 4000;
 type Errors = Partial<Record<keyof QrData, string>>;
 
 const EMPTY: QrData = { name: '', phone: '', company: '', region: '', city: '', stage: '', problem: '', problemOther: '', budget: '', contactTime: '' };
-const ORDER: (keyof QrData)[] = ['name', 'phone', 'company', 'region', 'stage', 'problem', 'problemOther', 'budget'];
+const ORDER: (keyof QrData)[] = ['name', 'phone', 'company', 'region', 'stage', 'problem', 'problemOther'];
 
 export const phoneDigits = (v: string) => {
   let digits = v.replace(/\D/g, '');
@@ -31,7 +31,6 @@ export function validateQurilish(d: QrData): Errors {
   if (!d.stage) e.stage = 'Loyiha bosqichini tanlang';
   if (!d.problem) e.problem = 'Asosiy muammoni tanlang';
   if (d.problem === 'Boshqa' && d.problemOther.trim().length < 2) e.problemOther = 'Qisqacha yozing';
-  if (!d.budget) e.budget = 'Budjet oralig‘ini tanlang';
   return e;
 }
 
@@ -110,7 +109,13 @@ export function QrForm() {
       const raw = sessionStorage.getItem(DRAFT_KEY);
       if (raw) {
         const saved = JSON.parse(raw) as { d?: Partial<QrData>; sid?: string };
-        if (saved.d) setD({ ...EMPTY, ...saved.d });
+        if (saved.d) {
+          const r = { ...EMPTY, ...saved.d };
+          // Drafts from the older, longer form: drop answers that are no longer offered.
+          if (!OPT.stage.includes(r.stage)) r.stage = '';
+          if (!OPT.problem.includes(r.problem)) r.problem = '';
+          setD({ ...r, budget: '', contactTime: '' });
+        }
         if (saved.sid && isQrSubmissionId(saved.sid)) submissionId.current = saved.sid;
       }
     } catch { /* ignore */ }
@@ -214,7 +219,7 @@ export function QrForm() {
                 <Field id="name" label="Ismingiz" error={E('name')}>
                   <input id="name" name="name" required className={inputCls(E('name'))} value={d.name} onChange={text('name', 80)} autoComplete="name" aria-invalid={!!E('name')} aria-describedby={describedBy('name', E('name'))} />
                 </Field>
-                <Field id="phone" label="Telefon raqamingiz" error={E('phone')}>
+                <Field id="phone" label="Telefon" error={E('phone')}>
                   <div className={`flex min-h-[52px] items-center border bg-ink/60 transition-colors focus-within:border-violet ${E('phone') ? 'border-alert/70' : 'border-line-strong'}`}>
                     <span className="select-none border-r border-line pl-4 pr-3 text-[16px] text-mist">+998</span>
                     <input id="phone" name="phone" type="tel" inputMode="tel" autoComplete="tel-national" placeholder="90 123 45 67" required aria-invalid={!!E('phone')} aria-describedby={describedBy('phone', E('phone'))}
@@ -224,10 +229,10 @@ export function QrForm() {
                 </Field>
               </div>
               <div className="grid gap-7 sm:grid-cols-2">
-                <Field id="company" label="Kompaniya yoki loyiha nomi" error={E('company')}>
+                <Field id="company" label="Kompaniya / loyiha nomi" error={E('company')}>
                   <input id="company" name="company" required className={inputCls(E('company'))} value={d.company} onChange={text('company', 160)} autoComplete="organization" aria-invalid={!!E('company')} aria-describedby={describedBy('company', E('company'))} />
                 </Field>
-                <Field id="region" label="Loyihangiz qaysi hududda?" error={E('region')}>
+                <Field id="region" label="Hudud" error={E('region')}>
                   <div className="relative">
                     <select id="region" name="region" className={`${inputCls(E('region'))} appearance-none pr-10 ${d.region ? '' : 'text-ash/80'}`} value={d.region} onChange={text('region')} required aria-invalid={!!E('region')} aria-describedby={describedBy('region', E('region'))}>
                       <option value="" disabled>Hududni tanlang</option>
@@ -240,8 +245,8 @@ export function QrForm() {
             </div>
 
             <div className="space-y-7 border-t border-line px-5 py-7 sm:px-10 sm:py-9">
-              <Chips id="stage" label="Loyiha qaysi bosqichda?" options={OPT.stage} value={d.stage} onChange={pick('stage')} error={E('stage')} />
-              <Chips id="problem" label="Hozirgi asosiy muammo nima?" options={OPT.problem} value={d.problem} onChange={pick('problem')} error={E('problem')} />
+              <Chips id="stage" label="Loyiha holati" options={OPT.stage} value={d.stage} onChange={pick('stage')} error={E('stage')} />
+              <Chips id="problem" label="Asosiy muammo" options={OPT.problem} value={d.problem} onChange={pick('problem')} error={E('problem')} />
               <AnimatePresence initial={false}>
                 {d.problem === 'Boshqa' && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3, ease }} className="overflow-hidden">
@@ -251,8 +256,6 @@ export function QrForm() {
                   </motion.div>
                 )}
               </AnimatePresence>
-              <Chips id="budget" label="Oylik reklama budjeti" options={OPT.budget} value={d.budget} onChange={pick('budget')} error={E('budget')} columns="grid-cols-2"
-                hint="Meta Ads va Google Ads uchun ajratiladigan reklama budjeti. Bu FAZO Digital xizmati narxi emas." />
             </div>
           </fieldset>
 
