@@ -1,11 +1,11 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Logo } from '../components/Logo';
 import { QrForm } from '../components/qurilish/QrForm';
-import { Dotted, Eyebrow, Icon, QrCta, Section } from '../components/qurilish/QrUi';
-import { CTA, QR_FORM_ID, hero, offer, problem, process } from '../content/qurilish';
+import { Dotted, QrCta } from '../components/qurilish/QrUi';
+import { CTA, QR_FORM_ID, hero, offer, problem, register, system } from '../content/qurilish';
 import { captureAttribution, initPixel, track } from '../lib/tracking';
 import { Reveal } from '../ui/Reveal';
+import mark from '../assets/fazo-mark.png';
 import heroWide from '../assets/qurilish/hero-1920.jpg';
 import heroWideWebp from '../assets/qurilish/hero-1920.webp';
 import heroMid from '../assets/qurilish/hero-960.jpg';
@@ -13,169 +13,147 @@ import heroMidWebp from '../assets/qurilish/hero-960.webp';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-/** No site navigation on this landing: one small brand mark, one goal (the form). */
-function Brand() {
+/** No site navigation on this ad landing: one compact brand line, one goal (registration). */
+function Brand({ className = '' }: { className?: string }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-      <Logo className="text-[14px]" markClass="h-5" />
-      <span aria-hidden className="hidden h-3.5 w-px bg-line-strong min-[400px]:inline-block" />
-      <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-bone/70">{hero.brandNote}</span>
-    </div>
+    <p className={`flex items-center gap-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-bone/85 ${className}`}>
+      <img src={mark} alt="" aria-hidden className="h-[18px] w-auto" />
+      <span>FAZO Digital <span className="text-violet">·</span> {hero.label}</span>
+    </p>
   );
 }
 
-function H2({ id, text, className = '' }: { id: string; text: string; className?: string }) {
+/** Reklama → murojaat → CRM → sotuv, as one compact wrapping line. */
+function Flow({ steps, className = '' }: { steps: string[]; className?: string }) {
   return (
-    <Reveal>
-      <h2 id={id} className={`text-[1.95rem] font-bold leading-[1.05] tracking-[-0.035em] text-bone sm:text-[2.6rem] lg:text-[3.2rem] ${className}`}><Dotted text={text} /></h2>
-    </Reveal>
+    <ol className={`flex flex-wrap items-center gap-x-2 gap-y-2.5 ${className}`}>
+      {steps.map((t, i) => {
+        const last = i === steps.length - 1;
+        return (
+          <li key={t} className="flex items-center gap-2">
+            <span className={`inline-flex min-h-10 items-center border px-3.5 text-[0.95rem] font-semibold tracking-[-0.01em] sm:min-h-12 sm:px-5 sm:text-[1.1rem] ${last ? 'border-violet bg-violet text-white' : 'border-line-strong bg-ink text-bone'}`}>{t}</span>
+            {!last && <span aria-hidden className="text-mist">→</span>}
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
-/* ───────── 1. Hero ───────── */
+/* ───────── Hero: the whole offer on the first mobile screen ───────── */
 function Hero() {
   const reduce = useReducedMotion();
-  const up = (delay: number) => ({ initial: reduce ? false : { opacity: 0, y: 18 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.8, delay, ease } });
+  const up = (delay: number) => ({ initial: reduce ? false : { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, delay, ease } });
   return (
-    <section aria-labelledby="qr-hero" className="relative isolate overflow-hidden lg:flex lg:min-h-[92svh] lg:flex-col">
-      {/* Mobile / tablet: brand, then the complex in daylight, then the offer */}
-      <div className="shell py-4 lg:hidden" style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)' }}><Brand /></div>
+    <section aria-labelledby="qr-hero" className="relative isolate overflow-hidden lg:flex lg:min-h-[86svh] lg:flex-col">
+      {/* Phones: compact brand line, a short band of the construction photo, then the offer */}
+      <div className="shell flex h-11 items-center lg:hidden" style={{ marginTop: 'env(safe-area-inset-top, 0px)' }}><Brand /></div>
       <div className="relative -z-10 lg:hidden">
         <picture>
           <source type="image/webp" srcSet={heroMidWebp} />
-          <img src={heroMid} alt={hero.imageAlt} width={960} height={540} decoding="async" {...{ fetchpriority: 'high' }}
-            className="aspect-[4/3] w-full object-cover object-[62%_35%] sm:aspect-[16/9]" />
+          <img src={heroMid} alt={hero.imageAlt} width={960} height={640} decoding="async" {...{ fetchpriority: 'high' }}
+            className="h-[23svh] min-h-[150px] max-h-[230px] w-full object-cover object-[50%_32%] sm:max-h-[320px] sm:h-[34svh]" />
         </picture>
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-ink to-transparent" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-ink to-transparent" />
       </div>
-      {/* Desktop: the photo fills the right side; a soft gradient only behind the text */}
-      <div className="absolute inset-y-0 left-[34%] right-0 -z-10 hidden lg:block">
+
+      {/* Desktop: split — copy left, the site under construction right; gradient only at the seam */}
+      <div className="absolute inset-y-0 left-[47%] right-0 -z-10 hidden overflow-hidden lg:block">
         <picture>
           <source type="image/webp" srcSet={heroWideWebp} />
-          <img src={heroWide} alt={hero.imageAlt} width={1920} height={1080} decoding="async" {...{ fetchpriority: 'high' }}
-            className="h-full w-full object-cover object-[68%_center]" />
+          <img src={heroWide} alt={hero.imageAlt} width={1920} height={1280} decoding="async" {...{ fetchpriority: 'high' }}
+            className="h-full w-full origin-[60%_15%] scale-[1.22] object-cover object-[62%_30%]" />
         </picture>
-        <div aria-hidden className="absolute inset-0 bg-[linear-gradient(90deg,#050505_0%,rgba(5,5,5,0.5)_14%,rgba(5,5,5,0.06)_34%,rgba(5,5,5,0)_50%)]" />
+        <div aria-hidden className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-ink to-transparent" />
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink to-transparent" />
       </div>
 
       <div className="shell hidden pt-8 lg:block"><Brand /></div>
       <div className="shell w-full lg:flex lg:flex-1 lg:items-center">
-        <div className="max-w-[640px] pb-14 pt-3 sm:pb-16 lg:max-w-[44%] lg:py-16">
-          <motion.div {...up(0)}><Eyebrow>{hero.eyebrow}</Eyebrow></motion.div>
-          <motion.h1 id="qr-hero" {...up(0.06)}
-            className="mt-5 text-[2.3rem] font-bold leading-[1.03] tracking-[-0.035em] min-[400px]:text-[2.55rem] sm:text-[3.2rem] lg:text-[3.6rem] xl:text-[4.1rem]">
+        <div className="pb-10 pt-1 sm:max-w-[600px] lg:max-w-[45%] lg:py-14">
+          <motion.h1 id="qr-hero" {...up(0)}
+            className="text-[1.95rem] font-bold leading-[1.04] tracking-[-0.035em] min-[400px]:text-[2.1rem] sm:text-[2.8rem] lg:text-[3rem] xl:text-[3.5rem]">
             <Dotted text={hero.title} />
           </motion.h1>
-          <motion.p {...up(0.14)} className="mt-5 max-w-[46ch] text-[1.05rem] leading-relaxed text-bone/85 sm:text-[1.15rem]">{hero.text}</motion.p>
-          <motion.div {...up(0.22)} className="mt-8">
-            <QrCta location="hero" className="w-full sm:w-auto">{CTA}</QrCta>
+          <motion.p {...up(0.06)} className="mt-3 text-[0.98rem] leading-snug text-bone/80 sm:mt-5 sm:text-[1.1rem] sm:leading-relaxed">{hero.text}</motion.p>
+          <motion.dl {...up(0.12)} className="mt-4 divide-y divide-line-strong border border-line-strong bg-surface-1/70 sm:mt-6">
+            {hero.system.map((it) => (
+              <div key={it.k} className="flex items-baseline gap-3 px-3.5 py-2.5 sm:px-5 sm:py-3.5">
+                <dt className="w-[92px] shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-violet sm:w-[120px] sm:text-[11px]">{it.k}</dt>
+                <dd className="text-[0.95rem] font-semibold leading-snug text-bone sm:text-[1.05rem]">{it.v}</dd>
+              </div>
+            ))}
+          </motion.dl>
+          <motion.div {...up(0.18)} className="mt-4 sm:mt-7">
+            <QrCta location="hero" className="w-full !text-[13px] sm:w-auto sm:min-w-[300px]">{CTA}</QrCta>
           </motion.div>
-          <motion.p {...up(0.3)} className="mt-6 flex max-w-[52ch] items-start gap-3 text-[0.9rem] leading-snug text-bone/70">
-            <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 bg-violet" />{hero.context}
-          </motion.p>
         </div>
       </div>
     </section>
   );
 }
 
-/* ───────── 2. Problem + solution ───────── */
-const PROBLEM_ICONS = ['cost', 'same', 'lost'];
-function ProblemSolution() {
+/* ───────── A. Problem ───────── */
+function Problem() {
   return (
-    <Section labelledBy="qr-problem" className="!py-16 sm:!py-20 lg:!py-24">
-      <H2 id="qr-problem" text={problem.title} />
-      <ul className="mt-9 grid gap-px border border-line bg-line md:grid-cols-3 lg:mt-12">
-        {problem.cards.map((c, i) => (
-          <Reveal as="li" key={c.t} delay={i * 0.06} className="flex gap-4 bg-ink p-5 sm:p-7">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-line-strong text-violet"><Icon name={PROBLEM_ICONS[i]} /></span>
-            <div>
-              <h3 className="text-[1.08rem] font-semibold leading-snug tracking-[-0.015em] text-bone sm:text-[1.2rem]">{c.t}</h3>
-              <p className="mt-1.5 text-[0.93rem] leading-relaxed text-mist">{c.d}</p>
-            </div>
-          </Reveal>
-        ))}
-      </ul>
-      <Reveal className="mt-8 lg:mt-10">
-        <div className="border border-violet/40 bg-[linear-gradient(120deg,rgba(122,107,255,0.14),rgba(122,107,255,0.02)_60%)] p-6 sm:p-8">
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-violet">{problem.solutionLabel}</p>
-          <p className="mt-3 max-w-[40ch] text-[1.3rem] font-bold leading-snug tracking-[-0.02em] text-bone sm:text-[1.6rem] lg:text-[1.9rem]">{problem.solution}</p>
-        </div>
-      </Reveal>
-    </Section>
-  );
-}
-
-/* ───────── 3. How it works + what we handle ───────── */
-const HANDLE_ICONS = ['strategy', 'reach', 'infra', 'sales'];
-function Process() {
-  const reduce = useReducedMotion();
-  const n = process.steps.length;
-  return (
-    <Section labelledBy="qr-process" className="overflow-hidden !py-16 sm:!py-20 lg:!py-24">
-      <H2 id="qr-process" text={process.title} />
-
-      {/* One flow for every screen: vertical on phones, horizontal from lg */}
-      <ol aria-label="Murojaat yo‘li" className="relative mt-10 flex max-w-[560px] flex-col gap-2 lg:mt-14 lg:grid lg:max-w-none lg:grid-cols-5 lg:gap-4">
-        <span aria-hidden className="absolute bottom-6 left-[21px] top-6 w-px bg-line-strong lg:bottom-auto lg:left-[10%] lg:right-[10%] lg:top-[21px] lg:h-px lg:w-auto" />
-        <motion.span aria-hidden className="absolute bottom-6 left-[21px] top-6 w-px origin-top bg-gradient-to-b from-line-strong via-violet to-violet lg:bottom-auto lg:left-[10%] lg:right-[10%] lg:top-[21px] lg:h-px lg:w-auto lg:origin-left lg:bg-gradient-to-r"
-          initial={reduce ? false : { opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, margin: '0px 0px -20% 0px' }} transition={{ duration: 1.4, ease }} />
-        {process.steps.map((t, i) => {
-          const last = i === n - 1;
-          return (
-            <Reveal as="li" key={t} y={12} delay={i * 0.08} className="relative flex items-center gap-4 lg:flex-col lg:gap-5 lg:text-center">
-              <span className={`relative z-10 flex h-[43px] w-[43px] shrink-0 items-center justify-center rounded-full border font-mono text-[12px] ${last ? 'border-violet bg-violet text-white' : 'border-line-strong bg-ink text-bone'}`}>{String(i + 1).padStart(2, '0')}</span>
-              <span className="py-2.5 text-[1rem] font-bold uppercase tracking-[0.01em] text-bone lg:py-0 xl:text-[1.1rem]">{t}</span>
+    <section aria-labelledby="qr-problem" className="border-t border-line py-12 sm:py-16 lg:py-20">
+      <div className="shell grid gap-6 lg:grid-cols-12 lg:items-center lg:gap-14">
+        <Reveal className="lg:col-span-5">
+          <h2 id="qr-problem" className="text-[1.8rem] font-bold leading-[1.05] tracking-[-0.035em] sm:text-[2.4rem] lg:text-[2.8rem]">{problem.title}</h2>
+        </Reveal>
+        <ul className="divide-y divide-line border-y border-line lg:col-span-7">
+          {problem.points.map((t, i) => (
+            <Reveal as="li" key={t} delay={i * 0.05} className="flex items-center gap-4 py-4 sm:py-5">
+              <span aria-hidden className="h-2 w-2 shrink-0 bg-violet" />
+              <span className="text-[1.05rem] font-semibold leading-snug tracking-[-0.01em] text-bone sm:text-[1.25rem]">{t}</span>
             </Reveal>
-          );
-        })}
-      </ol>
-      <Reveal className="mt-8 lg:mt-10">
-        <p className="max-w-[48ch] border-l-2 border-violet pl-4 text-[1.05rem] leading-relaxed text-bone/85 sm:text-[1.15rem]">{process.note}</p>
-      </Reveal>
-
-      <ul className="mt-10 grid gap-px border border-line bg-line sm:grid-cols-2 lg:mt-14 xl:grid-cols-4">
-        {process.items.map((it, i) => (
-          <Reveal as="li" key={it.t} delay={i * 0.06} className="group flex gap-4 bg-ink p-5 transition-colors duration-500 hover:bg-surface-1 sm:block sm:p-7">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-line-strong text-bone transition-colors group-hover:border-violet group-hover:text-violet"><Icon name={HANDLE_ICONS[i]} /></span>
-            <div>
-              <h3 className="text-[1.1rem] font-bold uppercase leading-tight tracking-[-0.01em] text-bone sm:mt-7">{it.t}</h3>
-              <p className="mt-1.5 text-[0.93rem] leading-relaxed text-mist sm:mt-2.5">{it.d}</p>
-            </div>
-          </Reveal>
-        ))}
-      </ul>
-    </Section>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
 
-/* ───────── 4. Price + form ───────── */
-function OfferForm() {
+/* ───────── B. System + C. Partnership ───────── */
+function SystemOffer() {
   return (
-    <section id={QR_FORM_ID} aria-labelledby="qr-form-title" className="relative scroll-mt-6 border-t border-line py-16 sm:py-20 lg:py-24">
-      <div aria-hidden className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[80%] -translate-x-1/2 rounded-full bg-violet/[0.07] blur-[120px]" />
-      <div className="shell relative grid gap-8 lg:grid-cols-12 lg:gap-14">
-        <div className="lg:col-span-5">
-          <div className="lg:sticky lg:top-10">
-            <h2 id="qr-form-title" className="text-[1.95rem] font-bold leading-[1.05] tracking-[-0.035em] sm:text-[2.6rem] lg:text-[3rem]">{offer.title}</h2>
-            <p className="mt-4 max-w-[46ch] text-[1.05rem] leading-relaxed text-mist">{offer.text}</p>
-            <div className="relative mt-7 overflow-hidden border border-line-strong bg-surface-1/90">
-              <div className="px-5 py-5 sm:px-7 sm:py-6">
-                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-mist">{offer.priceLabel}</p>
-                <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <span className="tabular text-[2rem] font-bold leading-none tracking-[-0.04em] text-bone min-[400px]:text-[2.3rem] sm:text-[2.7rem]">{offer.price}</span>
-                  <span className="font-mono text-[13px] uppercase tracking-[0.1em] text-mist">{offer.per}</span>
-                </p>
-              </div>
-              <div className="flex gap-3 border-t border-line bg-ink/60 px-5 py-3.5 sm:px-7">
-                <span aria-hidden className="mt-[2px] flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-lamp text-[11px] font-bold text-lamp">i</span>
-                <p className="text-[0.93rem] leading-snug text-bone/90">{offer.adBudget}</p>
-              </div>
+    <section aria-labelledby="qr-system" className="border-t border-line py-12 sm:py-16 lg:py-20">
+      <div className="shell">
+        <Reveal>
+          <h2 id="qr-system" className="max-w-[22ch] text-[1.8rem] font-bold leading-[1.05] tracking-[-0.035em] sm:text-[2.4rem] lg:text-[2.8rem]"><Dotted text={system.title} /></h2>
+        </Reveal>
+        <Reveal delay={0.05}><Flow steps={system.steps} className="mt-6 sm:mt-8" /></Reveal>
+
+        <Reveal delay={0.1} className="mt-10 sm:mt-14">
+          <div aria-label="Hamkorlik" className="flex flex-col gap-5 border border-line-strong bg-surface-1/80 p-5 sm:p-8 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-mist">{offer.label}</p>
+              <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="tabular text-[2.2rem] font-bold leading-none tracking-[-0.04em] text-bone sm:text-[2.8rem]">{offer.price}</span>
+                <span className="font-mono text-[13px] uppercase tracking-[0.1em] text-mist">{offer.per}</span>
+              </p>
+              <p className="mt-2.5 text-[0.95rem] text-bone/80">{offer.adBudget}</p>
             </div>
+            <QrCta location="pricing" className="w-full !text-[13px] lg:w-auto lg:min-w-[280px]">{CTA}</QrCta>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── D. Registration ───────── */
+function Registration() {
+  return (
+    <section id={QR_FORM_ID} aria-labelledby="qr-form-title" className="relative scroll-mt-2 border-t border-line pb-16 pt-10 sm:py-16 lg:py-20">
+      <div className="shell relative grid gap-6 lg:grid-cols-12 lg:gap-14">
+        <div className="lg:col-span-4">
+          <div className="lg:sticky lg:top-10">
+            <h2 id="qr-form-title" className="text-[2rem] font-bold leading-[1.05] tracking-[-0.035em] sm:text-[2.6rem] lg:text-[3rem]">{register.title}</h2>
+            <p className="mt-3 max-w-[40ch] text-[1rem] leading-relaxed text-mist sm:text-[1.05rem]">{register.text}</p>
           </div>
         </div>
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-8">
           <QrForm />
         </div>
       </div>
@@ -238,9 +216,9 @@ export default function QurilishPage() {
   return (
     <div className="relative">
       <Hero />
-      <ProblemSolution />
-      <Process />
-      <OfferForm />
+      <Problem />
+      <SystemOffer />
+      <Registration />
       <MiniFooter />
       <StickyCta />
     </div>
