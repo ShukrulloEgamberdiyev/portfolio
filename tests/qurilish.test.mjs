@@ -8,7 +8,7 @@ import ts from 'typescript';
 // Server option lists must match the /qurilish form options exactly.
 const content = await readFile(new URL('../src/content/qurilish.ts', import.meta.url), 'utf8');
 const js = ts.transpileModule(content, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText;
-const { OPT, REGIONS, pricing } = await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
+const { OPT, REGIONS, offer } = await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
 const gs = await readFile(new URL('../docs/apps-script.gs', import.meta.url), 'utf8');
 
 function receiver() {
@@ -54,7 +54,7 @@ function receiver() {
 const valid = (over = {}) => ({
   formType: 'qurilish', token: 'fazo-2026-maxfiy', hp: '', elapsed: '9000', submissionId: 'QR-MFX12AB-ABCDEF1234',
   name: 'Aziz', phone: '+998 90 123 45 67', company: 'Test Qurilish', region: 'Samarqand viloyati — Samarqand',
-  stage: 'Sotuv boshlangan', problem: 'Murojaatlar kam', problemOther: '', budget: '$3,000–$5,000', contactTime: 'Ertalab (9:00–12:00)',
+  stage: 'Sotuv boshlangan', problem: 'Murojaatlar kam', problemOther: '', budget: '', contactTime: '',
   ...over,
 });
 
@@ -64,9 +64,10 @@ test('server option lists match the /qurilish form options exactly', () => {
   for (const k of ['stage', 'problem', 'budget', 'contactTime']) assert.deepEqual(QR[k], OPT[k], k);
 });
 
-test('agreed budget options and price are unchanged', () => {
-  assert.deepEqual(OPT.budget, ['$1,000 gacha', '$1,000–$3,000', '$3,000–$5,000', '$5,000+']);
-  assert.equal(pricing.price, '$5,000 – $7,000');
+test('agreed price is unchanged and the ad budget is separate', () => {
+  assert.equal(offer.price, '$5,000–$7,000');
+  assert.equal(offer.per, '/ oy');
+  assert.match(offer.adBudget, /alohida/);
 });
 
 test('valid qurilish lead goes to QURILISH LEADLAR only, retry does not duplicate', () => {
@@ -86,7 +87,7 @@ test('valid qurilish lead goes to QURILISH LEADLAR only, retry does not duplicat
 test('invalid fields are rejected with the field name and no row', () => {
   const r = receiver();
   for (const [over, field] of [
-    [{ phone: '12345' }, 'phone'], [{ budget: '$10' }, 'budget'], [{ stage: 'x' }, 'stage'],
+    [{ phone: '12345' }, 'phone'], [{ budget: '$10' }, 'budget'], [{ problem: 'x' }, 'problem'], [{ stage: 'x' }, 'stage'],
     [{ problem: 'Boshqa', problemOther: '' }, 'problemOther'], [{ region: 'Moskva' }, 'region'],
     [{ submissionId: 'AV-XXXXXX-YYYYYY' }, 'submissionId'], [{ company: 'A' }, 'company'],
   ]) {
@@ -107,4 +108,13 @@ test('per-phone limit applies to new submissions', () => {
   const r = receiver();
   for (let i = 0; i < 3; i++) assert.equal(r.send(valid({ submissionId: `QR-MFX12AB-ABCDEF12${i}0` })).ok, true);
   assert.equal(r.send(valid({ submissionId: 'QR-MFX12AB-ABCDEF1299' })).error, 'contact_rate_limited');
+});
+
+test('budget is optional now (6-field form), older payloads with budget and old labels still save', () => {
+  const r = receiver();
+  assert.equal(r.send(valid({ submissionId: 'QR-MFX12AB-BUDGET0001', budget: undefined })).ok, true);
+  const old = r.send(valid({ submissionId: 'QR-MFX12AB-OLDFORM001', phone: '+998 91 000 00 01', budget: '$3,000–$5,000', contactTime: 'Ertalab (9:00–12:00)',
+    stage: 'Qurilish tugagan / sotuv davom etmoqda', problem: 'Reklama ishlayapti, lekin natija qoniqtirmaydi' }));
+  assert.equal(old.ok, true); assert.equal(old.saved, true);
+  assert.equal(r.send(valid({ submissionId: 'QR-MFX12AB-NEWSTAGE01', phone: '+998 91 000 00 02', stage: 'Qurilish tugagan, sotuv davom etmoqda' })).ok, true);
 });
