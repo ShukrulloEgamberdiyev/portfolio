@@ -2,66 +2,58 @@
 
 export const QR_FORM_ID = 'loyiha';
 
-/** One CTA label everywhere: every primary button leads to the same form. */
-export const CTA = 'Loyiham uchun yechim olish';
+/** One CTA label everywhere: every primary button leads to the same registration form. */
+export const CTA = 'Ro‘yxatdan o‘tish';
 
 export const hero = {
-  brandNote: 'Qurilish loyihalari uchun marketing',
-  eyebrow: 'Qurilish kompaniyalari uchun',
-  title: 'Uylar bor. Endi ularga xaridor kerak.',
-  text: 'Meta Ads va Google Ads orqali potensial xaridorlarni olib kelamiz va murojaatlarni sotuv bo‘limigacha bog‘laymiz.',
-  context: 'O‘zbekiston bo‘ylab turar joy loyihalari bilan ishlaymiz.',
-  imageAlt: 'Kunduzgi yorug‘likdagi yangi turar joy majmuasi hovlisi: rangli ko‘p qavatli binolar, yashil maysazor va sport maydonchasi',
+  label: 'Qurilish',
+  title: 'Qurayotgan uylaringizga potensial xaridorlarni olib kelamiz.',
+  text: 'Meta Ads va Google Ads orqali murojaatlar oqimini yo‘lga qo‘yib, ularni CRM va sotuv bo‘limiga bog‘laymiz.',
+  system: [
+    { k: 'Mijoz oqimi', v: 'Meta Ads + Google Ads' },
+    { k: 'Tizim', v: 'Landing → CRM → Sotuv' },
+  ],
+  imageAlt: 'Kunduzgi yorug‘likda qurilayotgan zamonaviy turar joy majmuasi: ko‘p qavatli binolar va minorali kran',
 };
 
 export const problem = {
-  title: 'Qurilish bor, lekin sotuv sustmi?',
-  cards: [
-    { t: 'Murojaatlar kam', d: 'Potensial xaridorlar yetarli kelmayapti.' },
-    { t: 'Reklama ishlayapti, natija qoniqtirmaydi', d: 'Budjet sarflanadi, lekin kerakli auditoriyadan murojaat kam.' },
-    { t: 'Murojaatlar yo‘qolmoqda', d: 'CRM, tezkor aloqa yoki follow-up tizimi yetarli emas.' },
-  ],
-  solutionLabel: 'FAZO Digital nima qiladi?',
-  solution: 'Potensial xaridorlarni olib kelamiz va murojaatlarni sotuv bo‘limigacha bog‘laymiz.',
+  title: 'Qurilish bor. Sotuv sustmi?',
+  points: ['Murojaatlar kam', 'Reklama ishlayapti, natija qoniqtirmaydi', 'Murojaatlar sotuv jarayonida yo‘qoladi'],
 };
 
-export const process = {
-  title: 'Jarayon oddiy.',
-  steps: ['Meta Ads + Google Ads', 'Landing', 'Murojaat', 'CRM', 'Sotuv bo‘limi'],
-  note: 'Reklamadan kelgan har bir murojaat nazoratli jarayonga tushadi.',
-  items: [
-    { t: 'Strategiya', d: 'Loyiha uchun offer va reklama yo‘nalishi.' },
-    { t: 'Reklama', d: 'Meta Ads + Google Ads.' },
-    { t: 'Landing + CRM', d: 'Murojaatlarni yig‘ish va nazorat qilish.' },
-    { t: 'Sotuv tizimi', d: 'Kerak bo‘lsa sotuv bo‘limini noldan quramiz.' },
-  ],
+export const system = {
+  title: 'Biz jarayonni bitta tizimga bog‘laymiz.',
+  steps: ['Meta + Google', 'Landing', 'Murojaat', 'CRM', 'Sotuv'],
 };
 
 export const offer = {
-  title: 'Loyihangiz uchun yechim kerakmi?',
-  text: 'Loyihangiz haqida qisqacha ma’lumot qoldiring. Jamoamiz uni ko‘rib chiqib, siz bilan bog‘lanadi.',
-  priceLabel: 'FAZO Digital xizmati',
+  label: 'FAZO Digital xizmati',
   price: '$5,000–$7,000',
   per: '/ oy',
-  adBudget: 'Meta Ads va Google Ads reklama budjeti alohida.',
+  adBudget: 'Reklama budjeti alohida ajratiladi.',
+};
+
+export const register = {
+  title: 'Ro‘yxatdan o‘tish',
+  text: 'Loyihangiz haqida qisqacha ma’lumot qoldiring. Jamoamiz siz bilan bog‘lanadi.',
 };
 
 /* ───────── Form ───────── */
 
 export const form = {
-  submit: 'Loyihamni tahlil qilish',
+  submit: 'Ro‘yxatdan o‘tish',
   sending: 'Yuborilmoqda…',
   required: 'Belgilangan maydonlarni to‘ldiring.',
   errors: {
-    network: 'Ariza yuborilmadi: aloqa uzildi yoki server javob bermadi. Internetni tekshirib, qayta yuboring — kiritilgan ma’lumotlar saqlanib qoldi.',
-    busy: 'Hozir arizalar juda ko‘p. Bir necha daqiqadan so‘ng qayta yuboring — kiritilgan ma’lumotlar saqlanib qoldi.',
-    contact: 'Shu telefon raqamidan yaqinda bir nechta ariza yuborilgan. Keyinroq qayta urinib ko‘ring yoki Telegram orqali yozing.',
-    invalid: 'Ariza qabul qilinmadi: ba’zi maydonlar to‘liq emas. Javoblarni tekshirib, qayta yuboring.',
-    generic: 'Ariza yuborilmadi. Qayta urinib ko‘ring — kiritilgan ma’lumotlar saqlanib qoldi.',
+    network: 'Yuborilmadi: aloqa uzildi yoki server javob bermadi. Internetni tekshirib, qayta yuboring — kiritilgan ma’lumotlar saqlanib qoldi.',
+    busy: 'Hozir so‘rovlar juda ko‘p. Bir necha daqiqadan so‘ng qayta yuboring — kiritilgan ma’lumotlar saqlanib qoldi.',
+    contact: 'Shu telefon raqami bilan yaqinda bir necha marta ro‘yxatdan o‘tilgan. Keyinroq qayta urinib ko‘ring yoki Telegram orqali yozing.',
+    invalid: 'Qabul qilinmadi: ba’zi maydonlar to‘liq emas. Javoblarni tekshirib, qayta yuboring.',
+    generic: 'Yuborilmadi. Qayta urinib ko‘ring — kiritilgan ma’lumotlar saqlanib qoldi.',
   },
   retry: 'Qayta yuborish',
   errorAlt: 'Muammo takrorlansa, Telegram orqali yozing:',
-  successTitle: 'Loyihangiz qabul qilindi.',
+  successTitle: 'Ro‘yxatdan o‘tdingiz.',
   successText: 'Jamoamiz loyihangizni ko‘rib chiqadi va siz bilan bog‘lanadi.',
   privacy: 'Yuborish orqali ma’lumotlaringiz',
   privacyLink: 'maxfiylik siyosati',

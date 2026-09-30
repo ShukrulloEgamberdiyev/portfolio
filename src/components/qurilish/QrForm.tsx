@@ -206,7 +206,7 @@ export function QrForm() {
           <p className="mt-4 max-w-[44ch] text-[1.05rem] leading-relaxed text-mist">{F.successText}</p>
         </motion.div>
       ) : (
-        <form noValidate onSubmit={(e) => { e.preventDefault(); void submit(); }} onFocus={started} aria-describedby="qr-form-status" aria-label="Loyiha arizasi">
+        <form noValidate onSubmit={(e) => { e.preventDefault(); void submit(); }} onFocus={started} aria-describedby="qr-form-status" aria-label="Ro‘yxatdan o‘tish formasi">
           {/* Honeypot: invisible to people, tempting to bots. */}
           <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
             <label htmlFor="qr_fax">Fax</label>
@@ -219,7 +219,7 @@ export function QrForm() {
                 <Field id="name" label="Ismingiz" error={E('name')}>
                   <input id="name" name="name" required className={inputCls(E('name'))} value={d.name} onChange={text('name', 80)} autoComplete="name" aria-invalid={!!E('name')} aria-describedby={describedBy('name', E('name'))} />
                 </Field>
-                <Field id="phone" label="Telefon" error={E('phone')}>
+                <Field id="phone" label="Telefon raqamingiz" error={E('phone')}>
                   <div className={`flex min-h-[52px] items-center border bg-ink/60 transition-colors focus-within:border-violet ${E('phone') ? 'border-alert/70' : 'border-line-strong'}`}>
                     <span className="select-none border-r border-line pl-4 pr-3 text-[16px] text-mist">+998</span>
                     <input id="phone" name="phone" type="tel" inputMode="tel" autoComplete="tel-national" placeholder="90 123 45 67" required aria-invalid={!!E('phone')} aria-describedby={describedBy('phone', E('phone'))}
@@ -246,7 +246,7 @@ export function QrForm() {
 
             <div className="space-y-7 border-t border-line px-5 py-7 sm:px-10 sm:py-9">
               <Chips id="stage" label="Loyiha holati" options={OPT.stage} value={d.stage} onChange={pick('stage')} error={E('stage')} />
-              <Chips id="problem" label="Asosiy muammo" options={OPT.problem} value={d.problem} onChange={pick('problem')} error={E('problem')} />
+              <Chips id="problem" label="Asosiy muammo" options={OPT.problem} value={d.problem} onChange={pick('problem')} error={E('problem')} columns="grid-cols-2" />
               <AnimatePresence initial={false}>
                 {d.problem === 'Boshqa' && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3, ease }} className="overflow-hidden">

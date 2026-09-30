@@ -13,10 +13,10 @@ export function initSmoothScroll() {
 }
 
 /** Scroll to a section id, respecting the sticky header. Works with or without Lenis. */
-export function scrollToId(id: string) {
+export function scrollToId(id: string, headerOffset = 72) {
   const el = document.getElementById(id);
   if (!el) return;
-  const offset = id === 'top' ? 0 : -72;
+  const offset = id === 'top' ? 0 : -headerOffset;
   if (lenis) lenis.scrollTo(el, { offset });
   else window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + offset, behavior: 'smooth' });
 }
