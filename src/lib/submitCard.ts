@@ -7,10 +7,11 @@ import { getAttribution } from './tracking';
  * /qurilish va /ishlab-chiqarish ishlatadigan "Targeting Xizmat" endpointiga emas.
  * Qabul qiluvchi: docs/card-apps-script.gs (shu jadvalning o‘ziga bog‘langan Apps Script web app).
  *
- * VITE_CARD_ENDPOINT bo‘sh bo‘lsa forma hech narsa yubormaydi va xato ko‘rsatadi — boshqa jadvalga
- * "zaxira" yo‘l yo‘q, shuning uchun /card lidlari hech qachon eski jadvallarga aralashmaydi.
+ * Standart qiymat — "FAZO Card Leads Receiver" deployment (2026-10-02, faqat shu jadvalga yozadi).
+ * VITE_CARD_ENDPOINT faqat boshqa deployment'ga o‘tkazish uchun. Eski lid jadvallariga hech qanday yo‘l yo‘q.
  */
-export const CARD_ENDPOINT = ((import.meta.env.VITE_CARD_ENDPOINT as string | undefined) || '').trim();
+export const CARD_ENDPOINT = ((import.meta.env.VITE_CARD_ENDPOINT as string | undefined)
+  || 'https://script.google.com/macros/s/AKfycbzP5dn7y1OtlEaEbDF4t7PYF_DRO9ic_fda_yP-d32Wkinoc6CUcw1wYzxzdlcXDfwQ/exec').trim();
 /** Ochiq identifikator (brauzer buildida ko‘rinadi), maxfiy kalit emas. Apps Script dagi CARD_TOKEN bilan bir xil. */
 export const CARD_TOKEN = ((import.meta.env.VITE_CARD_TOKEN as string | undefined) || 'fazo-card-2026').trim();
 
