@@ -120,3 +120,7 @@
   .ic-belt, .ic-roll, .ic-head, .ic-pulse, .ic-draw { animation: none !important; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
 }
+
+/* /card — ro‘yxatdan o‘tish oynasi: mobil klaviatura ochilganda ham ko‘rinadigan qismga sig‘adi (--vvh = visualViewport balandligi). */
+.card-dialog { max-height: calc(100vh - 20px); max-height: calc(var(--vvh, 100dvh) - 20px); }
+@media (min-width: 640px) { .card-dialog { max-height: min(760px, calc(var(--vvh, 100dvh) - 48px)); } }

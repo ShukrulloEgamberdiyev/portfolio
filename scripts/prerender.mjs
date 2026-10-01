@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 
-const { render, renderAvtosalon, renderQurilish, renderIshlab, seoFor, routes, uzOnlyRoutes = [], dictionaries } = await import(join(dist, 'server', 'entry-server.js'));
+const { render, renderAvtosalon, renderQurilish, renderIshlab, renderCard, seoFor, routes, uzOnlyRoutes = [], dictionaries } = await import(join(dist, 'server', 'entry-server.js'));
 
 const template = readFileSync(join(dist, 'index.html'), 'utf8');
 const LANGS = ['uz', 'ru', 'en'];
@@ -116,6 +116,17 @@ if (uzOnlyRoutes.includes('/ishlab-chiqarish')) {
   writeFileSync(join(dist, 'ishlab-chiqarish.html'), html);
   mkdirSync(join(dist, 'ishlab-chiqarish'), { recursive: true });
   writeFileSync(join(dist, 'ishlab-chiqarish', 'index.html'), html);
+  count += 1;
+}
+
+// /card — FAZO Digital raqamli vizitkasi (o‘zbekcha, alohida entry). Shablonni qayta yozmaydi: meta teglar card.html'da.
+if (uzOnlyRoutes.includes('/card') && renderCard) {
+  const cardHtml = readFileSync(join(dist, 'card.html'), 'utf8')
+    .replace('</head>', `  <link rel="alternate" hreflang="uz" href="${SITE}/card" />\n  </head>`)
+    .replace('<div id="root"></div>', `<div id="root" data-prerendered="true">${renderCard()}</div>`);
+  writeFileSync(join(dist, 'card.html'), cardHtml);
+  mkdirSync(join(dist, 'card'), { recursive: true });
+  writeFileSync(join(dist, 'card', 'index.html'), cardHtml);
   count += 1;
 }
 

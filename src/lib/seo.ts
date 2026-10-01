@@ -45,6 +45,14 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
       image: `${SITE_URL}/og-ishlab-chiqarish.jpg`,
     };
   }
+  if (path === '/card') {
+    return {
+      title: 'FAZO Digital — Marketing · SMM · Targeting',
+      description: 'FAZO Digital raqamli vizitkasi: marketing, SMM va targeting. Biznesingiz uchun marketingni tizimlashtiramiz va uni sotuv bilan bog‘laymiz.',
+      canonical: `${SITE_URL}/card`,
+      image: `${SITE_URL}/og-image.jpg`,
+    };
+  }
   if (path === '/') return { title: t.meta.title, description: t.meta.description, canonical };
   if (path === '/work') return make(p.work.title, p.work.intro);
   if (path === '/expertise') return make(p.expertise.title, p.expertise.intro);

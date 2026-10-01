@@ -19,6 +19,11 @@
       "source": "/ishlab-chiqarish/",
       "destination": "/ishlab-chiqarish",
       "permanent": true
+    },
+    {
+      "source": "/card/",
+      "destination": "/card",
+      "permanent": true
     }
   ],
   "headers": [

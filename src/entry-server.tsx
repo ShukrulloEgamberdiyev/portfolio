@@ -4,6 +4,7 @@ import App from './App';
 import AvtosalonApp from './AvtosalonApp';
 import QurilishApp from './QurilishApp';
 import IshlabApp from './IshlabApp';
+import CardApp from './CardApp';
 import type { Lang } from './i18n/types';
 import { ROUTES, UZ_ONLY_ROUTES } from './lib/routes';
 export { seoFor } from './lib/seo';
@@ -32,4 +33,9 @@ export function renderQurilish() {
 /** Prerender for the standalone /ishlab-chiqarish landing (its own client entry: src/ishlab-chiqarish-main.tsx). */
 export function renderIshlab() {
   return renderToString(<IshlabApp />);
+}
+
+/** Prerender for the /card digital business card (its own client entry: src/card-main.tsx). */
+export function renderCard() {
+  return renderToString(<CardApp />);
 }
