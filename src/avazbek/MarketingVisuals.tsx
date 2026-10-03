@@ -37,35 +37,23 @@ export function StrategyVisual() {
   );
 }
 
-/* ── 02 Target: reklama preview (real poster) + kampaniya grafigi ── */
+/* ── 02 Target: reklama preview (real poster) + abstrakt o‘sish chiziqlari ── */
 export function AdsVisual() {
   return (
     <div aria-hidden className="relative h-full w-full select-none">
-      {/* campaign graph panel */}
-      <div className="absolute left-[4%] right-[30%] top-[10%] rounded-[16px] border border-paper/15 bg-coal p-5">
-        <div className="flex items-center justify-between">
-          <span className="kicker text-paper/45">Campaign</span>
-          <span className="flex gap-1.5">
-            <span className="h-1.5 w-6 rounded-full bg-paper/70" />
-            <span className="h-1.5 w-6 rounded-full bg-paper/20" />
-          </span>
-        </div>
-        <svg viewBox="0 0 300 120" className="mt-5 w-full" fill="none">
-          {[30, 60, 90].map((y) => (
-            <line key={y} x1="0" x2="300" y1={y} y2={y} stroke="currentColor" className="text-paper/10" />
-          ))}
-          <path d="M0 100 C30 96 50 84 80 86 S130 70 160 60 S220 44 250 30 S285 14 300 12" stroke="currentColor" strokeWidth="2.5" className="text-paper" />
-          <path d="M0 108 C40 106 70 100 100 101 S160 92 190 88 S250 80 300 72" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 5" className="text-paper/35" />
-          <circle cx="300" cy="12" r="5" fill="#b59a6a" />
-        </svg>
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          {['Audience', 'Creative', 'Budget'].map((l) => (
-            <span key={l} className="truncate rounded-md bg-paper/[0.06] px-1 py-1.5 text-center text-[9px] text-paper/60 sm:px-2 sm:text-[10px]">
-              {l}
-            </span>
-          ))}
-        </div>
-      </div>
+      {/* abstract performance curves — raqamsiz, faqat grafik */}
+      <svg viewBox="0 0 600 450" className="absolute inset-0 h-full w-full" fill="none" preserveAspectRatio="xMidYMid slice">
+        {[0, 1, 2, 3, 4, 5].map((k) => (
+          <path
+            key={k}
+            d={`M-20 ${400 - k * 14} C 120 ${390 - k * 18}, 200 ${330 - k * 30}, 300 ${300 - k * 34} S 480 ${170 - k * 22}, 640 ${90 - k * 10}`}
+            stroke="currentColor"
+            strokeWidth={k === 5 ? 2.5 : 1}
+            className={k === 5 ? 'text-paper' : 'text-paper/15'}
+          />
+        ))}
+        <circle cx="560" cy="62" r="7" fill="#b59a6a" />
+      </svg>
       {/* ad preview card with real poster */}
       <div className="absolute bottom-[6%] right-[4%] w-[38%] min-w-[150px] rotate-2 overflow-hidden rounded-[16px] bg-paper shadow-2xl">
         <div className="flex items-center gap-2 px-3 py-2.5">

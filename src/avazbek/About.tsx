@@ -16,12 +16,11 @@ export default function About() {
             fill
             className="object-cover object-[48%_30%] grayscale-[85%] contrast-[1.05] transition-[filter] duration-700 hover:grayscale-0"
           />
-          <span className="kicker absolute bottom-5 left-5 text-paper/70">Fig. 02 — Toshkent</span>
         </div>
 
         <div className="flex flex-col justify-between gap-12 px-5 py-16 sm:px-8 sm:py-20 lg:px-14 lg:py-24 xl:px-20">
           <div>
-            <p data-reveal className="kicker text-paper/45">(04) / Men haqimda</p>
+            <p data-reveal className="kicker text-paper/45">About</p>
             <h2 data-reveal className="mt-6 text-[clamp(52px,9vw,112px)] font-semibold leading-[0.85] tracking-[-0.065em]">
               {about.title}
             </h2>

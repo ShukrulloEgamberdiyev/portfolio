@@ -1,5 +1,5 @@
 import Img from './Img';
-import { hero, site, videos } from './content';
+import { hero, videos } from './content';
 
 /**
  * Hero — jurnal muqovasi kompozitsiyasi.
@@ -7,31 +7,20 @@ import { hero, site, videos } from './content';
  * tufayli oq fonda qora, kostyum ustida oq o'qiladi. Mobil: ism → portret → matn, hech narsa ustma-ust emas.
  */
 export default function Hero() {
-  const tags = hero.label.split('•').map((t) => t.trim());
   return (
     <section id="top" className="relative overflow-hidden bg-paper pt-16 lg:pt-[72px]">
       <div className="shell relative xl:flex xl:h-[calc(100svh-72px)] xl:max-h-[1000px] xl:min-h-[760px] xl:flex-col">
         <div aria-hidden className="gridlines pointer-events-none absolute inset-y-0 left-5 right-5 sm:left-8 sm:right-8 lg:left-12 lg:right-12" />
 
-        {/* meta row */}
-        <div className="hero-fade relative z-30 flex items-center justify-between gap-4 border-b border-ink/10 py-4">
-          <p className="kicker text-ink">
-            <span className="text-graphite">N°01</span>&nbsp;&nbsp;Personal portfolio
-          </p>
-          <ul className="kicker hidden gap-6 text-graphite md:flex">
-            {tags.map((t) => (
-              <li key={t}>{t}</li>
-            ))}
-          </ul>
-          <p className="kicker hidden text-graphite sm:block">{site.location}</p>
-        </div>
+        {/* single small label */}
+        <p className="hero-fade kicker relative z-30 border-b border-ink/10 py-4 text-graphite">{hero.label}</p>
 
         <div className="relative grid flex-1 xl:grid-cols-12 xl:gap-8">
           {/* NAME — the only occurrence */}
           <h1
             className="relative z-20 order-1 pt-8 text-[clamp(36px,13.2vw,150px)] font-semibold uppercase leading-[0.84] tracking-[-0.065em] xl:pointer-events-none xl:absolute xl:bottom-10 xl:left-0 xl:right-0 xl:order-none xl:pt-0 xl:text-[clamp(64px,10.4vw,168px)] xl:text-white xl:mix-blend-difference"
           >
-            <span className="line-mask"><span>Avazbek</span></span>
+            <span className="line-mask"><span>Avazbek</span></span>{' '}
             <span className="line-mask"><span style={{ animationDelay: '0.12s' }}>Meliqoziyev</span></span>
           </h1>
 
@@ -48,7 +37,6 @@ export default function Hero() {
                 className="object-cover object-[50%_0%] [filter:contrast(1.06)]"
               />
             </div>
-            <figcaption className="kicker absolute right-3 top-3 text-ink/50 xl:right-4 xl:top-4">Fig. 01</figcaption>
 
             {/* small reel frame — links to video works */}
             <a

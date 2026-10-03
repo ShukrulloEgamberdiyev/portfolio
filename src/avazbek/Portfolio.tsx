@@ -14,14 +14,7 @@ export default function Portfolio() {
         <div aria-hidden className="gridlines-dark pointer-events-none absolute inset-0" />
         <div className="shell relative pb-14 pt-24 sm:pt-32 lg:pb-20 lg:pt-40">
           <div className="flex flex-wrap items-end justify-between gap-6 border-b border-paper/15 pb-6">
-            <p data-reveal className="kicker text-paper/50">(02) Selected work</p>
-            <nav aria-label="Portfolio bo‘limlari" data-reveal className="kicker flex flex-wrap gap-x-6 gap-y-2 text-paper/50">
-              {portfolio.index.map((p, i) => (
-                <a key={p.id} href={`#${p.id}`} className="u-link transition-colors hover:text-paper">
-                  {String.fromCharCode(65 + i)} · {p.label}
-                </a>
-              ))}
-            </nav>
+            <p data-reveal className="kicker text-paper/50">Selected work</p>
           </div>
           <h2
             id="portfolio-title"
@@ -42,8 +35,7 @@ export default function Portfolio() {
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
             <header className="lg:col-span-4">
               <div className="lg:sticky lg:top-28">
-                <p data-reveal className="kicker text-graphite">A — Brendlar</p>
-                <h3 data-reveal className="mt-5 text-[42px] font-semibold leading-[0.95] tracking-[-0.05em] sm:text-[56px]">
+                <h3 data-reveal className="text-[42px] font-semibold leading-[0.95] tracking-[-0.05em] sm:text-[56px]">
                   {brandsCopy.title}
                 </h3>
                 <p data-reveal className="mt-5 max-w-xs text-[15px] leading-relaxed text-graphite">{brandsCopy.text}</p>
@@ -85,8 +77,7 @@ export default function Portfolio() {
           <VideoWork
             header={
               <div>
-                <p data-reveal className="kicker text-paper/50">B — Video</p>
-                <h3 data-reveal className="mt-5 text-[46px] font-semibold leading-[0.92] tracking-[-0.055em] sm:text-[72px] lg:text-[96px]">
+                <h3 data-reveal className="text-[46px] font-semibold leading-[0.92] tracking-[-0.055em] sm:text-[72px] lg:text-[96px]">
                   {portfolio.videoTitle}
                 </h3>
                 <p data-reveal className="mt-5 max-w-sm text-[16px] leading-relaxed text-paper/55">{portfolio.videoText}</p>
@@ -104,7 +95,6 @@ export default function Portfolio() {
             <h3 data-reveal className="text-[42px] font-semibold leading-[0.95] tracking-[-0.05em] sm:text-[64px]">
               {portfolio.creativeTitle}
             </h3>
-            <p data-reveal className="kicker text-graphite">C — Yo‘nalishlar</p>
           </div>
 
           <div className="divide-y divide-ink/15">

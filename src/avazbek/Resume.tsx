@@ -13,7 +13,7 @@ export default function Resume() {
       <div className="shell">
         <div className="grid gap-12 border-t-2 border-ink pt-8 lg:grid-cols-12 lg:gap-8">
           <div className="min-w-0 lg:col-span-4">
-            <p data-reveal className="kicker text-graphite">(03) / Resume</p>
+            <p data-reveal className="kicker text-graphite">Curriculum vitae</p>
             <h2 data-reveal className="mt-6 text-[clamp(56px,14vw,112px)] font-semibold leading-[0.82] tracking-[-0.07em]">
               Resume
             </h2>

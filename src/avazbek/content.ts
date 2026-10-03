@@ -92,11 +92,6 @@ export const brandsCopy = {
 export const portfolio = {
   title: "Portfolio",
   text: "Marketing, kontent va reklama yo‘nalishida ishlagan loyihalarimdan ayrimlari.",
-  index: [
-    { id: "brands", label: "Brendlar" },
-    { id: "video", label: "Video" },
-    { id: "creative", label: "Marketing & Creative" },
-  ],
   videoTitle: "Video ishlari",
   videoText: "Suratga olish, montaj va short-form kontent — real loyihalardan.",
   creativeTitle: "Marketing & Creative",

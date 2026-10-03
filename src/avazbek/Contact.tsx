@@ -12,10 +12,9 @@ export default function Contact() {
     <>
       <section id="contact" className="bg-paper pb-16 pt-24 sm:pt-32 lg:pt-40">
         <div className="shell">
-          <p data-reveal className="kicker text-graphite">(05) / Contact</p>
+          <p data-reveal className="kicker text-graphite">Contact</p>
           <h2 data-reveal className="mt-6 text-[clamp(30px,10.6vw,190px)] font-semibold uppercase leading-[0.82] tracking-[-0.07em]">
-            Birga
-            <br />
+            Birga <br />
             ishlaymizmi?
           </h2>
           <div className="mt-14 grid gap-10 lg:mt-20 lg:grid-cols-12 lg:gap-8">
