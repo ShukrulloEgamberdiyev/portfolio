@@ -24,6 +24,11 @@
       "source": "/card/",
       "destination": "/card",
       "permanent": true
+    },
+    {
+      "source": "/avazbek/",
+      "destination": "/avazbek",
+      "permanent": true
     }
   ],
   "headers": [

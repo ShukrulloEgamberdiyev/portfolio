@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 
-const { render, renderAvtosalon, renderQurilish, renderIshlab, renderCard, seoFor, routes, uzOnlyRoutes = [], dictionaries } = await import(join(dist, 'server', 'entry-server.js'));
+const { render, renderAvtosalon, renderQurilish, renderIshlab, renderCard, renderAvazbek, seoFor, routes, uzOnlyRoutes = [], dictionaries } = await import(join(dist, 'server', 'entry-server.js'));
 
 const template = readFileSync(join(dist, 'index.html'), 'utf8');
 const LANGS = ['uz', 'ru', 'en'];
@@ -127,6 +127,16 @@ if (uzOnlyRoutes.includes('/card') && renderCard) {
   writeFileSync(join(dist, 'card.html'), cardHtml);
   mkdirSync(join(dist, 'card'), { recursive: true });
   writeFileSync(join(dist, 'card', 'index.html'), cardHtml);
+  count += 1;
+}
+
+// /avazbek — Avazbek Meliqoziyev personal portfolio (alohida entry, o‘z meta teglari avazbek.html'da).
+if (uzOnlyRoutes.includes('/avazbek') && renderAvazbek) {
+  const avzHtml = readFileSync(join(dist, 'avazbek.html'), 'utf8')
+    .replace('<div id="root"></div>', `<div id="root" data-prerendered="true">${renderAvazbek()}</div>`);
+  writeFileSync(join(dist, 'avazbek.html'), avzHtml);
+  mkdirSync(join(dist, 'avazbek'), { recursive: true });
+  writeFileSync(join(dist, 'avazbek', 'index.html'), avzHtml);
   count += 1;
 }
 

@@ -27,6 +27,7 @@ npm run preview      # build natijasini lokalda ko‘rish
 /avtosalon             Avtosalonlar uchun landing (faqat UZ, alohida header/footer, 4 bosqichli ariza)
 /qurilish              Turar joy quruvchilari uchun landing (faqat UZ, alohida header/footer, 1 bosqichli ariza)
 /ishlab-chiqarish      Ishlab chiqarish bizneslari uchun landing (faqat UZ, alohida header/footer, 1 bosqichli ariza)
+/avazbek               Avazbek Meliqoziyev shaxsiy portfoliosi (alohida entry, o‘z navbar/footer/CSS; kod: src/avazbek, assetlar: public/avazbek)
 ```
 Har biri `/ru/...` va `/en/...` ko‘rinishida ham mavjud.
 

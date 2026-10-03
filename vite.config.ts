@@ -7,7 +7,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, normalize, resolve } from 'node:path';
 
 /** Standalone Uzbek-only landings, each with its own HTML entry (e.g. qurilish.html → src/qurilish-main.tsx). */
-const LANDINGS = ['avtosalon', 'qurilish', 'ishlab-chiqarish', 'card'] as const;
+const LANDINGS = ['avtosalon', 'qurilish', 'ishlab-chiqarish', 'card', 'avazbek'] as const;
 
 /**
  * In dev and `vite preview` serve each landing at its canonical /<name>, and 301 the trailing-slash
@@ -89,6 +89,7 @@ export default defineConfig(({ mode, isSsrBuild }) => ({
               qurilish: fileURLToPath(new URL('./qurilish.html', import.meta.url)),
               'ishlab-chiqarish': fileURLToPath(new URL('./ishlab-chiqarish.html', import.meta.url)),
               card: fileURLToPath(new URL('./card.html', import.meta.url)),
+              avazbek: fileURLToPath(new URL('./avazbek.html', import.meta.url)),
             },
           },
         }

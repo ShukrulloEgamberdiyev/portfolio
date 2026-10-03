@@ -5,6 +5,7 @@ import AvtosalonApp from './AvtosalonApp';
 import QurilishApp from './QurilishApp';
 import IshlabApp from './IshlabApp';
 import CardApp from './CardApp';
+import AvazbekApp from './avazbek/App';
 import type { Lang } from './i18n/types';
 import { ROUTES, UZ_ONLY_ROUTES } from './lib/routes';
 export { seoFor } from './lib/seo';
@@ -38,4 +39,9 @@ export function renderIshlab() {
 /** Prerender for the /card digital business card (its own client entry: src/card-main.tsx). */
 export function renderCard() {
   return renderToString(<CardApp />);
+}
+
+/** Prerender for /avazbek — Avazbek Meliqoziyev personal portfolio (its own client entry: src/avazbek-main.tsx). */
+export function renderAvazbek() {
+  return renderToString(<AvazbekApp />);
 }

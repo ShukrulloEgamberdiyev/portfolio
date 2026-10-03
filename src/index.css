@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* /avazbek portfolio o‘z CSS’iga ega (src/avazbek/avazbek.css) — FAZO CSS’iga qo‘shilmaydi */
+@source not "./avazbek";
 
 /* ───────── FAZO design tokens ───────── */
 @theme {
