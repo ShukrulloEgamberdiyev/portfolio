@@ -1,10 +1,11 @@
+import type React from 'react';
 
 import Img from "./Img";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { videos } from "./content";
 
 /** Video ishlari: poster ko'rsatiladi, video faqat bosilganda modalda yuklanadi. */
-export default function VideoWork() {
+export default function VideoWork({ header }: { header?: React.ReactNode }) {
   const [active, setActive] = useState<number | null>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -50,54 +51,66 @@ export default function VideoWork() {
 
   const v = active !== null ? videos[active] : null;
 
+  const open = (i: number) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    lastTrigger.current = e.currentTarget;
+    setActive(i);
+  };
+  const Play = ({ big }: { big?: boolean }) => (
+    <span
+      className={`flex items-center justify-center rounded-full bg-paper text-ink shadow-xl transition-[transform,background-color,color] duration-500 group-hover:scale-110 group-hover:bg-accent group-hover:text-ink ${
+        big ? 'h-20 w-20' : 'h-12 w-12'
+      }`}
+    >
+      <svg width={big ? 22 : 15} height={big ? 22 : 15} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z" />
+      </svg>
+    </span>
+  );
+  const [featured, ...rest] = videos;
+
   return (
     <>
-      <ul className="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 xl:grid-cols-4 xl:items-start xl:gap-6">
-        {videos.map((item, i) => (
-          <li
-            key={item.src}
-            data-reveal
-            style={{ ["--d" as string]: i }}
-            className={`w-[72%] shrink-0 snap-start sm:w-auto ${i % 2 === 1 ? "xl:mt-16" : ""}`}
-          >
-            <button
-              type="button"
-              onClick={(e) => {
-                lastTrigger.current = e.currentTarget;
-                setActive(i);
-              }}
-              className="group block w-full rounded-[22px] text-left"
-              aria-label={`${item.title} videosini ko‘rish`}
-            >
-              <div className="relative aspect-[9/16] overflow-hidden rounded-[22px] bg-paper/5 ring-1 ring-paper/10">
-                <Img
-                  src={item.poster}
-                  alt=""
-                  fill
-                  loading="lazy"
-                  sizes="(min-width: 1280px) 24vw, (min-width: 640px) 48vw, 72vw"
-                  className="object-cover transition-transform duration-[1.1s] ease-out group-hover:scale-[1.04]"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-ink/85 via-ink/5 to-transparent" />
-                <span className="absolute left-4 top-4 font-mono text-[11px] text-paper/70">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="absolute inset-0 flex items-center justify-center">
-                  <span className="flex h-16 w-16 items-center justify-center rounded-full bg-paper text-ink shadow-xl transition-[transform,opacity,background-color,color] duration-500 group-hover:scale-110 group-hover:bg-accent group-hover:text-white [@media(hover:hover)]:scale-90 [@media(hover:hover)]:opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                      <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z" />
-                    </svg>
-                  </span>
-                </span>
-                <div className="absolute inset-x-0 bottom-0 p-4 text-paper sm:p-5">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-paper/60 sm:text-[11px]">{item.category}</p>
-                  <h4 className="mt-1 text-[18px] font-semibold leading-tight tracking-[-0.03em] sm:text-[22px]">{item.title}</h4>
-                </div>
+      <div className="grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-8">
+        {/* featured */}
+        <div data-reveal="image" className="lg:col-span-5">
+          <button type="button" onClick={open(0)} className="group block w-full text-left" aria-label={`${featured.title} videosini ko‘rish`}>
+            <div className="grain grain-light relative aspect-[4/5] overflow-hidden rounded-[6px] bg-coal lg:aspect-[9/16]">
+              <Img src={featured.poster} alt="" fill className="object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-[1.04]" />
+              <div className="absolute inset-0 bg-linear-to-t from-ink/80 via-transparent to-ink/10" />
+              <span className="absolute left-5 top-5 font-mono text-[11px] text-paper/70">01 — Featured</span>
+              <span className="absolute inset-0 flex items-center justify-center"><Play big /></span>
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+                <p className="kicker text-paper/60">{featured.category}</p>
+                <h4 className="mt-2 text-[30px] font-semibold leading-none tracking-[-0.04em] text-paper sm:text-[40px]">{featured.title}</h4>
               </div>
-            </button>
-          </li>
-        ))}
-      </ul>
+            </div>
+          </button>
+        </div>
+
+        {/* supporting */}
+        <div className="lg:col-span-7">
+          {header}
+          <ul className="-mx-5 mt-8 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0 lg:mt-14">
+            {rest.map((item, k) => {
+              const i = k + 1;
+              return (
+                <li key={item.src} data-reveal style={{ ['--d' as string]: k }} className="w-[58%] shrink-0 snap-start sm:w-auto">
+                  <button type="button" onClick={open(i)} className="group block w-full text-left" aria-label={`${item.title} videosini ko‘rish`}>
+                    <div className="relative aspect-[9/16] overflow-hidden rounded-[6px] bg-coal">
+                      <Img src={item.poster} alt="" fill className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.05]" />
+                      <div className="absolute inset-0 bg-linear-to-t from-ink/75 via-transparent to-transparent" />
+                      <span className="absolute left-3 top-3 font-mono text-[11px] text-paper/70">{String(i + 1).padStart(2, '0')}</span>
+                      <span className="absolute bottom-3 right-3"><Play /></span>
+                    </div>
+                    <p className="mt-3 text-[16px] font-medium tracking-[-0.02em] text-paper">{item.title}</p>
+                    <p className="kicker mt-1 text-paper/45">{item.category}</p>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
 
       {v ? (
         <div

@@ -33,8 +33,6 @@ export const nav = [
   { label: "Men haqimda", href: "#about" },
 ];
 
-/** Bo'limlar raqami va inglizcha label — bitta joyda, ketma-ketlik buzilmasligi uchun */
-
 export const hero = {
   label: "MARKETING • SMM • TARGET • CONTENT",
   statement: "Marketingni biznes natijasiga bog‘layman.",
@@ -53,19 +51,19 @@ export const approach = {
   steps: ["Biznes", "Auditoriya", "Offer", "Kontent", "Reklama", "Natija"],
 };
 
-/** Portfolio oxiridagi trust-blok. Faqat tasdiqlangan raqam; qolganlari matnli. */
-export const highlights = [
-  { value: "19+", label: "Ishlangan brendlar" },
-  { value: "SMM", label: "Strategiyadan kontentgacha" },
-  { value: "META ADS", label: "Target va optimizatsiya" },
-  { value: "VIDEO", label: "Reels va reklama kontenti" },
-];
+/** Natijalar: FAQAT tasdiqlangan raqam. Yangi tasdiqlangan raqam bo'lsa shu yerga qo'shiladi. */
+export const trust = {
+  value: "19+",
+  label: "Ishlangan brendlar",
+  text: "Turli yo‘nalishdagi bizneslar bilan marketing, target, kontent va video loyihalarda ishlaganman.",
+};
 
 /**
- * Logolar: /public/images/brands/brand-XX.png.
- * `name: null` — brend nomi aniq bo'lmasa: UI'da nom chiqmaydi, alt = "Client brand".
+ * Logolar: /public/avazbek/images/brands/brand-XX.webp.
+ * `name: null` — brend nomi aniq bo'lmasa: UI'da nom chiqmaydi, alt = "Brand logo".
+ * `featured: true` — trust wall'da katta (2×2) katakda chiqadi (2 tadan oshmasin).
  */
-export const brands: { name: string | null; logo: string }[] = [
+export const brands: { name: string | null; logo: string; featured?: boolean }[] = [
   { name: "Fazilat Estate", logo: "/avazbek/images/brands/brand-01.webp" },
   { name: "Rose Flowers", logo: "/avazbek/images/brands/brand-02.webp" },
   { name: "Bliss", logo: "/avazbek/images/brands/brand-03.webp" },
@@ -73,7 +71,7 @@ export const brands: { name: string | null; logo: string }[] = [
   { name: "UZ Style Catering", logo: "/avazbek/images/brands/brand-05.webp" },
   { name: "Boost", logo: "/avazbek/images/brands/brand-06.webp" },
   { name: "Alleya", logo: "/avazbek/images/brands/brand-07.webp" },
-  { name: "Leapmotor · Exeed · Geely Auto", logo: "/avazbek/images/brands/brand-08.webp" },
+  { name: "Leapmotor · Exeed · Geely Auto", logo: "/avazbek/images/brands/brand-08.webp", featured: true },
   { name: "LaminoX Factory", logo: "/avazbek/images/brands/brand-09.webp" },
   { name: "Aura", logo: "/avazbek/images/brands/brand-10.webp" },
   { name: null, logo: "/avazbek/images/brands/brand-11.webp" },
@@ -82,47 +80,46 @@ export const brands: { name: string | null; logo: string }[] = [
   { name: "ZK Academy", logo: "/avazbek/images/brands/brand-14.webp" },
   { name: null, logo: "/avazbek/images/brands/brand-15.webp" },
   { name: null, logo: "/avazbek/images/brands/brand-16.webp" },
-  { name: "Dilbar Restaurant", logo: "/avazbek/images/brands/brand-17.webp" },
+  { name: "Dilbar Restaurant", logo: "/avazbek/images/brands/brand-17.webp", featured: true },
   { name: null, logo: "/avazbek/images/brands/brand-18.webp" },
 ];
 
 export const brandsCopy = {
   title: "Ishlagan brendlarim",
-  text: "Turli yo‘nalishdagi bizneslar bilan marketing, reklama va kontent loyihalarida.",
+  text: "Avtosalon, restoran, ko‘chmas mulk, ta’lim va ishlab chiqarish — marketing, reklama va kontent loyihalari.",
 };
 
 export const portfolio = {
   title: "Portfolio",
   text: "Marketing, kontent va reklama yo‘nalishida ishlagan loyihalarimdan ayrimlari.",
-  parts: [
-    { id: "brands", label: "Ishlagan brendlar" },
-    { id: "video", label: "Video ishlari" },
+  index: [
+    { id: "brands", label: "Brendlar" },
+    { id: "video", label: "Video" },
     { id: "creative", label: "Marketing & Creative" },
-    { id: "results", label: "Natijalar" },
   ],
   videoTitle: "Video ishlari",
-  videoText: "Suratga olish, montaj va short-form kontent.",
+  videoText: "Suratga olish, montaj va short-form kontent — real loyihalardan.",
   creativeTitle: "Marketing & Creative",
 };
 
-/** Marketing & Creative kartalari — vizual kompozitsiya, real raqam emas */
+/** Marketing & Creative — 3 ta vizual blok. Vizuallar illyustratsiya, real kabinet ma'lumoti emas. */
 export const creative = [
   {
     no: "01",
     title: "Marketing Strategy",
-    tags: ["Strategy", "Audience", "Offer", "Content", "Ads", "Optimization"],
-    visual: "flow" as const,
+    text: "Biznes, auditoriya, offer va kontentni bitta yo‘nalishga bog‘layman.",
+    visual: "strategy" as const,
   },
   {
     no: "02",
     title: "Target Advertising",
-    tags: ["Creative testing", "Audience", "Campaign", "Optimization"],
+    text: "Meta Ads kampaniyalarini test, optimizatsiya va performance asosida boshqaraman.",
     visual: "ads" as const,
   },
   {
     no: "03",
-    title: "Content",
-    tags: ["Reels", "Creative", "Visual", "Communication"],
+    title: "Content & Video",
+    text: "Reels, reklama kreativlari va short-form kontent ishlab chiqaman.",
     visual: "content" as const,
   },
 ];
@@ -137,7 +134,7 @@ export const videos = [
   {
     src: "/avazbek/videos/video-02.mp4",
     poster: "/avazbek/videos/posters/video-02.jpg",
-    title: "Business Content",
+    title: "Marketing Content",
     category: "Marketing meeting",
   },
   {

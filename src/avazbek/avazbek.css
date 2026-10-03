@@ -19,32 +19,19 @@
   font-style: normal;
   font-display: swap;
 }
-@font-face {
-  font-family: "Instrument Serif";
-  src: url("./fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Instrument Serif";
-  src: url("./fonts/instrument-serif-latin-400-italic.woff2") format("woff2");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
 
 @theme {
-  --color-paper: #f5f5f2;
-  --color-bone: #ebebe6;
+  /* black + warm off-white; accent — juda yumshoq iliq bej, faqat nuqta/chiziqlarda */
+  --color-paper: #f4f3ef;
+  --color-bone: #edebe5;
   --color-ink: #0a0a0a;
-  --color-graphite: #5c5c57;
-  --color-line: #dadad4;
-  --color-accent: #d8501e;
+  --color-coal: #111111;
+  --color-graphite: #5f5d57;
+  --color-line: #d9d6ce;
+  --color-accent: #b59a6a;
 
   --font-sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --font-serif: "Instrument Serif", Georgia, serif;
 
   --container-shell: 1440px;
 }
@@ -145,12 +132,6 @@
   }
 
   /* Editorial helpers */
-  .em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-  }
   .kicker {
     font-family: var(--font-mono);
     font-size: 11px;
@@ -166,6 +147,30 @@
     background-size: calc((100% - 1px) / 12) 100%;
   }
 }
+
+/* Nozik grain — rasmlar ustida (CSP: data: img-src ruxsat etilgan) */
+@layer components {
+  .grain { position: relative; }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.09;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  .grain-light::after { mix-blend-mode: screen; opacity: 0.06; }
+
+  /* Link underline animatsiyasi */
+  .u-link { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .u-link:hover, .group:hover .u-link { background-size: 100% 1px; }
+
+  /* Logo marquee */
+  .marquee { display: flex; width: max-content; animation: marquee 48s linear infinite; }
+  .marquee-mask { mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+}
+@keyframes marquee { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
 
 /* Reveal — faqat JS bor bo'lsa yashiriladi (JS yo'q bo'lsa kontent ko'rinib turadi) */
 .js [data-reveal] {
@@ -212,5 +217,5 @@
   .js [data-reveal], .js [data-reveal="image"] {
     opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important;
   }
-  .line-mask > span, .hero-fade, .hero-portrait { animation: none !important; }
+  .line-mask > span, .hero-fade, .hero-portrait, .marquee { animation: none !important; }
 }
