@@ -12,8 +12,11 @@ export default function Contact() {
     <>
       <section id="contact" className="bg-paper pb-16 pt-24 sm:pt-32 lg:pt-40">
         <div className="shell">
-          <p data-reveal className="kicker text-graphite">Contact</p>
-          <h2 data-reveal className="mt-6 text-[clamp(30px,10.6vw,190px)] font-semibold uppercase leading-[0.82] tracking-[-0.07em]">
+          <p data-reveal className="kicker flex items-center gap-2.5 text-graphite">
+            <span className="h-px w-8 bg-accent" aria-hidden />
+            Bog‘lanish
+          </p>
+          <h2 data-reveal className="mt-6 text-[clamp(30px,10vw,150px)] font-semibold uppercase leading-[0.86] tracking-[-0.06em]">
             Birga <br />
             ishlaymizmi?
           </h2>
@@ -31,7 +34,7 @@ export default function Contact() {
                     <span className="u-link min-w-0 flex-1 text-[clamp(15px,4.6vw,44px)] font-semibold tracking-[-0.04em] [overflow-wrap:anywhere]">
                       {c.label}
                     </span>
-                    <span aria-hidden className="shrink-0 text-[22px] transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1">
+                    <span aria-hidden className="shrink-0 text-[22px] transition-transform duration-500 text-accent group-hover:-translate-y-1 group-hover:translate-x-1">
                       ↗
                     </span>
                   </a>
@@ -42,14 +45,14 @@ export default function Contact() {
         </div>
       </section>
 
-      <footer className="bg-ink text-paper">
+      <footer className="bg-coal text-paper">
         <div className="shell flex flex-col gap-4 py-8 text-[13px] sm:flex-row sm:items-center sm:justify-between">
           <p>
             <span className="font-semibold">{site.name}</span>
             <span className="text-paper/45"> — {site.role}</span>
           </p>
           <p className="flex items-center gap-6 text-paper/45">
-            <a href={contacts.telegram.href} target="_blank" rel="noopener noreferrer" className="u-link text-paper/80 hover:text-paper">
+            <a href={contacts.telegram.href} target="_blank" rel="noopener noreferrer" className="u-link inline-flex min-h-[44px] items-center text-paper/80 hover:text-paper">
               Telegram ↗
             </a>
             <span>© 2026</span>

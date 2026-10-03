@@ -30,7 +30,7 @@ export default function Navbar() {
         }`}
       >
         <nav className="shell flex h-16 items-center justify-between lg:h-[72px]" aria-label="Asosiy menyu">
-          <a href="#top" className="text-[17px] font-semibold tracking-[-0.03em]" onClick={() => setOpen(false)}>
+          <a href="#top" className="inline-flex min-h-[44px] items-center text-[17px] font-semibold tracking-[-0.03em]" onClick={() => setOpen(false)}>
             {site.shortName.replace(".", "")}
             <span className="text-accent">.</span>
           </a>

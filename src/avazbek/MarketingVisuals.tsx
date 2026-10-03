@@ -27,12 +27,12 @@ export function StrategyVisual() {
         {[[330, 150], [270, 230], [340, 240], [250, 160]].map(([x, y], i) => (
           <circle key={`c${i}`} cx={x} cy={y} r="5" className="fill-ink" />
         ))}
-        <circle cx="300" cy="190" r="6" fill="#b59a6a" />
+        <circle cx="300" cy="190" r="6" fill="#b89a63" />
       </svg>
       <span className="kicker absolute left-[9%] top-[8%] text-ink/45">Bozor</span>
       <span className="kicker absolute right-[8%] top-[20%] text-ink/45">Segment</span>
-      <span className="kicker absolute bottom-[10%] right-[30%] text-ink/70">Core audience</span>
-      <span className="kicker absolute bottom-[45%] left-[8%] text-ink/45">Offer</span>
+      <span className="kicker absolute bottom-[10%] right-[30%] text-ink/70">Asosiy auditoriya</span>
+      <span className="kicker absolute bottom-[45%] left-[8%] text-ink/45">Taklif</span>
     </div>
   );
 }
@@ -52,7 +52,7 @@ export function AdsVisual() {
             className={k === 5 ? 'text-paper' : 'text-paper/15'}
           />
         ))}
-        <circle cx="560" cy="62" r="7" fill="#b59a6a" />
+        <circle cx="560" cy="62" r="7" fill="#b89a63" />
       </svg>
       {/* ad preview card with real poster */}
       <div className="absolute bottom-[6%] right-[4%] w-[38%] min-w-[150px] rotate-2 overflow-hidden rounded-[16px] bg-paper shadow-2xl">
@@ -64,8 +64,8 @@ export function AdsVisual() {
           <Img src={videos[3].poster} alt="" fill className="object-cover" />
         </div>
         <div className="flex items-center justify-between px-3 py-2.5">
-          <span className="text-[11px] font-medium text-ink">Sponsored</span>
-          <span className="rounded-full bg-ink px-2.5 py-1 text-[10px] text-paper">Learn more</span>
+          <span className="text-[11px] font-medium text-ink">Reklama</span>
+          <span className="rounded-full bg-ink px-2.5 py-1 text-[10px] text-paper">Batafsil</span>
         </div>
       </div>
     </div>
@@ -79,7 +79,7 @@ export function ContentVisual() {
     <div aria-hidden className="relative flex h-full w-full select-none items-center justify-center gap-[6%] px-[6%]">
       {/* calendar */}
       <div className="hidden w-[46%] sm:block">
-        <p className="kicker text-ink/45">Content plan</p>
+        <p className="kicker text-ink/45">Kontent reja</p>
         <div className="mt-3 grid grid-cols-7 gap-1.5">
           {days.map((d) => (
             <span key={d} className="text-center font-mono text-[9px] text-ink/40">

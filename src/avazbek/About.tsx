@@ -7,20 +7,23 @@ export default function About() {
     <section id="about" className="relative bg-coal text-paper">
       {/* split: full-bleed office photo + bio */}
       <div className="grid lg:grid-cols-2">
-        <div data-reveal="image" className="grain relative aspect-[4/5] overflow-hidden sm:aspect-[4/3] lg:aspect-auto lg:min-h-[720px]">
+        <div data-reveal="image" className="relative aspect-[4/5] overflow-hidden sm:aspect-[4/3] lg:aspect-auto lg:min-h-[600px]">
           <Img
             src="/avazbek/images/office.jpg"
             alt="Avazbek Meliqoziyev ofisda"
             width={640}
             height={640}
             fill
-            className="object-cover object-[48%_30%] grayscale-[85%] contrast-[1.05] transition-[filter] duration-700 hover:grayscale-0"
+            className="object-cover object-[48%_30%] "
           />
         </div>
 
         <div className="flex flex-col justify-between gap-12 px-5 py-16 sm:px-8 sm:py-20 lg:px-14 lg:py-24 xl:px-20">
           <div>
-            <p data-reveal className="kicker text-paper/45">About</p>
+            <p data-reveal className="kicker flex items-center gap-2.5 text-accent">
+              <span className="h-px w-8 bg-accent" aria-hidden />
+              Men haqimda
+            </p>
             <h2 data-reveal className="mt-6 text-[clamp(52px,9vw,112px)] font-semibold leading-[0.85] tracking-[-0.065em]">
               {about.title}
             </h2>
@@ -43,7 +46,7 @@ export default function About() {
 
       {/* approach — horizontal visual flow */}
       <div className="shell py-16 sm:py-24">
-        <p data-reveal className="kicker text-paper/45">{approach.title}</p>
+        <p data-reveal className="kicker text-accent">{approach.title}</p>
         <ol className="relative mt-10 grid grid-cols-2 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
           <span aria-hidden className="absolute left-0 right-0 top-[7px] hidden h-px bg-paper/20 lg:block" />
           {approach.steps.map((s, i) => {
@@ -61,7 +64,7 @@ export default function About() {
 
       {/* professional environment — cinematic continuation */}
       <figure className="relative">
-        <div data-reveal="image" className="grain relative aspect-[4/3] w-full overflow-hidden sm:aspect-[16/9] lg:aspect-[21/9]">
+        <div data-reveal="image" className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-[16/9] lg:aspect-[21/9]">
           <Img
             src="/avazbek/images/corporate.jpg"
             srcSet="/avazbek/images/corporate-960.jpg 960w, /avazbek/images/corporate.jpg 1920w"
@@ -70,7 +73,7 @@ export default function About() {
             height={1440}
             alt="Avazbek Meliqoziyev hamkasblar va jamoa bilan"
             fill
-            className="object-cover object-[50%_45%] grayscale-[70%] contrast-[1.05]"
+            className="object-cover object-[50%_45%] "
           />
         </div>
         <figcaption className="shell flex flex-col gap-3 py-8 sm:flex-row sm:items-baseline sm:justify-between sm:gap-10">

@@ -5,17 +5,20 @@ import { resume, site } from './content';
 export default function Resume() {
   const rows = [
     { k: 'Yo‘nalishlar', v: resume.directions.map((d) => d.title) },
-    ...resume.skills.map((g) => ({ k: g.group === 'Marketing' ? 'Skills' : g.group, v: g.items })),
+    ...resume.skillsUz.map((g) => ({ k: g.group, v: g.items })),
   ];
 
   return (
     <section id="resume" className="bg-paper py-20 sm:py-28">
       <div className="shell">
-        <div className="grid gap-12 border-t-2 border-ink pt-8 lg:grid-cols-12 lg:gap-8">
+        <div className="grid gap-12 border-t border-ink/20 pt-8 lg:grid-cols-12 lg:gap-8">
           <div className="min-w-0 lg:col-span-4">
-            <p data-reveal className="kicker text-graphite">Curriculum vitae</p>
+            <p data-reveal className="kicker flex items-center gap-2.5 text-graphite">
+              <span className="h-px w-8 bg-accent" aria-hidden />
+              Rezyume
+            </p>
             <h2 data-reveal className="mt-6 text-[clamp(56px,14vw,112px)] font-semibold leading-[0.82] tracking-[-0.07em]">
-              Resume
+              {resume.title}
             </h2>
             <div data-reveal className="mt-8">
               <p className="text-[22px] font-semibold tracking-[-0.03em]">{site.name}</p>
@@ -27,8 +30,8 @@ export default function Resume() {
 
           <dl className="min-w-0 lg:col-span-7 lg:col-start-6">
             {resume.experience.length > 0 ? (
-              <div data-reveal className="grid gap-3 border-b border-ink/15 py-6 sm:grid-cols-[150px_1fr]">
-                <dt className="kicker pt-1 text-graphite">Experience</dt>
+              <div data-reveal className="grid gap-3 border-b border-ink/15 py-6 sm:grid-cols-[180px_1fr]">
+                <dt className="kicker pt-1 text-graphite">Tajriba</dt>
                 <dd className="space-y-2">
                   {resume.experience.map((x) => (
                     <p key={x.role + x.company} className="text-[18px]">
@@ -44,7 +47,7 @@ export default function Resume() {
                 key={r.k}
                 data-reveal
                 style={{ ['--d' as string]: i }}
-                className="grid gap-3 border-b border-ink/15 py-6 first:pt-0 sm:grid-cols-[150px_1fr]"
+                className="grid gap-3 border-b border-ink/15 py-6 first:pt-0 sm:grid-cols-[180px_1fr]"
               >
                 <dt className="kicker pt-1.5 text-graphite">
                   <span className="text-ink/30">{String(i + 1).padStart(2, '0')}</span>&nbsp;&nbsp;{r.k}

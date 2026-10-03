@@ -9,7 +9,7 @@
 export const site = {
   name: "Avazbek Meliqoziyev",
   shortName: "AVAZBEK.",
-  role: "Marketing • SMM • Target • Content",
+  role: "Marketing • SMM • Target • Kontent",
   title: "Avazbek Meliqoziyev | Marketing, SMM & Target Portfolio",
   description:
     "Avazbek Meliqoziyev — marketing, SMM, Meta Ads, target reklama, kontent va video production bo‘yicha professional portfolio.",
@@ -29,12 +29,12 @@ export const contacts = {
 
 export const nav = [
   { label: "Portfolio", href: "#portfolio" },
-  { label: "Resume", href: "#resume" },
+  { label: "Rezyume", href: "#resume" },
   { label: "Men haqimda", href: "#about" },
 ];
 
 export const hero = {
-  label: "MARKETING • SMM • TARGET • CONTENT",
+  label: "Marketing • SMM • Target • Kontent",
   statement: "Marketingni biznes natijasiga bog‘layman.",
   subtitle: "SMM, Meta Ads, kontent va marketing strategiyasi orqali brendlarning o‘sishi ustida ishlayman.",
 };
@@ -43,7 +43,7 @@ export const about = {
   title: "Men haqimda",
   lead: "Men Avazbek Meliqoziyev — marketing, SMM, target reklama, kontent va video yo‘nalishlarida ishlayman.",
   text: "Asosiy yondashuvim — strategiya, kreativ va reklamani biznesning real maqsadlari bilan bog‘lash.",
-  facts: ["Marketing / SMM / Target", "Meta Ads", "Content & Video", "Toshkent, O‘zbekiston"],
+  facts: ["Marketing / SMM / Target", "Meta Ads", "Kontent va video", "Toshkent, O‘zbekiston"],
 };
 
 export const approach = {
@@ -53,17 +53,16 @@ export const approach = {
 
 /** Natijalar: FAQAT tasdiqlangan raqam. Yangi tasdiqlangan raqam bo'lsa shu yerga qo'shiladi. */
 export const trust = {
-  value: "19+",
-  label: "Ishlangan brendlar",
-  text: "Turli yo‘nalishdagi bizneslar bilan marketing, target, kontent va video loyihalarda ishlaganman.",
+  /** "19+" FAZO Digital reference'idan olingan (agentlik da'vosi) — Avazbek uchun tasdiqlanmagan, shuning uchun raqamsiz. */
+  title: "Turli sohalardagi brendlar bilan ishlaganman",
+  text: "Avtosalon, restoran, ko‘chmas mulk, ta’lim va ishlab chiqarish yo‘nalishidagi bizneslar bilan marketing, target va kontent loyihalari.",
 };
 
 /**
  * Logolar: /public/avazbek/images/brands/brand-XX.webp.
  * `name: null` — brend nomi aniq bo'lmasa: UI'da nom chiqmaydi, alt = "Brand logo".
- * `featured: true` — trust wall'da katta (2×2) katakda chiqadi (2 tadan oshmasin).
  */
-export const brands: { name: string | null; logo: string; featured?: boolean }[] = [
+export const brands: { name: string | null; logo: string }[] = [
   { name: "Fazilat Estate", logo: "/avazbek/images/brands/brand-01.webp" },
   { name: "Rose Flowers", logo: "/avazbek/images/brands/brand-02.webp" },
   { name: "Bliss", logo: "/avazbek/images/brands/brand-03.webp" },
@@ -71,7 +70,7 @@ export const brands: { name: string | null; logo: string; featured?: boolean }[]
   { name: "UZ Style Catering", logo: "/avazbek/images/brands/brand-05.webp" },
   { name: "Boost", logo: "/avazbek/images/brands/brand-06.webp" },
   { name: "Alleya", logo: "/avazbek/images/brands/brand-07.webp" },
-  { name: "Leapmotor · Exeed · Geely Auto", logo: "/avazbek/images/brands/brand-08.webp", featured: true },
+  { name: "Leapmotor · Exeed · Geely Auto", logo: "/avazbek/images/brands/brand-08.webp" },
   { name: "LaminoX Factory", logo: "/avazbek/images/brands/brand-09.webp" },
   { name: "Aura", logo: "/avazbek/images/brands/brand-10.webp" },
   { name: null, logo: "/avazbek/images/brands/brand-11.webp" },
@@ -80,7 +79,7 @@ export const brands: { name: string | null; logo: string; featured?: boolean }[]
   { name: "ZK Academy", logo: "/avazbek/images/brands/brand-14.webp" },
   { name: null, logo: "/avazbek/images/brands/brand-15.webp" },
   { name: null, logo: "/avazbek/images/brands/brand-16.webp" },
-  { name: "Dilbar Restaurant", logo: "/avazbek/images/brands/brand-17.webp", featured: true },
+  { name: "Dilbar Restaurant", logo: "/avazbek/images/brands/brand-17.webp" },
   { name: null, logo: "/avazbek/images/brands/brand-18.webp" },
 ];
 
@@ -90,59 +89,78 @@ export const brandsCopy = {
 };
 
 export const portfolio = {
+  kicker: "Tanlangan ishlar",
   title: "Portfolio",
-  text: "Marketing, kontent va reklama yo‘nalishida ishlagan loyihalarimdan ayrimlari.",
-  videoTitle: "Video ishlari",
-  videoText: "Suratga olish, montaj va short-form kontent — real loyihalardan.",
-  creativeTitle: "Marketing & Creative",
+  text: "Marketing, kontent va reklama yo‘nalishidagi ishlardan namunalar.",
+  worksTitle: "Videolar",
+  worksText: "Real loyihalardan video materiallar. Kartochkada faqat videoda ko‘rinadigan ma’lumot berilgan.",
+  creativeTitle: "Yo‘nalishlar",
 };
 
 /** Marketing & Creative — 3 ta vizual blok. Vizuallar illyustratsiya, real kabinet ma'lumoti emas. */
 export const creative = [
   {
     no: "01",
-    title: "Marketing Strategy",
+    title: "Marketing strategiyasi",
     text: "Biznes, auditoriya, offer va kontentni bitta yo‘nalishga bog‘layman.",
     visual: "strategy" as const,
   },
   {
     no: "02",
-    title: "Target Advertising",
+    title: "Target reklama",
     text: "Meta Ads kampaniyalarini test, optimizatsiya va performance asosida boshqaraman.",
     visual: "ads" as const,
   },
   {
     no: "03",
-    title: "Content & Video",
+    title: "Kontent va video",
     text: "Reels, reklama kreativlari va short-form kontent ishlab chiqaman.",
     visual: "content" as const,
   },
 ];
 
-export const videos = [
+/**
+ * Videolar. `seen` — faqat kadrda ko'rinadigan fakt. Mijoz nomi, vazifa, Avazbekning roli va natija
+ * tasdiqlangach `client`, `task`, `role`, `result` maydonlarini qo'shing — ular kartochkada avtomatik chiqadi.
+ */
+export const videos: {
+  src: string;
+  poster: string;
+  title: string;
+  category: string;
+  seen: string;
+  client?: string;
+  task?: string;
+  role?: string;
+  result?: string;
+}[] = [
   {
     src: "/avazbek/videos/video-01.mp4",
     poster: "/avazbek/videos/posters/video-01.jpg",
-    title: "Content Production",
+    title: "Kontent yaratish",
     category: "Intervyu • Reels",
+    seen: "Ofis muhitida rahbar bilan suhbat: Avazbek savol beradi, video Reels formatida montaj qilingan.",
   },
   {
     src: "/avazbek/videos/video-02.mp4",
     poster: "/avazbek/videos/posters/video-02.jpg",
-    title: "Marketing Content",
-    category: "Marketing meeting",
+    title: "Marketing uchrashuvi",
+    category: "Tadbir • Reels",
+    seen: "Marketing mavzusidagi uchrashuvdan qisqa video: spiker, taqdimot ekrani va ishtirokchilar.",
   },
   {
     src: "/avazbek/videos/video-03.mp4",
     poster: "/avazbek/videos/posters/video-03.jpg",
-    title: "Behind the Scenes",
+    title: "Ish jarayonidan",
     category: "Ish jarayoni",
+    seen: "Avazbek noutbuk va telefonda ishlayotgan payt — ish jarayonidan kadrlar.",
   },
   {
     src: "/avazbek/videos/video-04.mp4",
     poster: "/avazbek/videos/posters/video-04.jpg",
-    title: "Corporate Content",
-    category: "Biznes uchrashuv",
+    title: "Biznes uchrashuv",
+    category: "Korporativ kontent",
+    seen: "Stol atrofidagi muhokama: Avazbek suhbatda o‘z fikrini bildiradi.",
   },
 ];
 
@@ -152,15 +170,15 @@ export const network = {
 };
 
 export const resume = {
-  title: "Resume",
-  roles: "Marketing • SMM • Target • Video Editing",
+  title: "Rezyume",
+  roles: "Marketing • SMM • Target • Video montaj",
   summary:
     "Biznesning auditoriyasi, taklifi, kontenti va reklamasini yagona tizim sifatida ko‘rib, sotuv va o‘sishga yo‘naltirilgan marketing ustida ishlayman.",
   /** Yo'nalishlar — Experience ma'lumoti kiritilmaguncha shu ko'rsatiladi */
   directions: [
-    { title: "Marketing & SMM", text: "Strategiya, kontent rejasi va brend kommunikatsiyasi." },
-    { title: "Target Advertising", text: "Meta Ads kampaniyalari: sozlash, kreativ test, optimizatsiya." },
-    { title: "Content & Video", text: "Reels, reklama videolari va short-form kontent." },
+    { title: "Marketing va SMM", text: "Strategiya, kontent rejasi va brend kommunikatsiyasi." },
+    { title: "Target reklama", text: "Meta Ads kampaniyalari: sozlash, kreativ test, optimizatsiya." },
+    { title: "Kontent va video", text: "Reels, reklama videolari va qisqa formatdagi kontent." },
   ],
   /**
    * Real ish tajribasi. Bo'sh bo'lsa timeline saytda ham, PDF'da ham chiqmaydi.
@@ -175,6 +193,21 @@ export const resume = {
     "Content Strategy",
     "Video Editing",
     "Creative Strategy",
+  ],
+  /** Saytda ko'rsatiladigan o'zbekcha ro'yxatlar (PDF inglizcha `skills` dan foydalanadi) */
+  skillsUz: [
+    {
+      group: "Ko‘nikmalar",
+      items: ["Marketing strategiyasi", "SMM", "Meta Ads", "Target reklama", "Auditoriya tahlili", "Taklif (offer) ishlab chiqish", "Kontent strategiyasi", "Performance marketing"],
+    },
+    {
+      group: "Kreativ",
+      items: ["Video montaj", "Reels tayyorlash", "Motion grafika", "Kreativ strategiya", "Kopirayting", "Vizual kontent"],
+    },
+    {
+      group: "Ishlatadigan dasturlar",
+      items: ["Adobe Premiere Pro", "Adobe After Effects", "Adobe Photoshop", "Figma", "CapCut", "VN", "Meta Ads Manager", "Tilda", "amoCRM", "Bitrix24"],
+    },
   ],
   skills: [
     {
