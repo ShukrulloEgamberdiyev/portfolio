@@ -7,14 +7,14 @@ import { portfolio, videos } from './content';
 const MAIN = [0, 1, 3];
 const EXTRA = 2;
 
-function Play({ big }: { big?: boolean }) {
+function Play({ size = 'md' }: { size?: 'sm' | 'md' }) {
+  const box = size === 'sm' ? 'h-8 w-8' : 'h-12 w-12';
+  const icon = size === 'sm' ? 10 : 14;
   return (
     <span
-      className={`flex items-center justify-center rounded-full bg-accent text-coal shadow-xl transition-transform duration-500 group-hover:scale-110 ${
-        big ? 'h-16 w-16' : 'h-11 w-11'
-      }`}
+      className={`flex items-center justify-center rounded-full bg-accent text-coal ring-1 ring-coal/10 transition-transform duration-300 group-hover:scale-105 ${box}`}
     >
-      <svg width={big ? 18 : 13} height={big ? 18 : 13} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <svg width={icon} height={icon} viewBox="0 0 24 24" fill="currentColor" aria-hidden className="translate-x-[1px]">
         <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z" />
       </svg>
     </span>
@@ -75,39 +75,31 @@ export default function VideoWork() {
 
   return (
     <>
-      <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
-        {/* header + extra BTS video */}
+      <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
+        {/* sarlavha + qo‘shimcha video */}
         <div className="lg:col-span-3">
-          <h3 data-reveal className="text-[40px] font-semibold leading-[0.95] tracking-[-0.05em] sm:text-[56px]">
-            {portfolio.worksTitle}
-          </h3>
-          <p data-reveal className="mt-4 max-w-xs text-[15px] leading-relaxed text-paper/60">{portfolio.worksText}</p>
+          <h3 data-reveal className="t-h2">{portfolio.worksTitle}</h3>
+          <p data-reveal className="t-small mt-4 max-w-[34ch] text-paper/65">{portfolio.worksText}</p>
 
           <button
             type="button"
             onClick={open(EXTRA)}
-            className="group mt-10 hidden w-full items-center gap-4 text-left lg:flex"
+            className="group mt-8 flex w-full max-w-[320px] items-center gap-4 rounded-[6px] border border-paper/15 p-2.5 pr-4 text-left transition-colors duration-300 hover:border-accent/60 lg:mt-12"
             aria-label={`${extra.title} videosini ko‘rish`}
           >
-            <span className="relative aspect-[9/16] w-20 shrink-0 overflow-hidden rounded-[4px] bg-paper/10">
-              <Img src={extra.poster} alt="" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-              <span className="absolute inset-0 flex items-center justify-center">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-coal">
-                  <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                    <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z" />
-                  </svg>
-                </span>
-              </span>
+            <span className="media relative aspect-[9/16] w-14 shrink-0 bg-paper/10">
+              <Img src={extra.poster} alt="" fill className="object-cover object-[50%_35%]" />
+              <span className="absolute inset-0 flex items-center justify-center"><Play size="sm" /></span>
             </span>
-            <span>
-              <span className="kicker block text-paper/45">{extra.category}</span>
-              <span className="mt-1 block text-[16px] font-medium text-paper">{extra.title}</span>
+            <span className="min-w-0">
+              <span className="t-label block text-accent">{extra.category}</span>
+              <span className="mt-1.5 block text-[15px] font-medium leading-snug text-paper">{extra.title}</span>
             </span>
           </button>
         </div>
 
-        {/* 3 work cards */}
-        <ol className="grid gap-10 sm:grid-cols-3 sm:gap-5 lg:col-span-9 lg:gap-6">
+        {/* 3 ta ish kartochkasi — mobil: surib ko‘riladigan qator; sm+: 3 ustun */}
+        <ol className="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:col-span-8 lg:col-start-5 lg:gap-6">
           {MAIN.map((i, k) => {
             const item = videos[i];
             const rows = [
@@ -117,43 +109,38 @@ export default function VideoWork() {
               item.result ? { k: 'Natija', v: item.result } : null,
             ].filter(Boolean) as { k: string; v: string }[];
             return (
-              <li key={item.src} data-reveal style={{ ['--d' as string]: k }} className={k === 1 ? 'sm:mt-12' : ''}>
+              <li
+                key={item.src}
+                data-reveal
+                style={{ ['--d' as string]: k }}
+                className={`w-[74%] shrink-0 snap-start min-[480px]:w-[46%] sm:w-auto ${k === 1 ? 'sm:mt-14' : ''}`}
+              >
                 <button type="button" onClick={open(i)} className="group block w-full text-left" aria-label={`${item.title} videosini ko‘rish`}>
-                  <span className="relative block aspect-[4/5] overflow-hidden rounded-[4px] bg-paper/10 sm:aspect-[9/16]">
-                    <Img src={item.poster} alt="" fill className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]" />
-                    <span className="absolute inset-0 bg-linear-to-t from-coal/70 via-transparent to-transparent" />
-                    <span className="absolute left-4 top-4 font-mono text-[11px] text-paper/80">0{k + 1}</span>
-                    <span className="absolute bottom-4 right-4"><Play big={k === 0} /></span>
+                  <span className="media relative block aspect-[9/16] bg-paper/10">
+                    <Img src={item.poster} alt="" fill className="object-cover object-[50%_35%] transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
+                    <span className="absolute left-3 top-3 rounded-full bg-coal/70 px-2.5 py-1 font-mono text-[11px] leading-none text-paper/90">0{k + 1}</span>
+                    <span className="absolute bottom-3 right-3"><Play /></span>
                   </span>
                 </button>
-                <p className="kicker mt-5 text-accent">{item.category}</p>
-                <h4 className="mt-2 text-[24px] font-semibold leading-tight tracking-[-0.03em] text-paper">{item.title}</h4>
-                <p className="mt-3 text-[14px] leading-relaxed text-paper/65">{item.seen}</p>
-                {rows.length ? (
-                  <dl className="mt-4 space-y-2 border-t border-paper/15 pt-4 text-[14px]">
-                    {rows.map((r) => (
-                      <div key={r.k} className="flex gap-3">
-                        <dt className="w-28 shrink-0 text-paper/45">{r.k}</dt>
-                        <dd className="text-paper/85">{r.v}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                ) : null}
+                <div className="mt-5 border-t border-paper/15 pt-4">
+                  <p className="t-label text-accent">{item.category}</p>
+                  <h4 className="t-h4 mt-2 text-paper">{item.title}</h4>
+                  <p className="t-small mt-2 text-paper/65">{item.seen}</p>
+                  {rows.length ? (
+                    <dl className="t-small mt-4 space-y-2 border-t border-paper/15 pt-4">
+                      {rows.map((r) => (
+                        <div key={r.k} className="flex gap-3">
+                          <dt className="w-28 shrink-0 text-paper/50">{r.k}</dt>
+                          <dd className="text-paper/85">{r.v}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  ) : null}
+                </div>
               </li>
             );
           })}
         </ol>
-
-        {/* mobile/tablet: extra video */}
-        <button type="button" onClick={open(EXTRA)} className="group flex items-center gap-4 text-left lg:hidden" aria-label={`${extra.title} videosini ko‘rish`}>
-          <span className="relative aspect-[9/16] w-16 shrink-0 overflow-hidden rounded-[4px] bg-paper/10">
-            <Img src={extra.poster} alt="" fill className="object-cover" />
-          </span>
-          <span>
-            <span className="kicker block text-paper/45">{extra.category}</span>
-            <span className="mt-1 block text-[16px] font-medium text-paper">{extra.title} ▸</span>
-          </span>
-        </button>
       </div>
 
       {v ? (
@@ -162,24 +149,26 @@ export default function VideoWork() {
           role="dialog"
           aria-modal="true"
           aria-label={v.title}
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-coal/95 p-4 backdrop-blur-md sm:p-8"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-coal/[0.97] p-4 sm:p-8"
           style={{ animation: 'fade .3s ease both' }}
           onClick={close}
         >
-          <div className="relative flex w-full max-w-[min(92vw,calc(78svh*9/16))] flex-col" onClick={(e) => e.stopPropagation()}>
+          <div className="relative flex w-full max-w-[min(92vw,calc(76svh*9/16))] flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="mb-3 flex items-center justify-between gap-4 text-paper">
               <div className="min-w-0">
-                <p className="kicker text-paper/55">{v.category}</p>
-                <p className="truncate text-[17px] font-medium tracking-[-0.02em]">{v.title}</p>
+                <p className="t-label text-accent">{v.category}</p>
+                <p className="t-h4 mt-1 truncate">{v.title}</p>
               </div>
               <button
                 ref={closeRef}
                 type="button"
                 onClick={close}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-paper/25 text-xl text-paper transition-colors hover:bg-paper hover:text-coal"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-paper/30 text-paper transition-colors hover:border-accent hover:bg-accent hover:text-coal"
                 aria-label="Yopish"
               >
-                ×
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+                  <path d="M1 1l12 12M13 1L1 13" />
+                </svg>
               </button>
             </div>
             <video
@@ -190,13 +179,13 @@ export default function VideoWork() {
               autoPlay
               playsInline
               preload="metadata"
-              className="aspect-[9/16] max-h-[78svh] w-full rounded-[6px] bg-black object-contain"
+              className="aspect-[9/16] max-h-[76svh] w-full rounded-[6px] border border-paper/10 bg-black object-contain"
             />
-            <div className="mt-3 flex justify-between">
-              <button type="button" onClick={() => step(-1)} className="min-h-[44px] rounded-full px-4 text-[14px] text-paper/70 hover:text-paper">
+            <div className="mt-3 flex justify-between border-t border-paper/10 pt-2">
+              <button type="button" onClick={() => step(-1)} className="t-small min-h-[44px] rounded-full px-3 text-paper/70 transition-colors hover:text-accent">
                 ← Oldingi
               </button>
-              <button type="button" onClick={() => step(1)} className="min-h-[44px] rounded-full px-4 text-[14px] text-paper/70 hover:text-paper">
+              <button type="button" onClick={() => step(1)} className="t-small min-h-[44px] rounded-full px-3 text-paper/70 transition-colors hover:text-accent">
                 Keyingi →
               </button>
             </div>

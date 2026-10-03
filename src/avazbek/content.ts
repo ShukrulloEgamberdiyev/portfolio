@@ -62,25 +62,26 @@ export const trust = {
  * Logolar: /public/avazbek/images/brands/brand-XX.webp.
  * `name: null` — brend nomi aniq bo'lmasa: UI'da nom chiqmaydi, alt = "Brand logo".
  */
-export const brands: { name: string | null; logo: string }[] = [
-  { name: "Fazilat Estate", logo: "/avazbek/images/brands/brand-01.webp" },
-  { name: "Rose Flowers", logo: "/avazbek/images/brands/brand-02.webp" },
-  { name: "Bliss", logo: "/avazbek/images/brands/brand-03.webp" },
-  { name: "West", logo: "/avazbek/images/brands/brand-04.webp" },
-  { name: "UZ Style Catering", logo: "/avazbek/images/brands/brand-05.webp" },
-  { name: "Boost", logo: "/avazbek/images/brands/brand-06.webp" },
-  { name: "Alleya", logo: "/avazbek/images/brands/brand-07.webp" },
-  { name: "Leapmotor · Exeed · Geely Auto", logo: "/avazbek/images/brands/brand-08.webp" },
-  { name: "LaminoX Factory", logo: "/avazbek/images/brands/brand-09.webp" },
-  { name: "Aura", logo: "/avazbek/images/brands/brand-10.webp" },
-  { name: null, logo: "/avazbek/images/brands/brand-11.webp" },
-  { name: "IFAR Home Confectionery", logo: "/avazbek/images/brands/brand-12.webp" },
-  { name: "Tatneft 777", logo: "/avazbek/images/brands/brand-13.webp" },
-  { name: "ZK Academy", logo: "/avazbek/images/brands/brand-14.webp" },
-  { name: null, logo: "/avazbek/images/brands/brand-15.webp" },
-  { name: null, logo: "/avazbek/images/brands/brand-16.webp" },
-  { name: "Dilbar Restaurant", logo: "/avazbek/images/brands/brand-17.webp" },
-  { name: null, logo: "/avazbek/images/brands/brand-18.webp" },
+/** `scale` — logotiplarni optik jihatdan tenglashtirish (ko‘rinadigan maydon bo‘yicha); `ratio` — asl eni/bo‘yi. */
+export const brands: { name: string | null; logo: string; scale: number; ratio: number }[] = [
+  { name: "Fazilat Estate", logo: "/avazbek/images/brands/brand-01.webp", scale: 0.96, ratio: 1.088 },
+  { name: "Rose Flowers", logo: "/avazbek/images/brands/brand-02.webp", scale: 1.38, ratio: 0.852 },
+  { name: "Bliss", logo: "/avazbek/images/brands/brand-03.webp", scale: 0.96, ratio: 1.077 },
+  { name: "West", logo: "/avazbek/images/brands/brand-04.webp", scale: 0.78, ratio: 1.803 },
+  { name: "UZ Style Catering", logo: "/avazbek/images/brands/brand-05.webp", scale: 0.83, ratio: 2.700 },
+  { name: "Boost", logo: "/avazbek/images/brands/brand-06.webp", scale: 0.98, ratio: 1.055 },
+  { name: "Alleya", logo: "/avazbek/images/brands/brand-07.webp", scale: 1.38, ratio: 1.045 },
+  { name: "Leapmotor · Exeed · Geely Auto", logo: "/avazbek/images/brands/brand-08.webp", scale: 0.93, ratio: 1.121 },
+  { name: "LaminoX Factory", logo: "/avazbek/images/brands/brand-09.webp", scale: 0.79, ratio: 2.800 },
+  { name: "Aura", logo: "/avazbek/images/brands/brand-10.webp", scale: 0.99, ratio: 1.044 },
+  { name: null, logo: "/avazbek/images/brands/brand-11.webp", scale: 1.01, ratio: 1.090 },
+  { name: "IFAR Home Confectionery", logo: "/avazbek/images/brands/brand-12.webp", scale: 0.95, ratio: 1.099 },
+  { name: "Tatneft 777", logo: "/avazbek/images/brands/brand-13.webp", scale: 0.96, ratio: 1.066 },
+  { name: "ZK Academy", logo: "/avazbek/images/brands/brand-14.webp", scale: 0.94, ratio: 1.110 },
+  { name: null, logo: "/avazbek/images/brands/brand-15.webp", scale: 0.96, ratio: 1.066 },
+  { name: null, logo: "/avazbek/images/brands/brand-16.webp", scale: 1.0, ratio: 1.033 },
+  { name: "Dilbar Restaurant", logo: "/avazbek/images/brands/brand-17.webp", scale: 0.77, ratio: 1.469 },
+  { name: null, logo: "/avazbek/images/brands/brand-18.webp", scale: 1.2, ratio: 1.022 },
 ];
 
 export const brandsCopy = {

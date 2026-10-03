@@ -20,7 +20,7 @@ export function StrategyVisual() {
         <circle cx="300" cy="190" r="26" className="fill-ink" />
         {/* scattered audience dots */}
         {[
-          [120, 110], [150, 300], [200, 80], [420, 120], [440, 300], [360, 350], [90, 220], [400, 60], [230, 340],
+          [120, 110], [150, 300], [200, 80], [420, 120], [440, 300], [360, 350], [400, 60], [230, 340],
         ].map(([x, y], i) => (
           <circle key={i} cx={x} cy={y} r="4" className="fill-ink/25" />
         ))}
@@ -55,7 +55,7 @@ export function AdsVisual() {
         <circle cx="560" cy="62" r="7" fill="#b89a63" />
       </svg>
       {/* ad preview card with real poster */}
-      <div className="absolute bottom-[6%] right-[4%] w-[38%] min-w-[150px] rotate-2 overflow-hidden rounded-[16px] bg-paper shadow-2xl">
+      <div className="absolute bottom-[6%] right-[4%] w-[38%] min-w-[150px] overflow-hidden rounded-[10px] bg-paper shadow-[0_16px_32px_-20px_rgb(0_0_0/0.5)]">
         <div className="flex items-center gap-2 px-3 py-2.5">
           <span className="h-5 w-5 rounded-full bg-ink" />
           <span className="h-1.5 w-16 rounded-full bg-ink/20" />
@@ -97,7 +97,7 @@ export function ContentVisual() {
         </div>
       </div>
       {/* phone */}
-      <div className="relative w-[40%] max-w-[210px] rounded-[30px] border-[5px] border-ink bg-ink shadow-2xl">
+      <div className="relative w-[40%] max-w-[210px] rounded-[30px] border-[5px] border-ink bg-ink shadow-[0_16px_32px_-22px_rgb(20_36_59/0.5)]">
         <div className="relative aspect-[9/19] overflow-hidden rounded-[24px]">
           <Img src={videos[0].poster} alt="" fill className="object-cover" />
           <div className="absolute inset-0 bg-linear-to-t from-ink/70 via-transparent to-ink/20" />

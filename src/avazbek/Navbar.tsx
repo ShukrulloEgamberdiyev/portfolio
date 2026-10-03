@@ -25,7 +25,7 @@ export default function Navbar() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${
           scrolled || open
-            ? "border-b border-ink/10 bg-paper/90 backdrop-blur-xl"
+            ? "border-b border-ink/10 bg-paper/95 backdrop-blur-md"
             : "border-b border-transparent"
         }`}
       >
@@ -40,22 +40,22 @@ export default function Navbar() {
               <li key={n.href}>
                 <a
                   href={n.href}
-                  className="group relative text-[14px] text-ink/70 transition-colors hover:text-ink"
+                  className="group relative inline-flex min-h-[44px] items-center text-[14px] font-medium text-ink/70 transition-colors hover:text-ink"
                 >
                   {n.label}
-                  <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-ink transition-transform duration-300 group-hover:scale-x-100" />
+                  <span className="absolute bottom-2.5 left-0 h-px w-full origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100" />
                 </a>
               </li>
             ))}
           </ul>
 
           <div className="flex items-center gap-2">
-            <a href="#contact" className="btn-dark hidden !min-h-[40px] !px-5 !text-[14px] sm:inline-flex">
+            <a href="#contact" className="btn-dark hidden !min-h-[44px] !px-5 !text-[14px] sm:inline-flex">
               Bog‘lanish <span aria-hidden>↗</span>
             </a>
             <button
               type="button"
-              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 lg:hidden"
+              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-ink/20 lg:hidden"
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? "Menyuni yopish" : "Menyuni ochish"}
@@ -97,10 +97,10 @@ export default function Navbar() {
                 <a
                   href={n.href}
                   onClick={() => setOpen(false)}
-                  className="flex items-baseline justify-between border-b border-ink/10 py-3 text-[34px] font-semibold tracking-[-0.04em]"
+                  className="flex items-baseline justify-between border-b border-ink/12 py-4 text-[clamp(28px,8vw,36px)] font-semibold tracking-[-0.035em]"
                 >
                   {n.label}
-                  <span className="font-mono text-xs text-graphite">0{i + 1}</span>
+                  <span className="font-mono text-xs text-accent">0{i + 1}</span>
                 </a>
               </li>
             ))}
