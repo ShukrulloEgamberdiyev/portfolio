@@ -8,10 +8,10 @@
 type Props = { variant: 'network' | 'frames' | 'rings'; tone?: 'light' | 'dark'; className?: string };
 
 export default function Backdrop({ variant, tone = 'light', className = '' }: Props) {
-  const ink = tone === 'light' ? '23 35 52' : '243 239 231';
-  const line = `rgb(${ink} / ${tone === 'light' ? 0.07 : 0.09})`;
+  const ink = tone === 'light' ? '34 50 74' : '245 247 251';
+  const line = `rgb(${ink} / ${tone === 'light' ? 0.08 : 0.1})`;
   const dot = `rgb(${ink} / ${tone === 'light' ? 0.18 : 0.2})`;
-  const gold = '#b89a63';
+  const gold = '#4568c4'; // aksent
 
   if (variant === 'network') {
     // Pastki tasma: auditoriya tugunlari chapdan portret tomon ko‘tarilib boradi — matn ostiga tushmaydi.

@@ -27,7 +27,7 @@ export function StrategyVisual() {
         {[[330, 150], [270, 230], [340, 240], [250, 160]].map(([x, y], i) => (
           <circle key={`c${i}`} cx={x} cy={y} r="5" className="fill-ink" />
         ))}
-        <circle cx="300" cy="190" r="6" fill="#b89a63" />
+        <circle cx="300" cy="190" r="6" fill="#4568c4" />
       </svg>
       <span className="kicker absolute left-[9%] top-[8%] text-ink/45">Bozor</span>
       <span className="kicker absolute right-[8%] top-[20%] text-ink/45">Segment</span>
@@ -49,23 +49,23 @@ export function AdsVisual() {
             d={`M-20 ${400 - k * 14} C 120 ${390 - k * 18}, 200 ${330 - k * 30}, 300 ${300 - k * 34} S 480 ${170 - k * 22}, 640 ${90 - k * 10}`}
             stroke="currentColor"
             strokeWidth={k === 5 ? 2.5 : 1}
-            className={k === 5 ? 'text-paper' : 'text-paper/15'}
+            className={k === 5 ? 'text-accent' : 'text-ink/12'}
           />
         ))}
-        <circle cx="560" cy="62" r="7" fill="#b89a63" />
+        <circle cx="560" cy="62" r="7" fill="#4568c4" />
       </svg>
       {/* ad preview card with real poster */}
-      <div className="absolute bottom-[6%] right-[4%] w-[38%] min-w-[150px] overflow-hidden rounded-[10px] bg-paper shadow-[0_16px_32px_-20px_rgb(0_0_0/0.5)]">
+      <div className="absolute bottom-[6%] right-[4%] w-[38%] min-w-[150px] overflow-hidden rounded-[10px] bg-card shadow-[var(--shadow-lift)] ring-1 ring-line">
         <div className="flex items-center gap-2 px-3 py-2.5">
           <span className="h-5 w-5 rounded-full bg-ink" />
           <span className="h-1.5 w-16 rounded-full bg-ink/20" />
         </div>
-        <div className="relative aspect-[4/5] bg-bone">
+        <div className="relative aspect-[4/5] bg-mist">
           <Img src={videos[3].poster} alt="" fill className="object-cover" />
         </div>
         <div className="flex items-center justify-between px-3 py-2.5">
           <span className="text-[11px] font-medium text-ink">Reklama</span>
-          <span className="rounded-full bg-ink px-2.5 py-1 text-[10px] text-paper">Batafsil</span>
+          <span className="rounded-full bg-accent px-2.5 py-1 text-[10px] text-white">Batafsil</span>
         </div>
       </div>
     </div>

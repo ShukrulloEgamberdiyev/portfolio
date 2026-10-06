@@ -14,11 +14,10 @@ export default function Resume() {
         {/* profil */}
         <div className="min-w-0 lg:col-span-4">
           <div className="lg:sticky lg:top-28">
-            <span aria-hidden data-reveal className="block h-px w-7 bg-accent" />
-            <h2 data-reveal className="t-h2 mt-5">{resume.title}</h2>
-            <div data-reveal className="mt-8 border-t border-ink/15 pt-6">
+                        <h2 data-reveal className="t-h2">{resume.title}</h2>
+            <div data-reveal className="mt-8 border-t border-line pt-6">
               <p className="t-h4">{site.name}</p>
-              <p className="t-label mt-2 text-accent-ink">{resume.roles}</p>
+              <p className="t-label mt-2 text-accent">{resume.roles}</p>
               <p className="t-body mt-5 max-w-[38ch] text-graphite">{resume.summary}</p>
               <DownloadResume className="mt-8" />
             </div>
@@ -26,9 +25,9 @@ export default function Resume() {
         </div>
 
         {/* qatorlar */}
-        <dl className="min-w-0 border-t border-ink/15 lg:col-span-7 lg:col-start-6">
+        <dl className="card min-w-0 px-5 sm:px-8 lg:col-span-7 lg:col-start-6">
           {resume.experience.length > 0 ? (
-            <div data-reveal className="grid gap-3 border-b border-ink/15 py-7 sm:grid-cols-[11rem_1fr] sm:gap-8">
+            <div data-reveal className="grid gap-3 border-b border-line py-6 last:border-b-0 sm:grid-cols-[11rem_1fr] sm:gap-8">
               <dt className="t-label pt-1 text-graphite">Tajriba</dt>
               <dd className="space-y-2">
                 {resume.experience.map((x) => (
@@ -45,10 +44,10 @@ export default function Resume() {
               key={r.k}
               data-reveal
               style={{ ['--d' as string]: i }}
-              className="grid gap-3 border-b border-ink/15 py-7 sm:grid-cols-[11rem_1fr] sm:gap-8"
+              className="grid gap-3 border-b border-line py-6 last:border-b-0 sm:grid-cols-[11rem_1fr] sm:gap-8"
             >
               <dt className="t-label flex items-baseline gap-3 pt-1 text-graphite">
-                <span className="text-accent-ink">{String(i + 1).padStart(2, '0')}</span>
+                <span className="text-accent">{String(i + 1).padStart(2, '0')}</span>
                 {r.k}
               </dt>
               {r.lead ? (
@@ -67,7 +66,7 @@ export default function Resume() {
                     {r.v.map((t) => (
                       <li
                         key={t}
-                        className="t-small rounded-full border border-ink/15 px-3 py-1.5 leading-none text-ink/85"
+                        className="t-small rounded-full border border-line bg-paper px-3 py-1.5 leading-none text-ink"
                       >
                         {t}
                       </li>

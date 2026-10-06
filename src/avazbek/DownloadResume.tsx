@@ -18,14 +18,14 @@ export default function DownloadResume({ className = "" }: { className?: string 
 
   if (ok === false) {
     return (
-      <span aria-disabled className={`btn cursor-not-allowed border border-ink/20 text-ink opacity-60 ${className}`}>
+      <span aria-disabled className={`btn-secondary cursor-not-allowed opacity-60 ${className}`}>
         Rezyume tez orada
       </span>
     );
   }
 
   return (
-    <a href={site.resumePdf} download className={`btn-dark ${className}`}>
+    <a href={site.resumePdf} download className={`btn-primary ${className}`}>
       Rezyumeni yuklab olish <span aria-hidden>↓</span>
     </a>
   );

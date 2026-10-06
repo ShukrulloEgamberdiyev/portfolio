@@ -25,7 +25,7 @@ export default function Navbar() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${
           scrolled || open
-            ? "border-b border-ink/10 bg-paper/95 backdrop-blur-md"
+            ? "border-b border-line bg-paper/95 backdrop-blur-md"
             : "border-b border-transparent"
         }`}
       >
@@ -50,12 +50,12 @@ export default function Navbar() {
           </ul>
 
           <div className="flex items-center gap-2">
-            <a href="#contact" className="btn-dark hidden !min-h-[44px] !px-5 !text-[14px] sm:inline-flex">
+            <a href="#contact" className="btn-primary hidden !min-h-[44px] !px-5 !text-[14px] sm:inline-flex">
               Bog‘lanish <span aria-hidden>↗</span>
             </a>
             <button
               type="button"
-              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-ink/20 lg:hidden"
+              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-line bg-card lg:hidden"
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? "Menyuni yopish" : "Menyuni ochish"}
@@ -97,7 +97,7 @@ export default function Navbar() {
                 <a
                   href={n.href}
                   onClick={() => setOpen(false)}
-                  className="flex items-baseline justify-between border-b border-ink/12 py-4 text-[clamp(28px,8vw,36px)] font-semibold tracking-[-0.035em]"
+                  className="flex items-baseline justify-between border-b border-line py-4 text-[clamp(28px,8vw,36px)] font-semibold tracking-[-0.035em]"
                 >
                   {n.label}
                   <span className="font-mono text-xs text-accent">0{i + 1}</span>
@@ -105,7 +105,7 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
-          <a href="#contact" onClick={() => setOpen(false)} className="btn-dark w-full">
+          <a href="#contact" onClick={() => setOpen(false)} className="btn-primary w-full">
             Bog‘lanish <span aria-hidden>↗</span>
           </a>
         </div>
