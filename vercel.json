@@ -29,6 +29,11 @@
       "source": "/avazbek/",
       "destination": "/avazbek",
       "permanent": true
+    },
+    {
+      "source": "/077agency/",
+      "destination": "/077agency",
+      "permanent": true
     }
   ],
   "headers": [

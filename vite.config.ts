@@ -7,7 +7,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, normalize, resolve } from 'node:path';
 
 /** Standalone Uzbek-only landings, each with its own HTML entry (e.g. qurilish.html → src/qurilish-main.tsx). */
-const LANDINGS = ['avtosalon', 'qurilish', 'ishlab-chiqarish', 'card', 'avazbek'] as const;
+const LANDINGS = ['avtosalon', 'qurilish', 'ishlab-chiqarish', 'card', 'avazbek', '077agency'] as const;
 
 /**
  * In dev and `vite preview` serve each landing at its canonical /<name>, and 301 the trailing-slash
@@ -72,9 +72,42 @@ function previewPrerendered(): Plugin {
   };
 }
 
+/**
+ * /api/077agency/lead — dev va `vite preview` uchun. Productionda xuddi shu handler
+ * api/077agency/lead.ts (Vercel Function) orqali ishlaydi.
+ */
+function agency077Api(): Plugin {
+  const mount = (mw: Connect.Server): void => {
+    mw.use('/api/077agency/lead', async (req, res) => {
+      const { handleLead, handleStatus } = await import('./src/agency077/server/handler.ts');
+      const env = { AGENCY077_SHEETS_URL: process.env.AGENCY077_SHEETS_URL, AGENCY077_SHEETS_SECRET: process.env.AGENCY077_SHEETS_SECRET };
+      let response: Response;
+      if (req.method === 'POST') {
+        const chunks: Buffer[] = [];
+        for await (const c of req) chunks.push(c as Buffer);
+        const headers = new Headers();
+        for (const [k, v] of Object.entries(req.headers)) if (typeof v === 'string') headers.set(k, v);
+        response = await handleLead(new Request('http://local/api/077agency/lead', { method: 'POST', headers, body: Buffer.concat(chunks) }), env);
+      } else if (req.method === 'GET') {
+        response = handleStatus(env);
+      } else {
+        response = new Response('{"ok":false}', { status: 405 });
+      }
+      res.statusCode = response.status;
+      response.headers.forEach((v, k) => res.setHeader(k, v));
+      res.end(await response.text());
+    });
+  };
+  return {
+    name: 'agency077-local-api',
+    configureServer(server) { mount(server.middlewares); },
+    configurePreviewServer(server) { mount(server.middlewares); },
+  };
+}
+
 // `--mode singlefile` inlines everything into one HTML (used for the hosted preview).
 export default defineConfig(({ mode, isSsrBuild }) => ({
-  plugins: [react(), tailwindcss(), landingRoutes(), previewPrerendered(), ...(mode === 'singlefile' ? [viteSingleFile()] : [])],
+  plugins: [react(), tailwindcss(), landingRoutes(), agency077Api(), previewPrerendered(), ...(mode === 'singlefile' ? [viteSingleFile()] : [])],
   build: {
     outDir: mode === 'singlefile' ? 'dist-preview' : 'dist',
     target: 'es2020',
@@ -90,6 +123,7 @@ export default defineConfig(({ mode, isSsrBuild }) => ({
               'ishlab-chiqarish': fileURLToPath(new URL('./ishlab-chiqarish.html', import.meta.url)),
               card: fileURLToPath(new URL('./card.html', import.meta.url)),
               avazbek: fileURLToPath(new URL('./avazbek.html', import.meta.url)),
+              '077agency': fileURLToPath(new URL('./077agency.html', import.meta.url)),
             },
           },
         }

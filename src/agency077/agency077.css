@@ -1,0 +1,147 @@
+/*
+ * /077agency — 077agency landing sahifasi.
+ * Faqat 077agency.html entry'sida yuklanadi: FAZO Digital'ning src/index.css'i bilan aralashmaydi
+ * va boshqa sahifalarga ta'sir qilmaydi. Tailwind faqat shu papkani skanerlaydi.
+ * Komponent uslublari .a077 ildiz klassi ichida cheklangan.
+ */
+@import "tailwindcss" source("./");
+
+/* Layout: qora-grafit sahna, juda nozik panjara, qizil faqat CTA, tanlov va muhim detallarda. */
+@theme {
+  --color-bg: #0b0b0f;
+  --color-card: #15151b;
+  --color-card-2: #1c1c24;
+  --color-field: #101015;
+  --color-fg: #f5f5f7;
+  --color-muted: #b4b4bf;
+  --color-dim: #80808c;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.16);
+  --color-accent: #e3212d;
+  --color-accent-bright: #f2343f;
+  --color-accent-soft: #ff7a82;
+  --color-warn: #ffb547;
+  --color-ok: #3dd68c;
+
+  --font-display: "Manrope", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-sans: "Manrope", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --breakpoint-xs: 400px;
+}
+
+@layer base {
+  html {
+    background: var(--color-bg);
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    overflow-x: hidden;
+  }
+}
+
+.a077 {
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-muted);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+.a077 h1,
+.a077 h2,
+.a077 h3 {
+  text-wrap: balance;
+  font-family: var(--font-display);
+}
+.a077 ::selection {
+  background: rgb(227 33 45 / 0.4);
+  color: #fff;
+}
+.a077 :focus-visible {
+  outline: 2px solid var(--color-accent-soft);
+  outline-offset: 3px;
+  border-radius: 14px;
+}
+
+@layer components {
+  .a077 .shell {
+    @apply mx-auto w-full max-w-[1240px] px-4 sm:px-8;
+  }
+  .a077 .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-dim;
+  }
+  .a077 .btn-primary {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-[14px] bg-accent px-6 py-3.5 text-[15px] font-bold text-white transition duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.18) inset,
+      0 10px 28px -10px rgb(227 33 45 / 0.75);
+  }
+  .a077 .btn-primary:hover:not(:disabled) {
+    @apply bg-accent-bright;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.2) inset,
+      0 14px 34px -10px rgb(227 33 45 / 0.9);
+  }
+  .a077 .btn-ghost {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-[14px] border border-line-strong bg-white/[0.02] px-5 py-3 text-[15px] font-semibold text-fg transition hover:border-white/30 hover:bg-white/[0.05];
+  }
+  .a077 .chip {
+    @apply relative flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-[14px] border border-line-strong bg-field px-4 py-3 text-left text-[14.5px] font-semibold text-fg transition duration-150 hover:border-white/30 hover:bg-card-2;
+  }
+  .a077 .chip[aria-checked="true"] {
+    @apply border-accent bg-accent/[0.12];
+    box-shadow:
+      inset 0 0 0 1px rgb(227 33 45 / 0.7),
+      0 8px 24px -14px rgb(227 33 45 / 0.8);
+  }
+  .a077 .field {
+    @apply min-h-[52px] w-full rounded-[14px] border border-line-strong bg-field px-4 py-3.5 text-[16px] text-fg transition placeholder:text-dim hover:border-white/25 focus:border-accent focus:bg-black/40 focus:outline-none focus:ring-4 focus:ring-accent/20;
+  }
+  .a077 .field:focus-visible {
+    outline: none;
+  }
+  .a077 .field[aria-invalid="true"] {
+    @apply border-warn focus:ring-warn/20;
+  }
+  .a077 .card {
+    @apply rounded-[20px] border border-line bg-card;
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 24px 60px -36px rgb(0 0 0 / 0.9);
+  }
+}
+
+/* Logotip chiziqlari chizilib chiqadi, so‘ng "0" atrofida signal aylanadi */
+.a077 .mark-stroke {
+  stroke-dasharray: 900;
+  stroke-dashoffset: 900;
+  animation: a077-draw 1.4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.a077 .mark-stroke.d2 { animation-delay: 0.2s; }
+.a077 .mark-stroke.d3 { animation-delay: 0.35s; }
+@keyframes a077-draw { to { stroke-dashoffset: 0; } }
+
+.a077 .rise { animation: a077-rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@keyframes a077-rise { from { transform: translateY(10px); opacity: 0.001; } }
+
+.a077 .step-in { animation: a077-step 0.28s ease both; }
+@keyframes a077-step { from { transform: translateX(8px); opacity: 0; } }
+
+/* Hajmli dekorativ elementlar: sekin "suzish" */
+.a077 .float-slow { animation: a077-float 7s ease-in-out infinite; }
+.a077 .float-slower { animation: a077-float 9s ease-in-out infinite reverse; }
+@keyframes a077-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -8px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .a077 .mark-stroke { animation: none; stroke-dashoffset: 0; }
+  .a077 .rise, .a077 .step-in, .a077 .float-slow, .a077 .float-slower { animation: none; }
+  .a077 .orbit { display: none; }
+}
