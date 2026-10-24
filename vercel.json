@@ -47,7 +47,7 @@
       ]
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!crm(?:/|$)).*)",
       "headers": [
         {
           "key": "X-Content-Type-Options",
@@ -74,6 +74,16 @@
           "value": "camera=(), microphone=(), geolocation=(), payment=()"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/crm",
+      "destination": "https://fazo-digital-crm.vercel.app/crm"
+    },
+    {
+      "source": "/crm/:path*",
+      "destination": "https://fazo-digital-crm.vercel.app/crm/:path*"
     }
   ]
 }
