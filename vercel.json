@@ -38,6 +38,36 @@
   ],
   "headers": [
     {
+      "source": "/amina-crm/sw.js",
+      "headers": [
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/amina-crm/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        }
+      ]
+    },
+    {
       "source": "/assets/(.*)",
       "headers": [
         {
@@ -47,7 +77,7 @@
       ]
     },
     {
-      "source": "/((?!crm(?:/|$)).*)",
+      "source": "/((?!crm(?:/|$)|amina-crm(?:/|$)).*)",
       "headers": [
         {
           "key": "X-Content-Type-Options",
