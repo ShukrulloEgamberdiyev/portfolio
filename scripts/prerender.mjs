@@ -18,6 +18,8 @@ const { render, renderAvtosalon, renderQurilish, renderIshlab, renderCard, rende
 const template = readFileSync(join(dist, 'index.html'), 'utf8');
 const LANGS = ['uz', 'ru', 'en'];
 const prefix = (l) => (l === 'uz' ? '' : `/${l}`);
+/** Final URL of a route in a language: /ru and /en home have no trailing slash (Vercel trailingSlash: false redirects /ru/ → /ru). */
+const urlFor = (l, r) => `${SITE}${prefix(l)}${r === '/' ? (prefix(l) ? '' : '/') : r}`;
 const SITE = 'https://www.fazodigital.uz';
 
 const OG_LOCALE = { uz: 'uz_UZ', ru: 'ru_RU', en: 'en_US' };
@@ -32,7 +34,7 @@ function page(route, lang, { uzOnly = false } = {}) {
     ? '<meta name="robots" content="noindex, follow" />'
     : uzOnly
     ? `<link rel="alternate" hreflang="uz" href="${seo.canonical}" />`
-    : LANGS.map((l) => `<link rel="alternate" hreflang="${l}" href="${SITE}${prefix(l)}${route === '/' ? '/' : route}" />`).join('\n    ')
+    : LANGS.map((l) => `<link rel="alternate" hreflang="${l}" href="${urlFor(l, route)}" />`).join('\n    ')
     + `\n    <link rel="alternate" hreflang="x-default" href="${SITE}${route === '/' ? '/' : route}" />`;
 
   return template
@@ -152,7 +154,7 @@ if (uzOnlyRoutes.includes('/avazbek') && renderAvazbek) {
 writeFileSync(join(dist, '404.html'), page('/404', 'uz'));
 
 // sitemap
-const urls = LANGS.flatMap((l) => routes.map((r) => `${SITE}${prefix(l)}${r === '/' ? '/' : r}`))
+const urls = LANGS.flatMap((l) => routes.map((r) => urlFor(l, r)))
   .concat(uzOnlyRoutes.map((r) => `${SITE}${r}`));
 writeFileSync(
   join(dist, 'sitemap.xml'),

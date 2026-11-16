@@ -102,3 +102,14 @@ test('internal links and local assets resolve', opts, () => {
     for (const m of html.matchAll(/(?:href|src)="(\/[^"/][^"]*|\/)"/g)) assert.ok(exists(m[1]), `${rel}: broken ${m[1]}`);
   }
 });
+
+test('no canonical, hreflang or sitemap URL ends in a trailing slash that Vercel would redirect (/ru/ → /ru)', opts, () => {
+  const bad = /https:\/\/www\.fazodigital\.uz\/[^"<\s]+\/(?=["<])/;
+  for (const p of pages) {
+    const links = (p.html.match(/<link rel="(canonical|alternate)"[^>]*>/g) || []).join('\n');
+    assert.doesNotMatch(links, bad, p.rel);
+  }
+  const sitemap = readFileSync(new URL('../dist/sitemap.xml', import.meta.url), 'utf8');
+  assert.doesNotMatch(sitemap, bad);
+  assert.match(sitemap, /<loc>https:\/\/www\.fazodigital\.uz\/ru<\/loc>/);
+});

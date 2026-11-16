@@ -29,7 +29,8 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
   const path = normalizePath(rawPath);
   const t = dictionaries[lang];
   const p = pageDictionaries[lang];
-  const canonical = `${SITE_URL}${langPrefix(lang)}${path === '/' ? '/' : path}`;
+  // /ru and /en home pages have no trailing slash: Vercel (trailingSlash: false) redirects /ru/ → /ru.
+  const canonical = `${SITE_URL}${langPrefix(lang)}${path === '/' ? (langPrefix(lang) ? '' : '/') : path}`;
   const make = (title: string, description: string): Seo => ({ title: `${title} — ${SUFFIX}`, description, canonical });
 
   if (path === '/avtosalon') {
