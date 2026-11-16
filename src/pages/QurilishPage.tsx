@@ -227,7 +227,7 @@ function MiniFooter() {
     <footer className="border-t border-line pb-28 pt-8 md:pb-8">
       <div className="shell flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ash">
         <span>FAZO Digital © 2026</span>
-        <a href="/privacy" target="_blank" rel="noopener" className="transition-colors hover:text-bone">Maxfiylik siyosati</a>
+        <a href="/privacy" target="_blank" rel="noopener" className="tap transition-colors hover:text-bone">Maxfiylik siyosati</a>
       </div>
     </footer>
   );

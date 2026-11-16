@@ -310,7 +310,7 @@ function MiniFooter() {
         <Logo className="text-[14px]" markClass="h-5" />
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <span>FAZO Digital © 2026</span>
-          <a href="/privacy" target="_blank" rel="noopener" className="transition-colors hover:text-bone">Maxfiylik siyosati</a>
+          <a href="/privacy" target="_blank" rel="noopener" className="tap transition-colors hover:text-bone">Maxfiylik siyosati</a>
         </div>
       </div>
     </footer>

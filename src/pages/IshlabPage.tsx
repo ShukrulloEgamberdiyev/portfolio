@@ -65,7 +65,7 @@ function Header() {
       <header className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color] duration-500 ${solid || open ? 'border-b border-line bg-ink/80 backdrop-blur-xl' : 'border-b border-transparent'}`}
         style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
         <div className="shell flex h-16 items-center justify-between lg:h-20">
-          <a href="/" aria-label="FAZO Digital — bosh sahifa" data-cursor="hover"><Logo /></a>
+          <a href="/" aria-label="FAZO Digital — bosh sahifa" data-cursor="hover" className="tap"><Logo /></a>
           <nav aria-label="Sahifa bo‘limlari" className="hidden items-center gap-8 lg:flex">
             {nav.map((n) => (
               <a key={n.id} href={`#${n.id}`} onClick={go(n.id)} className="group relative text-[14px] text-mist transition-colors hover:text-bone">
@@ -686,10 +686,10 @@ function MiniFooter() {
   return (
     <footer className="border-t border-line pb-28 pt-10 md:pb-10">
       <div className="shell flex flex-col items-start justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.14em] text-ash sm:flex-row sm:items-center">
-        <a href="/" aria-label="FAZO Digital — bosh sahifa"><Logo className="text-[14px]" markClass="h-5" /></a>
+        <a href="/" aria-label="FAZO Digital — bosh sahifa" className="tap"><Logo className="text-[14px]" markClass="h-5" /></a>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <span>FAZO Digital © 2026</span>
-          <a href="/privacy" target="_blank" rel="noopener" className="transition-colors hover:text-bone">Maxfiylik siyosati</a>
+          <a href="/privacy" target="_blank" rel="noopener" className="tap transition-colors hover:text-bone">Maxfiylik siyosati</a>
         </div>
       </div>
     </footer>

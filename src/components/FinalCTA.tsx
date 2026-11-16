@@ -36,7 +36,7 @@ export function FinalCTA() {
               <dt className="eyebrow">{c.label}</dt>
               <dd className="mt-3 text-[1.1rem] font-medium tracking-[-0.01em]">
                 {c.href ? (
-                  <a href={c.href} data-cursor="hover" className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat pb-1 transition-[background-size] duration-500 hover:bg-[length:100%_1px]" {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{c.value}</a>
+                  <a href={c.href} data-cursor="hover" className="tap bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat pb-1 transition-[background-size] duration-500 hover:bg-[length:100%_1px]" {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{c.value}</a>
                 ) : c.value}
               </dd>
             </div>
