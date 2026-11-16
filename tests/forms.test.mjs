@@ -43,3 +43,16 @@ test('contact: full phone numbers and @usernames pass; bare words and cut number
   for (const ok of ['+998 90 123 45 67', '998901234567', '+7 900 123-45-67', '@fazo_digital', 't.me/fazo_digital', 'https://t.me/fazo_digital']) assert.equal(mod.isContact(ok), true, ok);
   for (const bad of ['', 'salom', 'fazo_digital', '@abc', '+998 90 123 45', '+998 90 123 45 67 8', '12345', 'tel: yo‘q']) assert.equal(mod.isContact(bad), false, bad);
 });
+
+test('general form: only an explicit confirmation counts — the health-check answer is never a success', async () => {
+  const src = await readFile(new URL('../src/lib/submit.ts', import.meta.url), 'utf8');
+  const body = src.slice(src.indexOf('export function isSiteConfirmation'));
+  const js = ts.transpileModule(body, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText;
+  const { isSiteConfirmation } = await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
+  const id = 'SA-MUH60GB01-A1B2C3D4E5';
+  assert.equal(isSiteConfirmation({ ok: true, saved: true, submissionId: id }, id), true);
+  assert.equal(isSiteConfirmation({ ok: true }, id), true, 'older deployment');
+  assert.equal(isSiteConfirmation({ ok: true, status: 'FAZO application endpoint' }, id), false, 'health check');
+  assert.equal(isSiteConfirmation({ ok: true, saved: true, submissionId: 'SA-OTHER-ID' }, id), false);
+  assert.equal(isSiteConfirmation({ ok: true, saved: false, submissionId: id }, id), false);
+});

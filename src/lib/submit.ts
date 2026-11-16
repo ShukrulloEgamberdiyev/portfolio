@@ -72,7 +72,17 @@ export function buildSitePayload(data: Application, lang: string, guard: { hp: s
 export async function submitApplication(data: Application, lang = 'uz', guard: { hp: string; elapsed: number } = { hp: '', elapsed: 0 }, submissionId = newSiteSubmissionId()): Promise<void> {
   const payload = buildSitePayload(data, lang, guard, submissionId);
   const result = await deliverApplication(APPLICATION_ENDPOINT, payload, 25000);
-  if ('saved' in result && (result.saved !== true || result.submissionId !== submissionId)) {
+  if (!isSiteConfirmation(result, submissionId)) {
     throw new DeliveryError('bad_response', '', 'Receiver did not confirm this submission');
   }
+}
+
+/**
+ * The receiver's answer confirms THIS application: the current script returns `saved` and echoes the id;
+ * an older deployment returns a bare {ok:true} only after appending the row. The health-check answer
+ * (doGet / a POST that ended up there: {ok:true, status}) never confirms anything.
+ */
+export function isSiteConfirmation(result: Record<string, unknown>, submissionId: string): boolean {
+  if ('saved' in result) return result.saved === true && result.submissionId === submissionId;
+  return !('status' in result);
 }

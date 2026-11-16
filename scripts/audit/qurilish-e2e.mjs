@@ -28,17 +28,12 @@ const fill=async(page,name='Test Sinov')=>{
 const submit=page=>page.locator('form button[type=submit]').click();
 const ok=page=>page.locator('text=Ro‘yxatdan o‘tdingiz').count();
 
-// 1 mobile menu CTA
+// 1 /qurilish ataylab menyusiz (reklama landingi). Birinchi ekrandagi CTA formaga olib boradimi?
 { const {ctx,page}=await fresh();
-  const menuBtn = page.locator('header button[aria-expanded]'); log('menu button exists', await menuBtn.count()>0);
-  if(await menuBtn.count()){ await menuBtn.first().click(); await page.waitForTimeout(600);
-    const dlg=page.locator('[role=dialog], #qr-menu, [id*=menu]').first();
-    const cta=page.locator('[role=dialog] a, [role=dialog] button').filter({hasText:/Ro‘yxatdan|muhokama/i}).first();
-    log('menu CTA count', String(await cta.count()));
-    if(await cta.count()){ await cta.click(); await page.waitForTimeout(1500);
-      log('menu closed after CTA', (await page.locator('[role=dialog]').count())===0);
-      const r=await page.locator('#loyiha-card').boundingBox(); log('form in viewport', !!r && r.y<780 && r.y+r.height>0);
-      await page.screenshot({path:'./audit-shots/qr-menu-cta.png'}); } }
+  log('no site menu (by design)', (await page.locator('header button[aria-expanded], nav').count())===0);
+  const cta=page.locator('a[href="#loyiha"]').first(); log('hero CTA visible on first screen', await cta.isVisible() && ((await cta.boundingBox())?.y ?? 9999) < 780);
+  await cta.click(); await page.waitForTimeout(1500);
+  const r=await page.locator('#loyiha-card').boundingBox(); log('CTA → form in viewport', !!r && r.y<780 && r.y+r.height>0);
   await ctx.close(); }
 // 2 empty submit + aria
 { const {ctx,page,reqs}=await fresh(); await page.locator('#loyiha-card').scrollIntoViewIfNeeded(); await submit(page); await page.waitForTimeout(500);
