@@ -63,6 +63,7 @@ export default function CaseStudy() {
         </div>
 
         <div className="lg:col-span-5">
+          {c.result.length > 0 && (
           <Reveal className="border border-line-strong bg-surface-1/70 p-6 sm:p-9">
             <Label>{d.result}</Label>
             <ul className="mt-6 space-y-4">
@@ -74,6 +75,7 @@ export default function CaseStudy() {
             </ul>
             <p className="mt-6 text-[0.82rem] leading-relaxed text-ash">{d.disclaimer}</p>
           </Reveal>
+          )}
 
           {usedStages.length > 0 && (
             <Reveal className="mt-10">
