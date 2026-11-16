@@ -294,7 +294,7 @@ function handleAvtosalon(data) {
   if (problem) return out({ ok: false, error: 'invalid', field: problem });
   const id = data.submissionId;
   const fp = leadFingerprint(AVTOSALON_EDITABLE, data);
-  data.fingerprint = fp; // server o‘zi hisoblaydi — mijoz yuborgan qiymatga ishonilmaydi
+  data.fingerprint = fpCell(fp); // server o‘zi hisoblaydi; jadvalga "fp_" prefiksi bilan (son bo‘lib qolmasligi uchun)
 
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(20000)) return out({ ok: false, error: 'busy' });
@@ -405,7 +405,7 @@ function handleQurilish(data) {
   if (problem) return out({ ok: false, error: 'invalid', field: problem });
   const id = data.submissionId;
   const fp = leadFingerprint(QURILISH_EDITABLE, data);
-  data.fingerprint = fp; // server o‘zi hisoblaydi — mijoz yuborgan qiymatga ishonilmaydi
+  data.fingerprint = fpCell(fp); // server o‘zi hisoblaydi; jadvalga "fp_" prefiksi bilan (son bo‘lib qolmasligi uchun)
 
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(20000)) return out({ ok: false, error: 'busy' });
@@ -489,7 +489,7 @@ function handleIshlab(data) {
   if (problem) return out({ ok: false, error: 'invalid', field: problem });
   const id = data.submissionId;
   const fp = icFingerprint(data);
-  data.fingerprint = fp; // server o‘zi hisoblaydi — mijoz yuborgan qiymatga ishonilmaydi
+  data.fingerprint = fpCell(fp); // server o‘zi hisoblaydi; jadvalga "fp_" prefiksi bilan (son bo‘lib qolmasligi uchun)
 
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(20000)) return out({ ok: false, error: 'busy' });
@@ -536,19 +536,23 @@ function correctRow(sheet, header, row, columns, editable, data, fp) {
   const values = sheet.getRange(row, 1, 1, width).getValues()[0].slice();
   while (values.length < width) values.push('');
   const fpCol = header.indexOf('Ma’lumot izi');
-  if (String(values[fpCol]) === fp) return out({ ok: true, saved: true, duplicate: true, submissionId: data.submissionId, fingerprint: fp });
+  if (readFp(values[fpCol]) === fp) return out({ ok: true, saved: true, duplicate: true, submissionId: data.submissionId, fingerprint: fp });
 
   const countCol = header.indexOf('Tuzatishlar soni');
   const count = Number(values[countCol] || 0);
   if (count >= MAX_CORRECTIONS) return out({ ok: false, error: 'too_many_corrections' });
 
+  // Faqat o‘zgargan kataklar yoziladi: qo‘lda qo‘shilgan ustunlar (formula, izoh, status) ustidan yozilmaydi.
   const byKey = {};
   columns.forEach(function (c) { byKey[c[0]] = c[1]; });
-  editable.forEach(function (k) { values[header.indexOf(byKey[k])] = clean(data[k]); });
-  values[fpCol] = fp;
-  values[header.indexOf('Tuzatilgan vaqt')] = new Date();
-  values[countCol] = count + 1;
-  sheet.getRange(row, 1, 1, width).setValues([values]);
+  const changes = [];
+  editable.forEach(function (k) {
+    const colIdx = header.indexOf(byKey[k]);
+    const next = clean(data[k]);
+    if (colIdx >= 0 && String(values[colIdx]) !== next) changes.push([colIdx, next]);
+  });
+  changes.push([fpCol, fpCell(fp)], [header.indexOf('Tuzatilgan vaqt'), new Date()], [countCol, count + 1]);
+  changes.forEach(function (c) { if (c[0] >= 0) sheet.getRange(row, c[0] + 1, 1, 1).setValues([[c[1]]]); });
   SpreadsheetApp.flush();
   if (storedFingerprint(sheet, header, row) !== fp) throw new Error('Correction not confirmed');
   return out({ ok: true, saved: true, updated: true, submissionId: data.submissionId, fingerprint: fp });
@@ -556,8 +560,16 @@ function correctRow(sheet, header, row, columns, editable, data, fp) {
 
 function storedFingerprint(sheet, header, row) {
   const col = header.indexOf('Ma’lumot izi') + 1;
-  return col > 0 ? String(sheet.getRange(row, 1, 1, header.length).getValues()[0][col - 1]) : '';
+  return col > 0 ? readFp(sheet.getRange(row, 1, 1, header.length).getValues()[0][col - 1]) : '';
 }
+
+/**
+ * Iz jadvalga "fp_" prefiksi bilan yoziladi: faqat raqamdan iborat yoki "1234e5678…" ko‘rinishidagi
+ * hex iz Google Sheets'da songa aylanib, solishtirish buzilmasligi uchun. O‘qishda prefiks olib
+ * tashlanadi; eski (prefikssiz) qatorlar ham mos keladi.
+ */
+function fpCell(fp) { return 'fp_' + fp; }
+function readFp(value) { return String(value == null ? '' : value).replace(/^fp_/, ''); }
 
 /**
  * src/lib/leadFingerprint.ts dagi leadFingerprint bilan AYNAN bir xil bo‘lishi shart (testlar tekshiradi).

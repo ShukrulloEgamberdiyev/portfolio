@@ -30,7 +30,7 @@ function receiver() {
       getRange: (r, c, nr = 1, nc = 1) => {
         const api = {
           getValues: () => [(tab.rows[r - 1] || []).slice(c - 1, c - 1 + nc)],
-          setValues: (v) => { tab.rows[r - 1] = v[0]; return api; },
+          setValues: (v) => { const row = [...(tab.rows[r - 1] || [])]; v[0].forEach((x, k) => { row[c - 1 + k] = x; }); tab.rows[r - 1] = row; return api; },
           setFontWeight: () => api,
           createTextFinder: (text) => ({ matchEntireCell() { return this; }, findNext() {
             for (let i = r; i < r + nr; i++) if (tab.rows[i - 1] && String(tab.rows[i - 1][c - 1]) === text) return { getRow: () => i };
@@ -105,7 +105,7 @@ test('valid lead goes to ISHLAB CHIQARISH LEADLAR only and confirms the stored f
   assert.equal(tab.rows[1][col(tab, 'Nima ishlab chiqaradi')], 'Krovat va shkaflar');
   assert.equal(tab.rows[1][col(tab, 'Sotuv yo‘nalishi')], 'Chakana + Optom');
   assert.equal(tab.rows[1][col(tab, 'Lead status')], 'Yangi');
-  assert.equal(tab.rows[1][col(tab, 'Ma’lumot izi')], clientFp(valid()));
+  assert.equal(tab.rows[1][col(tab, 'Ma’lumot izi')], 'fp_' + clientFp(valid()));
 });
 
 test('lost reply: resending the identical payload with the same id is idempotent (one row, same confirmation)', () => {
@@ -131,7 +131,7 @@ test('changed payload with the same id is saved as a correction — never a sile
   const row = tab.rows[1];
   assert.equal(row[col(tab, 'Telefon')], "'+998 91 765 43 21");
   assert.equal(row[col(tab, 'Oylik reklama budjeti')], 'Budjet bo‘yicha tavsiya kerak');
-  assert.equal(row[col(tab, 'Ma’lumot izi')], clientFp(changed));
+  assert.equal(row[col(tab, 'Ma’lumot izi')], 'fp_' + clientFp(changed));
   assert.equal(Number(row[col(tab, 'Tuzatishlar soni')]), 1);
   assert.equal(Object.prototype.toString.call(row[col(tab, 'Tuzatilgan vaqt')]), '[object Date]');
   assert.equal(row[col(tab, 'Sana va vaqt')], createdAt, 'original date kept');

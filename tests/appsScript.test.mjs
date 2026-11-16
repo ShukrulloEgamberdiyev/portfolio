@@ -11,20 +11,27 @@ const WORKBOOK = '1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo';
  * In-memory stand-in for the Apps Script services the receiver uses. `tabs` and `cache` can be shared
  * between receivers to simulate a new execution (fresh cache = "cache lost") against the same workbook.
  */
-function receiver({ wrongSheet = false, failWrite = false, silentWriteLoss = false, preset = null, hour = '2026092204', tabs = null, cache = null, lockBusy = false } = {}) {
+function receiver({ wrongSheet = false, failWrite = false, silentWriteLoss = false, preset = null, hour = '2026092204', tabs = null, cache = null, lockBusy = false, coerce = false } = {}) {
   cache = cache ?? new Map();
   tabs = tabs ?? new Map();
   let held = false;
+  // Google Sheets kabi: raqamga o‘xshagan matn ("0123…", "12e45…") songa aylanadi.
+  const sheetValue = (v) => (coerce && typeof v === 'string' && /^\s*[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?\s*$/i.test(v) ? Number(v) : v);
+  const writes = [];
   const makeTab = (name, filler = 0, initial = []) => {
     const tab = {
       name, rows: initial.map((r) => [...r]), filler,
-      appendRow(row) { if (failWrite) throw Error('failed'); if (!silentWriteLoss) tab.rows.push(row); },
+      appendRow(row) { if (failWrite) throw Error('failed'); if (!silentWriteLoss) tab.rows.push(row.map(sheetValue)); },
       getLastRow: () => tab.filler + tab.rows.length,
       getLastColumn: () => tab.rows.reduce((m, r) => Math.max(m, r.length), 0),
       getRange: (r, c, nr = 1, nc = 1) => {
         const api = {
           getValues: () => [(tab.rows[r - 1 - tab.filler] || []).slice(c - 1, c - 1 + nc)],
-          setValues: (v) => { tab.rows[r - 1 - tab.filler] = v[0]; return api; },
+          setValues: (v) => {
+            const i = r - 1 - tab.filler; const row = tab.rows[i] ? [...tab.rows[i]] : [];
+            v[0].forEach((x, k) => { row[c - 1 + k] = sheetValue(x); writes.push({ tab: name, row: r, col: c + k }); });
+            tab.rows[i] = row; return api;
+          },
           setFontWeight: () => api,
           createTextFinder: (text) => ({
             matchEntireCell() { return this; },
@@ -73,7 +80,7 @@ function receiver({ wrongSheet = false, failWrite = false, silentWriteLoss = fal
   const siteRows = () => tabs.get('Sayt arizalari').rows;
   const avtoTab = () => tabs.get('AVTOSALON LEADLAR');
   const avtoRows = () => (avtoTab() ? avtoTab().rows.slice(1) : []);
-  return { send, tabs, cache, siteRows, avtoTab, avtoRows, get: sandbox.doGet };
+  return { send, tabs, cache, siteRows, avtoTab, avtoRows, writes, get: sandbox.doGet, fp: sandbox.leadFingerprint, AV_EDITABLE: vm.runInContext('AVTOSALON_EDITABLE', sandbox) };
 }
 
 /* ───────── general site form (behaviour unchanged) ───────── */
@@ -304,4 +311,55 @@ test('write failure, silent write loss, busy lock or wrong workbook never report
     assert.deepEqual([res.ok, res.error], [false, 'storage_failed'], JSON.stringify(config));
   }
   assert.deepEqual(receiver({ lockBusy: true }).send(avto()).error, 'busy');
+});
+
+/* ───────── "Ma’lumot izi": Sheets raqamga aylantirmasligi ───────── */
+
+/** Sheets songa aylantiradigan izni beradigan avtosalon arizasini topadi (≈0,1% holat). */
+function numericLookingLead(r, pattern) {
+  for (let i = 0; i < 200000; i++) {
+    const a = avto({ dealer: `TEST salon ${i}` });
+    if (pattern.test(r.fp(r.AV_EDITABLE, a))) return a;
+  }
+  throw new Error('no sample found');
+}
+
+for (const [label, pattern] of [['only digits', /^\d{16}$/], ['digits-e-digits', /^\d+e\d+$/]]) {
+  test(`fingerprint that Sheets would turn into a number (${label}) is stored as text and confirmed`, () => {
+    const r = receiver({ coerce: true });
+    const a = numericLookingLead(r, pattern);
+    const res = r.send(a);
+    assert.deepEqual([res.ok, res.saved], [true, true], JSON.stringify(res));
+    const cell = r.avtoRows()[0][col(r, 'Ma’lumot izi')];
+    assert.equal(cell, 'fp_' + res.fingerprint);
+    assert.equal(res.fingerprint, r.fp(r.AV_EDITABLE, a), 'response carries the raw fingerprint');
+    const again = r.send(a);
+    assert.deepEqual([again.ok, again.duplicate], [true, true]);
+    assert.equal(r.avtoRows().length, 1);
+  });
+}
+
+test('old rows with an unprefixed fingerprint still match (no false correction)', () => {
+  const r = receiver(); const a = avto();
+  const res = r.send(a);
+  const c = col(r, 'Ma’lumot izi');
+  r.avtoTab().rows[1][c] = res.fingerprint; // eski skript prefikssiz yozgan
+  const again = r.send(a);
+  assert.equal(again.duplicate, true);
+  assert.equal(r.avtoRows()[0][col(r, 'Tuzatishlar soni')], '0');
+});
+
+test('correction writes only the changed cells, manual columns are never rewritten', () => {
+  const r = receiver({ preset: [['Ariza ID', 'Avtosalon nomi', 'Hisob (formula)', 'Lead status']] });
+  const a = avto();
+  r.send(a);
+  r.avtoTab().rows[1][2] = '=B2&"!"';
+  r.writes.length = 0;
+  const res = r.send({ ...a, dealer: 'Yangi nom' });
+  assert.equal(res.updated, true);
+  const header = r.avtoTab().rows[0];
+  const written = r.writes.map((w) => header[w.col - 1]).sort();
+  assert.deepEqual(written, ['Avtosalon nomi', 'Ma’lumot izi', 'Tuzatilgan vaqt', 'Tuzatishlar soni'].sort());
+  assert.equal(r.avtoRows()[0][2], '=B2&"!"');
+  assert.equal(r.avtoRows()[0][1], 'Yangi nom');
 });

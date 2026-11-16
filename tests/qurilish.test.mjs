@@ -23,7 +23,7 @@ function receiver() {
       getRange: (r, c, nr = 1, nc = 1) => {
         const api = {
           getValues: () => [(tab.rows[r - 1] || []).slice(c - 1, c - 1 + nc)],
-          setValues: (v) => { tab.rows[r - 1] = v[0]; return api; },
+          setValues: (v) => { const row = [...(tab.rows[r - 1] || [])]; v[0].forEach((x, k) => { row[c - 1 + k] = x; }); tab.rows[r - 1] = row; return api; },
           setFontWeight: () => api,
           createTextFinder: (text) => ({ matchEntireCell() { return this; }, findNext() {
             for (let i = r; i < r + nr; i++) if (tab.rows[i - 1] && String(tab.rows[i - 1][c - 1]) === text) return { getRow: () => i };
