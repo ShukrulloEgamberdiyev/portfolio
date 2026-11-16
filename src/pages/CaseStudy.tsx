@@ -31,22 +31,18 @@ export default function CaseStudy() {
         meta={[{ label: d.industry, value: c.industry }]}
       />
 
-      <section className="shell mt-16 lg:mt-24">
-        <div className="relative aspect-[16/9] w-full overflow-hidden bg-surface-2">
-          {meta.media?.video ? (
-            <video className="h-full w-full object-cover" src={meta.media.video} poster={meta.media.poster} muted loop playsInline autoPlay />
-          ) : meta.media?.poster ? (
-            <img className="h-full w-full object-cover" src={meta.media.poster} alt={meta.name} />
-          ) : (
-            <>
-              <span aria-hidden className="absolute inset-0" style={{ background: 'radial-gradient(55% 60% at 30% 30%, rgba(91,77,255,0.28), transparent 75%)' }} />
-              <span aria-hidden className="absolute inset-0 opacity-50"
-                style={{ backgroundImage: 'linear-gradient(rgba(245,245,245,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(245,245,245,0.045) 1px, transparent 1px)', backgroundSize: '64px 64px' }} />
-              <span className="absolute bottom-6 left-6 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ash">{d.mediaNote}</span>
-            </>
-          )}
-        </div>
-      </section>
+      {/* Project media appears only when there is real material — never an empty placeholder frame. */}
+      {(meta.media?.video || meta.media?.poster) && (
+        <section className="shell mt-16 lg:mt-24">
+          <div className="relative aspect-[16/9] w-full overflow-hidden bg-surface-2">
+            {meta.media.video ? (
+              <video className="h-full w-full object-cover" src={meta.media.video} poster={meta.media.poster} muted loop playsInline autoPlay />
+            ) : (
+              <img className="h-full w-full object-cover" src={meta.media.poster} alt={meta.name} loading="lazy" decoding="async" />
+            )}
+          </div>
+        </section>
+      )}
 
       <section className="shell mt-20 grid gap-14 lg:mt-28 lg:grid-cols-12">
         <div className="lg:col-span-7">

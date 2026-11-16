@@ -18,12 +18,19 @@ const { render, renderAvtosalon, renderQurilish, renderIshlab, renderCard, rende
 const template = readFileSync(join(dist, 'index.html'), 'utf8');
 const LANGS = ['uz', 'ru', 'en'];
 const prefix = (l) => (l === 'uz' ? '' : `/${l}`);
-const SITE = 'https://fazodigital.uz';
+const SITE = 'https://www.fazodigital.uz';
+
+const OG_LOCALE = { uz: 'uz_UZ', ru: 'ru_RU', en: 'en_US' };
 
 function page(route, lang, { uzOnly = false } = {}) {
   const seo = seoFor(route, lang);
   const html = render(`${route}`, lang);
-  const alternates = uzOnly
+  const ogLocale = `<meta property="og:locale" content="${OG_LOCALE[lang]}" />`
+    + LANGS.filter((l) => l !== lang).map((l) => `\n    <meta property="og:locale:alternate" content="${OG_LOCALE[l]}" />`).join('');
+  // A missing page has no canonical address and no language versions; it is only kept out of the index.
+  const alternates = seo.noindex
+    ? '<meta name="robots" content="noindex, follow" />'
+    : uzOnly
     ? `<link rel="alternate" hreflang="uz" href="${seo.canonical}" />`
     : LANGS.map((l) => `<link rel="alternate" hreflang="${l}" href="${SITE}${prefix(l)}${route === '/' ? '/' : route}" />`).join('\n    ')
     + `\n    <link rel="alternate" hreflang="x-default" href="${SITE}${route === '/' ? '/' : route}" />`;
@@ -32,9 +39,10 @@ function page(route, lang, { uzOnly = false } = {}) {
     .replace('<html lang="uz">', `<html lang="${lang}">`)
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(seo.title)}</title>`)
     .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${escapeHtml(seo.description)}" />`)
-    .replace(/<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${seo.canonical}" />`)
+    .replace(/<link rel="canonical"[^>]*>\s*/, seo.noindex ? '' : `<link rel="canonical" href="${seo.canonical}" />\n    `)
     .replace(/<link rel="alternate"[^>]*>\s*/g, '')
-    .replace('</head>', `  ${alternates}\n  </head>`)
+    .replace(/<meta property="og:locale(:alternate)?"[^>]*>\s*/g, '')
+    .replace('</head>', `  ${alternates}\n    ${ogLocale}\n  </head>`)
     .replace(/<meta property="og:title"[^>]*>/, `<meta property="og:title" content="${escapeHtml(seo.title)}" />`)
     .replace(/<meta property="og:description"[^>]*>/, `<meta property="og:description" content="${escapeHtml(seo.description)}" />`)
     .replace(/<meta property="og:url"[^>]*>/, `<meta property="og:url" content="${seo.canonical}" />`)

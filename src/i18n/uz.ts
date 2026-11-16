@@ -203,7 +203,12 @@ export const uz: Dict = {
     contact: 'Telefon yoki Telegram', contactPh: '+998 90 000 00 00 yoki @foydalanuvchi', contactHint: 'Faqat shu ariza bo‘yicha bog‘lanish uchun.',
     next: 'Keyingi', back: 'Orqaga', submit: 'Arizani yuborish', sending: 'Yuborilmoqda…', required: 'Davom etish uchun majburiy maydonlarni to‘g‘ri to‘ldiring.', stepOf: 'Qadam',
     successTitle: 'Ariza qabul qilindi.', successText: 'Arizangizni ko‘rib chiqamiz va Telegram yoki telefon orqali bog‘lanamiz.', successCta: 'Telegram orqali bog‘lanish',
-    error: 'Yuborib bo‘lmadi. Iltimos, Telegram orqali yozing: @fazo_digital',
+    retry: 'Qayta yuborish',
+    fieldName: 'Ismingizni kiriting', fieldCompany: 'Kompaniya yoki brend nomini kiriting', fieldChoice: 'Variantlardan birini tanlang',
+    fieldContact: 'Telefon raqamini to‘liq (+998 90 123 45 67) yoki Telegram nomini @ bilan kiriting',
+    errorNetwork: 'Yuborilmadi: aloqa uzildi yoki server javob bermadi. Internetni tekshirib, qayta yuboring — javoblaringiz saqlanib turibdi.',
+    errorBusy: 'Hozir arizalar juda ko‘p. Bir necha daqiqadan so‘ng qayta yuboring — javoblaringiz saqlanib turibdi.',
+    error: 'Yuborilmadi. Qayta urinib ko‘ring yoki Telegram orqali yozing: @fazo_digital',
   },
   final: {
     title: [{ t: 'O‘sish —' }, { t: 'tasodif emas.', outline: true }, { t: 'Bu tizim', accent: true }],

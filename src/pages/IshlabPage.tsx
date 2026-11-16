@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useId, useRef, useState } from 'react';
 import { Logo } from '../components/Logo';
 import { IcForm } from '../components/ishlab/IcForm';
@@ -9,7 +9,7 @@ import {
 } from '../content/ishlab';
 import { scrollToId } from '../lib/scroll';
 import { captureAttribution, initPixel, track } from '../lib/tracking';
-import { Reveal } from '../ui/Reveal';
+import { Reveal, riseStyle, useReveal } from '../ui/Reveal';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const pad2 = (n: number) => String(n).padStart(2, '0');
@@ -119,43 +119,41 @@ const CALLOUTS = [
 ];
 
 function Hero() {
-  const reduce = useReducedMotion();
-  const up = (delay: number) => ({ initial: reduce ? false : { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.9, delay, ease } });
+  // Pure CSS entrance: headline, text and buttons are in the HTML at full opacity, with or without JavaScript.
+  const up = (delay: number) => ({ style: riseStyle(delay, 20, 0.9) });
   return (
     <section aria-labelledby="ic-hero" className="relative isolate overflow-hidden pt-16 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-20">
       <div aria-hidden className="pointer-events-none absolute right-[-12%] top-[6%] -z-10 h-[520px] w-[620px] rounded-full bg-violet/[0.07] blur-[140px]" />
       <div aria-hidden className="pointer-events-none absolute bottom-[-10%] left-[30%] -z-10 h-[320px] w-[520px] rounded-full bg-forge/[0.05] blur-[120px]" />
       <div className="shell grid w-full gap-6 lg:grid-cols-12 lg:items-center lg:gap-10">
-        <motion.div className="relative order-2 -mx-4 pb-12 sm:mx-0 sm:pb-16 lg:order-2 lg:col-span-6 lg:-mr-8 lg:pb-0 xl:-mr-14"
-          initial={reduce ? false : { opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease }}>
+        <div className="fade-in relative order-2 -mx-4 pb-12 sm:mx-0 sm:pb-16 lg:order-2 lg:col-span-6 lg:-mr-8 lg:pb-0 xl:-mr-14" style={riseStyle(0, 0, 1.4)}>
           <div className="relative mx-auto max-w-[640px] lg:max-w-none">
             <ProductionLine className="block aspect-[800/620] h-auto w-full [mask-image:linear-gradient(90deg,transparent,#000_6%,#000_94%,transparent),linear-gradient(180deg,transparent,#000_12%)] [mask-composite:intersect] [-webkit-mask-composite:source-in]" />
             <ul aria-hidden className="hidden sm:block">
               {CALLOUTS.map((c, i) => (
-                <motion.li key={c.k} className="absolute" style={c.pos}
-                  initial={reduce ? false : { opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 1.1 + i * 0.25, ease }}>
+                <li key={c.k} className="fade-in absolute" style={{ ...c.pos, ...riseStyle(1.1 + i * 0.25, 0, 0.7) }}>
                   <span className={`absolute whitespace-nowrap border border-line-strong bg-ink/85 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] backdrop-blur ${c.side === 'left' ? 'left-3 -top-[15px]' : 'right-4 -top-[15px]'}`}>
                     <span className={i === 0 ? 'text-forge' : 'text-violet'}>0{i + 1}</span> <span className="text-bone">{c.k}</span> <span className="text-ash">· {c.v}</span>
                   </span>
-                </motion.li>
+                </li>
               ))}
             </ul>
           </div>
-        </motion.div>
+        </div>
 
         <div className="order-1 pt-6 sm:pt-12 lg:order-1 lg:col-span-6 lg:pt-0">
-          <motion.div {...up(0)}><Eyebrow>{hero.eyebrow}</Eyebrow></motion.div>
-          <motion.h1 id="ic-hero" {...up(0.08)}
-            className="mt-4 text-[2rem] font-bold leading-[1.05] sm:mt-6 tracking-[-0.04em] min-[400px]:text-[2.3rem] sm:text-[3.1rem] lg:text-[3.1rem] xl:text-[3.4rem] 2xl:text-[4.1rem]">
+          <div className="rise" {...up(0)}><Eyebrow>{hero.eyebrow}</Eyebrow></div>
+          <h1 id="ic-hero" {...up(0.08)}
+            className="rise mt-4 text-[2rem] font-bold leading-[1.05] sm:mt-6 tracking-[-0.04em] min-[400px]:text-[2.3rem] sm:text-[3.1rem] lg:text-[3.1rem] xl:text-[3.4rem] 2xl:text-[4.1rem]">
             <span className="block text-bone/55">{hero.titleA}</span>
             <span className="mt-1 block max-w-[20ch]"><Dotted text={hero.titleB} /></span>
-          </motion.h1>
-          <motion.p {...up(0.16)} className="mt-4 max-w-[50ch] text-[1rem] leading-relaxed text-bone/80 min-[400px]:text-[1.06rem] sm:mt-6 sm:text-[1.17rem]">{hero.text}</motion.p>
-          <motion.div {...up(0.26)} className="mt-6 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+          </h1>
+          <p {...up(0.16)} className="rise mt-4 max-w-[50ch] text-[1rem] leading-relaxed text-bone/80 min-[400px]:text-[1.06rem] sm:mt-6 sm:text-[1.17rem]">{hero.text}</p>
+          <div {...up(0.26)} className="rise mt-6 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
             <IcCta location="hero" className="w-full sm:w-auto sm:whitespace-nowrap">{hero.cta}</IcCta>
             <IcCta location="hero-secondary" to="tizim" variant="ghost" className="w-full sm:w-auto sm:whitespace-nowrap">{hero.ctaSecondary}</IcCta>
-          </motion.div>
-          <motion.div {...up(0.36)} className="mt-7 border-t border-line pt-5 sm:mt-9">
+          </div>
+          <div {...up(0.36)} className="rise mt-7 border-t border-line pt-5 sm:mt-9">
             <ol aria-label="Tizim bosqichlari" className="flex flex-wrap items-center gap-x-2.5 gap-y-2 font-mono text-[10.5px] uppercase tracking-[0.14em] sm:text-[11px]">
               {hero.chain.map((c, i) => (
                 <li key={c} className="flex items-center gap-2.5">
@@ -164,7 +162,7 @@ function Hero() {
                 </li>
               ))}
             </ol>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -297,8 +295,12 @@ function Channels() {
 }
 
 /* ───────── 04. Marketing system pipeline ───────── */
+/** The violet track draws itself when the pipeline scrolls into view; without JavaScript it is simply drawn. */
+function TrackLine({ delay }: { delay: number }) {
+  const { ref, attr } = useReveal<HTMLDivElement>(1300 + delay * 1000, '0px 0px -15% 0px');
+  return <div ref={ref} aria-hidden data-reveal={attr} className="reveal-line absolute top-[22px] h-px bg-violet" style={{ left: '10%', right: '10%', '--reveal-d': `${delay}s` } as React.CSSProperties} />;
+}
 function Pipeline() {
-  const reduce = useReducedMotion();
   const rows = [system.stages.slice(0, 5), system.stages.slice(5)];
   const groupOf = (i: number) => system.groups.findIndex((g) => i >= g.from && i <= g.to);
   const isFocus = (i: number) => i === system.focus;
@@ -316,23 +318,20 @@ function Pipeline() {
           <div key={r} className={r === 1 ? 'mt-0' : ''}>
             <div className="relative">
               <div className="absolute top-[22px] h-px bg-line-strong" style={{ left: '10%', right: '10%' }} />
-              <motion.div aria-hidden className="absolute top-[22px] h-px origin-left bg-violet" style={{ left: '10%', right: '10%' }}
-                initial={reduce ? false : { scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true, margin: '0px 0px -15% 0px' }}
-                transition={{ duration: 1.6, delay: r * 0.9, ease: [0.65, 0, 0.35, 1] }} />
+              <TrackLine delay={r * 0.9} />
               <ol className="relative grid grid-cols-5 gap-3">
                 {row.map((s, j) => {
                   const i = r * 5 + j;
                   const g = system.groups[groupOf(i)];
                   return (
-                    <motion.li key={s.t} initial={reduce ? false : { opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '0px 0px -15% 0px' }}
-                      transition={{ duration: 0.6, delay: r * 0.9 + j * 0.16, ease }} className="flex flex-col items-center text-center">
+                    <Reveal as="li" key={s.t} y={16} delay={r * 0.9 + j * 0.16} className="flex flex-col items-center text-center">
                       {node(i)}
                       <div className={`mt-5 flex h-full w-full flex-col border px-4 py-4 ${isFocus(i) ? 'border-violet/60 bg-violet/[0.08]' : 'border-line bg-surface-1/70'}`}>
                         <p className={`font-mono text-[9.5px] uppercase tracking-[0.14em] ${isFocus(i) ? 'text-violet' : 'text-ash'}`}>{g.name}</p>
                         <h3 className="mt-2 text-[1rem] font-semibold uppercase leading-tight tracking-[0.01em] text-bone">{s.t}</h3>
                         <p className="mt-1.5 text-[0.85rem] leading-snug text-mist">{s.d}</p>
                       </div>
-                    </motion.li>
+                    </Reveal>
                   );
                 })}
               </ol>

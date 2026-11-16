@@ -3,7 +3,8 @@ import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { CONTACT } from '../../data/site';
 import { AV_FORM_ID, OPT, REGIONS, form as F } from '../../content/avtosalon';
 import { DeliveryError } from '../../lib/applicationTransport';
-import { buildAvtosalonPayload, isSubmissionId, newSubmissionId, submitAvtosalon, trackLeadOnce, type AvData } from '../../lib/submitAvtosalon';
+import { formatPhone, phoneDigits, phoneError } from '../../lib/phone';
+import { avFingerprint, buildAvtosalonPayload, isSubmissionId, newSubmissionId, submitAvtosalon, trackLeadOnce, type AvData } from '../../lib/submitAvtosalon';
 import { track } from '../../lib/tracking';
 import { scrollToId } from '../../lib/scroll';
 
@@ -34,12 +35,6 @@ const isInstagram = (v: string) => {
   return /^@?[a-zA-Z0-9._]{2,30}$/.test(s) || /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9._]{2,30}\/?(\?.*)?$/i.test(s);
 };
 const isWebsite = (v: string) => /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(v.trim());
-export const phoneDigits = (v: string) => {
-  let digits = v.replace(/\D/g, '');
-  if (digits.length > 9 && digits.startsWith('998')) digits = digits.slice(3); // pasted with country code
-  return digits.slice(0, 9);
-};
-const formatPhone = (d: string) => [d.slice(0, 2), d.slice(2, 5), d.slice(5, 7), d.slice(7, 9)].filter(Boolean).join(' ');
 const isTelegram = (v: string) => /^@?[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(v.trim()); // 5–32 belgi, @ hisobga olinmaydi
 
 function validate(step: number, d: AvData): Errors {
@@ -74,7 +69,8 @@ function validate(step: number, d: AvData): Errors {
     if (d.problem.trim().length < 5) e.problem = 'Qisqacha yozing — bu suhbatni aniqroq qiladi';
     if (d.name.trim().length < 2) e.name = 'Ismingizni kiriting';
     if (d.position.trim().length < 2) e.position = 'Lavozimingizni kiriting';
-    if (phoneDigits(d.phone).length !== 9) e.phone = 'Raqamni to‘liq kiriting: +998 XX XXX XX XX';
+    const phoneProblem = phoneError(d.phone);
+    if (phoneProblem) e.phone = phoneProblem;
     if (!isTelegram(d.telegram)) e.telegram = 'Masalan: @username — 5–32 belgi: lotin harflari, raqamlar va _';
   }
   return e;
@@ -82,15 +78,28 @@ function validate(step: number, d: AvData): Errors {
 
 /* ───────── field primitives ───────── */
 
+/**
+ * Label + control + hint + error. The control with this id is linked to its hint and error for assistive
+ * technology (aria-describedby / aria-invalid) here, so every field gets it without repeating it per input.
+ */
 function Field({ id, label, optional, error, hint, children }: { id: string; label: string; optional?: boolean; error?: string; hint?: ReactNode; children: ReactNode }) {
+  const wrap = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const control = wrap.current?.querySelector(`[id="${id}"]`);
+    if (!control) return;
+    const ids = [hint ? `${id}-hint` : '', error ? `${id}-err` : ''].filter(Boolean).join(' ');
+    if (ids) control.setAttribute('aria-describedby', ids); else control.removeAttribute('aria-describedby');
+    if (error) control.setAttribute('aria-invalid', 'true'); else control.removeAttribute('aria-invalid');
+    if (!optional) control.setAttribute('aria-required', 'true');
+  }, [id, error, hint, optional]);
   return (
-    <div data-field={id}>
+    <div ref={wrap} data-field={id}>
       <label htmlFor={id} className="block text-[0.95rem] font-medium text-bone">
         {label}{optional ? <span className="ml-2 text-[0.8rem] font-normal text-ash">ixtiyoriy</span> : <span className="text-signal"> *</span>}
       </label>
-      {hint && <div className="mt-1.5 text-[0.85rem] leading-snug text-ash">{hint}</div>}
+      {hint && <div id={`${id}-hint`} className="mt-1.5 text-[0.85rem] leading-snug text-ash">{hint}</div>}
       <div className="mt-3">{children}</div>
-      {error && <p id={`${id}-err`} className="mt-2 text-[0.85rem] text-alert" role="alert">{error}</p>}
+      {error && <p id={`${id}-err`} className="mt-2 text-[0.85rem] text-alert">{error}</p>}
     </div>
   );
 }
@@ -104,12 +113,13 @@ function Chips({ id, label, options, value, onChange, multi = false, error, hint
   const gid = useId();
   const selected = (o: string) => (Array.isArray(value) ? value.includes(o) : value === o);
   return (
-    <fieldset data-field={id} aria-describedby={error ? `${id}-err` : undefined}>
-      <legend className="text-[0.95rem] font-medium text-bone">
+    <fieldset data-field={id} role={multi ? 'group' : 'radiogroup'} aria-labelledby={`${id}-legend`} aria-required="true" aria-invalid={error ? true : undefined}
+      aria-describedby={[hint ? `${id}-hint` : '', error ? `${id}-err` : ''].filter(Boolean).join(' ') || undefined} className="min-w-0">
+      <legend id={`${id}-legend`} className="text-[0.95rem] font-medium text-bone">
         {label}<span className="text-signal"> *</span>
         {multi && <span className="ml-2 text-[0.8rem] font-normal text-ash">bir nechtasini tanlash mumkin</span>}
       </legend>
-      {hint && <div className="mt-1.5 text-[0.85rem] leading-snug text-ash">{hint}</div>}
+      {hint && <div id={`${id}-hint`} className="mt-1.5 text-[0.85rem] leading-snug text-ash">{hint}</div>}
       <div className={`mt-3 grid gap-2 ${columns ?? 'grid-cols-2 sm:flex sm:flex-wrap'}`}>
         {options.map((o, i) => {
           const on = selected(o);
@@ -127,7 +137,7 @@ function Chips({ id, label, options, value, onChange, multi = false, error, hint
           );
         })}
       </div>
-      {error && <p id={`${id}-err`} className="mt-2 text-[0.85rem] text-alert" role="alert">{error}</p>}
+      {error && <p id={`${id}-err`} className="mt-2 text-[0.85rem] text-alert">{error}</p>}
     </fieldset>
   );
 }
@@ -142,9 +152,11 @@ export function AvForm() {
   const [errors, setErrors] = useState<Errors>({});
   const [tried, setTried] = useState<boolean[]>([false, false, false, false]);
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
-  const [errorReason, setErrorReason] = useState<'network' | 'busy' | 'contact' | 'invalid' | 'generic'>('generic');
+  const [errorReason, setErrorReason] = useState<'network' | 'busy' | 'contact' | 'invalid' | 'generic' | 'corrections'>('generic');
   const [honeypot, setHoneypot] = useState('');
   const submissionId = useRef('');
+  /** Fingerprints of earlier attempts under the current id that may have reached the sheet. */
+  const sentFps = useRef<string[]>([]);
   const startedAt = useRef(0);
   const sending = useRef(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -156,9 +168,12 @@ export function AvForm() {
     try {
       const raw = sessionStorage.getItem(DRAFT_KEY);
       if (raw) {
-        const saved = JSON.parse(raw) as { d?: Partial<AvData>; step?: number; sid?: string };
+        const saved = JSON.parse(raw) as { d?: Partial<AvData>; step?: number; sid?: string; fps?: string[] };
         if (saved.d) setD({ ...EMPTY, ...saved.d });
-        if (saved.sid && isSubmissionId(saved.sid)) submissionId.current = saved.sid;
+        if (saved.sid && isSubmissionId(saved.sid)) {
+          submissionId.current = saved.sid;
+          sentFps.current = Array.isArray(saved.fps) ? saved.fps.filter((f) => typeof f === 'string') : [];
+        }
         if (typeof saved.step === 'number') setStep(Math.min(3, Math.max(0, saved.step)));
       }
     } catch { /* ignore */ }
@@ -166,7 +181,7 @@ export function AvForm() {
   }, []);
   useEffect(() => {
     if (!hydrated.current || status === 'done') return;
-    try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, step, sid: submissionId.current })); } catch { /* ignore */ }
+    try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, step, sid: submissionId.current, fps: sentFps.current })); } catch { /* ignore */ }
   }, [d, step, status]);
 
   const started = () => track('AvtosalonFormStart', { content_name: 'Avtosalon ariza' }, { custom: true, onceKey: 'av-form-start' });
@@ -226,26 +241,38 @@ export function AvForm() {
     }
     sending.current = true;
     setStatus('sending'); // inputs are disabled while sending, so what the user sees is exactly what is sent
-    if (!submissionId.current) submissionId.current = newSubmissionId();
-    const id = submissionId.current;
-    try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, step, sid: id })); } catch { /* ignore */ }
+    if (!submissionId.current) { submissionId.current = newSubmissionId(); sentFps.current = []; }
+    const earlier = [...sentFps.current];
+    const persist = () => { try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, step, sid: submissionId.current, fps: sentFps.current })); } catch { /* ignore */ } };
+    // Recorded before sending: if the reply is lost (or the page reloads), the next attempt knows this data may be stored.
+    sentFps.current = [...earlier, avFingerprint(d)];
+    persist();
     try {
       if (honeypot) throw new DeliveryError('rejected', 'spam'); // bots never get a success screen, nothing is sent
       // Minimum-time spam check: wait out the remainder instead of dropping a real (e.g. restored) application.
       const wait = MIN_FILL_MS + 250 - (Date.now() - startedAt.current);
       if (wait > 0) await new Promise((r) => setTimeout(r, wait));
-      const payload = buildAvtosalonPayload(d, { hp: honeypot, elapsed: Date.now() - startedAt.current }, id);
-      await submitAvtosalon(payload);
+      const confirmed = await submitAvtosalon({
+        build: (sid) => buildAvtosalonPayload(d, { hp: honeypot, elapsed: Date.now() - startedAt.current }, sid),
+        submissionId: submissionId.current,
+        earlier,
+        onNewId: (sid) => { submissionId.current = sid; sentFps.current = [avFingerprint(d)]; persist(); },
+      });
+      const id = confirmed.submissionId;
       // Only a confirmed save (new row, or this id's row already stored) reaches this line.
       trackLeadOnce(id);
       setStatus('done');
+      submissionId.current = '';
+      sentFps.current = [];
       try { sessionStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
       keepCardInView();
     } catch (err) {
       const code = err instanceof DeliveryError ? err.code : 'network';
       const detail = err instanceof DeliveryError ? err.detail : '';
       const field = err instanceof DeliveryError ? err.field : '';
-      if (detail === 'invalid' && field === 'submissionId') submissionId.current = ''; // malformed id: next attempt gets a fresh one
+      // A definite rejection stored nothing: this attempt's data must not count as "possibly stored".
+      if (code === 'rejected' || code === 'http' || code === 'config') { sentFps.current = earlier; persist(); }
+      if (detail === 'invalid' && field === 'submissionId') { submissionId.current = ''; sentFps.current = []; } // malformed id: next attempt gets a fresh one
       if (detail === 'invalid' && field && field in EMPTY) {
         // The server rejected a specific answer: show it on its own step, keep everything else.
         const key = field as keyof AvData;
@@ -257,7 +284,8 @@ export function AvForm() {
         focusFirstError(fieldErrors);
       }
       setErrorReason(
-        code === 'timeout' || code === 'network' || detail === 'busy' || detail === 'storage_failed' ? 'network'
+        code === 'timeout' || code === 'network' || code === 'bad_response' || detail === 'busy' || detail === 'storage_failed' ? 'network'
+          : detail === 'too_many_corrections' ? 'corrections'
           : detail === 'rate_limited' ? 'busy'
           : detail === 'contact_rate_limited' ? 'contact'
           : detail === 'invalid' ? 'invalid'

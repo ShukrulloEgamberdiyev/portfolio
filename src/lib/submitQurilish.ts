@@ -1,4 +1,6 @@
-import { DeliveryError, deliverApplication, type DeliveryResult } from './applicationTransport';
+import { submitConfirmed, type Confirmation } from './confirmedSubmit';
+import { QR_FINGERPRINT_FIELDS, leadFingerprint } from './leadFingerprint';
+import { phoneForServer } from './phone';
 import { APPLICATION_ENDPOINT, APPLICATION_TOKEN } from './submit';
 import { normalizeLanding } from './attribution';
 import { getAttribution, track } from './tracking';
@@ -11,16 +13,19 @@ export type QrData = {
 /** Flattens the form into the keys the Apps Script expects for the "QURILISH LEADLAR" tab. */
 export function buildQurilishPayload(d: QrData, guard: { hp: string; elapsed: number }, submissionId: string): Record<string, string> {
   const a = getAttribution();
-  const digits = d.phone.replace(/\D/g, '').slice(-9);
-  return {
-    formType: 'qurilish',
+  const lead = {
     name: d.name.trim(),
-    phone: `+998 ${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5, 7)} ${digits.slice(7, 9)}`,
+    phone: phoneForServer(d.phone),
     company: d.company.trim(),
     region: [d.region, d.city.trim()].filter(Boolean).join(' — '),
     stage: d.stage,
     problem: d.problem,
     problemOther: d.problem === 'Boshqa' ? d.problemOther.trim() : '',
+  };
+  return {
+    formType: 'qurilish',
+    ...lead,
+    fingerprint: leadFingerprint(QR_FINGERPRINT_FIELDS, lead),
     budget: '', // no longer asked on the page (6-field form); the server accepts ''
     contactTime: '', // no longer asked on the page; '' is accepted by the server
     utm_source: a.utm_source ?? '',
@@ -51,13 +56,15 @@ export function newQrSubmissionId() {
 
 export const isQrSubmissionId = (id: string) => /^QR-[A-Z0-9]{6,14}-[A-Z0-9]{6,14}$/.test(id);
 
-/** Resolves only when the Apps Script confirms this exact submission was stored. */
-export async function submitQurilish(payload: Record<string, string>): Promise<DeliveryResult> {
-  const result = await deliverApplication(APPLICATION_ENDPOINT, payload, 25000);
-  if (result.saved !== true || result.submissionId !== payload.submissionId) {
-    throw new DeliveryError('bad_response', '', 'Receiver did not confirm this submission');
-  }
-  return result;
+/** Fingerprint of what the form currently holds — changes whenever the visitor edits an answer. */
+export const qrFingerprint = (d: QrData) => buildQurilishPayload(d, { hp: '', elapsed: 0 }, '').fingerprint;
+
+/**
+ * Resolves only when the receiver confirms that this submission id holds exactly this data
+ * (see confirmedSubmit.ts for the lost-reply rules).
+ */
+export function submitQurilish(o: { build: (id: string) => Record<string, string>; submissionId: string; earlier: string[]; onNewId?: (id: string) => void }): Promise<Confirmation> {
+  return submitConfirmed({ endpoint: APPLICATION_ENDPOINT, newId: newQrSubmissionId, ...o });
 }
 
 const LEAD_KEY = 'fazo.qurilish.leads';

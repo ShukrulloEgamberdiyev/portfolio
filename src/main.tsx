@@ -3,7 +3,11 @@ import { createRoot, hydrateRoot } from 'react-dom/client';
 import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import App from './App';
 import { langFromPath, langPrefix } from './i18n';
+import { captureAttribution } from './lib/tracking';
 import './index.css';
+
+// Remember the campaign that brought the visitor before they move on to another page (e.g. / → /apply).
+captureAttribution();
 
 const lang = langFromPath(window.location.pathname);
 const basename = langPrefix(lang) || '/';

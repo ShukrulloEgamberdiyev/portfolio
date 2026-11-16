@@ -43,6 +43,7 @@ export type Dict = {
     contact: string; contactPh: string; contactHint: string;
     next: string; back: string; submit: string; sending: string; required: string; stepOf: string;
     successTitle: string; successText: string; successCta: string; error: string;
+    retry: string; fieldName: string; fieldCompany: string; fieldChoice: string; fieldContact: string; errorNetwork: string; errorBusy: string;
   };
   final: { title: Line[]; sub: string; cta: string; telegram: string; labels: { instagram: string; telegram: string; phone: string; location: string; web: string }; location: string };
   footer: { tagline: string; navLabel: string; socialLabel: string; legalLabel: string; privacy: string; contact: string; rights: string; location: string; top: string };

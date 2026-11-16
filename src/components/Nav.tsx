@@ -32,9 +32,8 @@ export function Nav() {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed inset-x-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${compact ? 'border-b border-line bg-ink/70 backdrop-blur-xl' : 'border-b border-transparent'}`}
+      <header
+        className={`nav-in fixed inset-x-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${compact ? 'border-b border-line bg-ink/70 backdrop-blur-xl' : 'border-b border-transparent'}`}
         style={{ top: 0, paddingTop: 'env(safe-area-inset-top, 0px)' }}>
         <nav aria-label={t.footer.navLabel} className={`shell flex items-center justify-between transition-[height] duration-500 ${compact ? 'h-16' : 'h-20 lg:h-24'}`}>
           <Link to="/" onClick={close} aria-label="FAZO Digital" data-cursor="hover"><Logo /></Link>
@@ -66,7 +65,7 @@ export function Nav() {
             </button>
           </div>
         </nav>
-      </motion.header>
+      </header>
 
       <AnimatePresence>
         {open && (

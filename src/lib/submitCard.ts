@@ -1,5 +1,6 @@
 import { DeliveryError, deliverApplication } from './applicationTransport';
 import { normalizeLanding } from './attribution';
+import { phoneForServer } from './phone';
 import { getAttribution } from './tracking';
 
 /**
@@ -43,7 +44,7 @@ export function buildCardPayload(d: CardData, guard: { hp: string; elapsed: numb
   return {
     formType: 'card',
     name: d.name.trim(),
-    phone: formatUzPhone(d.phone),
+    phone: phoneForServer(d.phone),
     business: d.business.trim(),
     link: d.link.trim(),
     need: d.need,

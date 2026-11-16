@@ -87,6 +87,18 @@ test('site: appends to Sayt arizalari and sanitises formula prefixes', () => {
   assert.equal(r.siteRows()[0][2], "'=bad()");
   assert.equal(r.siteRows()[0].at(-1), 'Yangi');
 });
+test('site: a stored application is confirmed explicitly (saved + the request id), a lost write is not', () => {
+  const r = receiver();
+  const res = r.send({ ...site, submissionId: 'SA-MUH60GB01-A1B2C3D4E5' });
+  assert.deepEqual([res.ok, res.saved, res.submissionId], [true, true, 'SA-MUH60GB01-A1B2C3D4E5']);
+  const lost = receiver({ silentWriteLoss: true });
+  assert.equal(lost.send(site).ok, false);
+});
+test('site: a very long page URL does not reject the application', () => {
+  const r = receiver();
+  assert.equal(r.send({ ...site, page: 'https://www.fazodigital.uz/apply?fbclid=' + 'x'.repeat(5000) }).ok, true);
+  assert.equal(r.siteRows()[0][16].length, 1000);
+});
 test('site: identical retry is acknowledged without a duplicate row', () => {
   const r = receiver(); r.send(site);
   assert.equal(r.send(site).duplicate, true);
@@ -161,12 +173,30 @@ test('1. plain retry with the same id → one row', () => {
   assert.equal(r.avtoRows().length, 1);
 });
 
-test('2. same id with a changed payload → still one row', () => {
+test('2. same id with a changed payload → the stored row is corrected, never a silent success for old data, never a 2nd row', () => {
   const r = receiver(); const a = avto();
-  r.send(a);
-  assert.equal(r.send({ ...a, dealer: 'Boshqa nom', budget: '$5,000–7,000' }).duplicate, true);
+  const first = r.send(a);
+  const changed = r.send({ ...a, dealer: 'Boshqa nom', budget: '$5,000–7,000' });
+  assert.deepEqual([changed.ok, changed.saved, changed.updated, changed.duplicate], [true, true, true, undefined]);
+  assert.notEqual(changed.fingerprint, first.fingerprint, 'the confirmation describes the new data');
   assert.equal(r.avtoRows().length, 1);
-  assert.equal(r.avtoRows()[0][col(r, 'Avtosalon nomi')], 'TEST — AVTOSALON QA');
+  assert.equal(r.avtoRows()[0][col(r, 'Avtosalon nomi')], 'Boshqa nom');
+  assert.equal(r.avtoRows()[0][col(r, 'Marketing + reklama budjeti (oylik)')], '$5,000–7,000');
+  assert.equal(r.avtoRows()[0][col(r, 'Tuzatishlar soni')], 1);
+  // attribution and status are not touched by a correction
+  assert.equal(r.avtoRows()[0][col(r, 'UTM Source')], 'facebook');
+  assert.equal(r.avtoRows()[0][col(r, 'Lead status')], 'Yangi');
+});
+
+test('2b. a row saved by the older script (no fingerprint column) is upgraded in place on retry', () => {
+  const header = ['Ariza ID', 'Avtosalon nomi', 'Lead status'];
+  const a = avto();
+  const r = receiver({ preset: [header, [a.submissionId, 'TEST — AVTOSALON QA', 'Aloqaga chiqildi']] });
+  const res = r.send(a);
+  assert.equal(res.saved, true); assert.equal(typeof res.fingerprint, 'string');
+  assert.equal(r.avtoRows().length, 1);
+  assert.equal(r.avtoRows()[0][col(r, 'Lead status')], 'Aloqaga chiqildi', 'manual status survives');
+  assert.equal(r.send(a).duplicate, true);
 });
 
 test('3. retry after the cache was lost → found by Ariza ID in the sheet, one row', () => {
@@ -197,13 +227,21 @@ test('5. invalid phone / budget / option / goalsOther / id → rejected with the
     [{ instagram: 'bad handle!' }, 'instagram'], [{ website: 'not a site' }, 'website'],
     [{ dealer: 'x'.repeat(161) }, 'dealer'], [{ dealer: 42 }, 'dealer'], [{ problem: 'abc' }, 'problem'],
     [{ submissionId: 'AV-TEST-1' }, 'submissionId'], [{ submissionId: undefined }, 'submissionId'],
-    [{ utm_source: 'x'.repeat(201) }, 'utm_source'],
   ];
   for (const [patch, field] of cases) {
     const res = r.send(avto(patch));
     assert.deepEqual([res.ok, res.error, res.field], [false, 'invalid', field], JSON.stringify(patch));
   }
   assert.equal(r.avtoRows().length, 0);
+});
+
+test('5a. a long ad URL or oversized UTM never blocks a correctly filled application — it is shortened', () => {
+  const r = receiver();
+  const res = r.send(avto({ page: 'https://www.fazodigital.uz/avtosalon?fbclid=' + 'x'.repeat(4000), utm_source: 'u'.repeat(900), referrer: 42 }));
+  assert.equal(res.saved, true, JSON.stringify(res));
+  assert.equal(r.avtoRows()[0][col(r, 'Landing / sahifa manbasi')].length, 1000);
+  assert.equal(r.avtoRows()[0][col(r, 'UTM Source')].length, 200);
+  assert.equal(r.avtoRows()[0][col(r, 'Referrer')], '');
 });
 
 test('5b. valid edge values are accepted (Aniq bilmayman, no Boshqa, website URL, instagram URL, no brand text)', () => {

@@ -84,7 +84,14 @@ const AVTOSALON_COLUMNS = [
   ['page', 'Landing / sahifa manbasi'],
   ['referrer', 'Referrer'],
   ['submissionId', 'Ariza ID'],
+  ['fingerprint', 'Ma’lumot izi'],
+  ['correctedAt', 'Tuzatilgan vaqt'],
+  ['corrections', 'Tuzatishlar soni'],
 ];
+/* Bir xil Ariza ID boshqa ma’lumot bilan qayta kelsa, shu maydonlar o‘sha qatorda tuzatiladi (izi ham shulardan hisoblanadi). */
+const AVTOSALON_EDITABLE = ['dealer', 'region', 'instagram', 'website', 'carTypes', 'branches', 'stock', 'marketingOwner', 'targetStatus',
+  'budget', 'monthlyLeads', 'monthlySales', 'salesStaff', 'rop', 'crm', 'leadSystem', 'goals', 'goalsOther', 'problem', 'name',
+  'position', 'phone', 'telegram'];
 const AVTOSALON_STATUS_HEADER = 'Lead status';
 const AVTOSALON_ID_HEADER = 'Ariza ID';
 
@@ -131,7 +138,11 @@ const QURILISH_COLUMNS = [
   ['page', 'Landing / sahifa manbasi'],
   ['referrer', 'Referrer'],
   ['submissionId', 'Ariza ID'],
+  ['fingerprint', 'Ma’lumot izi'],
+  ['correctedAt', 'Tuzatilgan vaqt'],
+  ['corrections', 'Tuzatishlar soni'],
 ];
+const QURILISH_EDITABLE = ['name', 'phone', 'company', 'region', 'stage', 'problem', 'problemOther'];
 
 /* Frontend (src/content/qurilish.ts) bilan bir xil ruxsat etilgan qiymatlar. */
 const QR = {
@@ -174,7 +185,7 @@ const ISHLAB_COLUMNS = [
 ];
 /* Tuzatishda (bir xil Ariza ID, boshqa ma’lumot) qayta yoziladigan maydonlar. Sana, UTM va manba o‘zgarmaydi. */
 const ISHLAB_EDITABLE = ['name', 'phone', 'product', 'region', 'channel', 'budget', 'problem'];
-const ISHLAB_MAX_CORRECTIONS = 5;
+const MAX_CORRECTIONS = 5;
 
 /* Frontend (src/content/ishlab.ts → OPT) bilan bir xil ruxsat etilgan qiymatlar. */
 const IC = {
@@ -246,7 +257,7 @@ function handleSite(data) {
       .map(function (c) { return String(data[c[0]] || '').trim(); }).join('|');
     const duplicateKey = 'd_' + Utilities.base64EncodeWebSafe(
       Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, fingerprint));
-    if (cache.get(duplicateKey)) return out({ ok: true, duplicate: true });
+    if (cache.get(duplicateKey)) return out({ ok: true, saved: true, duplicate: true, submissionId: siteId(data) });
     const hourKey = 'h_site_' + Utilities.formatDate(new Date(), 'Asia/Tashkent', 'yyyyMMddHH');
     const count = Number(cache.get(hourKey) || 0);
     if (count >= LIMITS.site.perHour) return out({ ok: false, error: 'rate_limited' });
@@ -254,11 +265,14 @@ function handleSite(data) {
     const sheet = getSheetByConfig(SHEET_NAME, COLUMNS, 'Holat');
     const row = COLUMNS.map(function (c) { return c[0] === 'submittedAt' ? new Date() : clean(data[c[0]]); });
     row.push('Yangi');
+    const before = sheet.getLastRow();
     sheet.appendRow(row);
     SpreadsheetApp.flush();
+    // Qator haqiqatan qo‘shilganini tekshiramiz: jim yo‘qolgan yozuv hech qachon muvaffaqiyat emas.
+    if (sheet.getLastRow() <= before) throw new Error('Row not found after append');
     cache.put(duplicateKey, '1', LIMITS.site.duplicateTtlSec);
     cache.put(hourKey, String(count + 1), 3600);
-    return out({ ok: true });
+    return out({ ok: true, saved: true, submissionId: siteId(data) });
   } catch (error) {
     console.error(error);
     return out({ ok: false, error: 'storage_failed' });
@@ -267,20 +281,29 @@ function handleSite(data) {
   }
 }
 
+/** Umumiy forma ID'si faqat javobda qaytariladi (brauzer aynan o‘z so‘roviga javob kelganini tekshiradi). */
+function siteId(data) {
+  return typeof data.submissionId === 'string' && /^SA-[A-Z0-9]{6,14}-[A-Z0-9]{6,14}$/.test(data.submissionId) ? data.submissionId : '';
+}
+
 /* ───────── Avtosalon formasi ───────── */
 
 function handleAvtosalon(data) {
+  normalizeAttribution(data); // uzun UTM/sahifa manzili to‘g‘ri arizani rad etmaydi — qisqartiriladi
   const problem = validateAvtosalon(data);
   if (problem) return out({ ok: false, error: 'invalid', field: problem });
   const id = data.submissionId;
+  const fp = leadFingerprint(AVTOSALON_EDITABLE, data);
+  data.fingerprint = fp; // server o‘zi hisoblaydi — mijoz yuborgan qiymatga ishonilmaydi
 
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(20000)) return out({ ok: false, error: 'busy' });
   try {
     const sheet = getSheetByConfig(AVTOSALON_SHEET_NAME, AVTOSALON_COLUMNS, AVTOSALON_STATUS_HEADER);
     const header = ensureHeader(sheet, AVTOSALON_COLUMNS, AVTOSALON_STATUS_HEADER);
-    // Dublikat faqat jadvalda shu Ariza ID bilan qator haqiqatan bo‘lsa tasdiqlanadi (cache emas).
-    if (findRowById(sheet, header, id)) return out({ ok: true, saved: true, duplicate: true, submissionId: id });
+    // Shu Ariza ID jadvalda bor: bir xil ma’lumot — retry (dublikat yo‘q); boshqa ma’lumot — o‘sha qator tuzatiladi.
+    const existing = findRowById(sheet, header, id);
+    if (existing) return correctRow(sheet, header, existing, AVTOSALON_COLUMNS, AVTOSALON_EDITABLE, data, fp);
 
     // Yangi ariza — limitlar (retry bu yerga yetib kelmaydi, shuning uchun limitni sarflamaydi).
     const cache = CacheService.getScriptCache();
@@ -293,13 +316,16 @@ function handleAvtosalon(data) {
       return out({ ok: false, error: 'contact_rate_limited' });
     }
 
+    data.correctedAt = '';
+    data.corrections = '0';
     appendMapped(sheet, header, AVTOSALON_COLUMNS, AVTOSALON_STATUS_HEADER, data);
     SpreadsheetApp.flush();
-    if (!findRowById(sheet, header, id)) throw new Error('Row not found after append');
+    const row = findRowById(sheet, header, id);
+    if (!row || storedFingerprint(sheet, header, row) !== fp) throw new Error('Row not confirmed after append');
 
     cache.put(hourKey, String(hourCount + 1), 3600);
     contactKeys.forEach(function (k, i) { cache.put(k, String(contactCounts[i] + 1), LIMITS.avtosalon.perContactWindowSec); });
-    return out({ ok: true, saved: true, submissionId: id });
+    return out({ ok: true, saved: true, submissionId: id, fingerprint: fp });
   } catch (error) {
     console.error(error);
     return out({ ok: false, error: 'storage_failed' });
@@ -374,16 +400,20 @@ function validateAvtosalon(d) {
 /* ───────── Qurilish formasi ───────── */
 
 function handleQurilish(data) {
+  normalizeAttribution(data); // uzun UTM/sahifa manzili to‘g‘ri arizani rad etmaydi — qisqartiriladi
   const problem = validateQurilish(data);
   if (problem) return out({ ok: false, error: 'invalid', field: problem });
   const id = data.submissionId;
+  const fp = leadFingerprint(QURILISH_EDITABLE, data);
+  data.fingerprint = fp; // server o‘zi hisoblaydi — mijoz yuborgan qiymatga ishonilmaydi
 
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(20000)) return out({ ok: false, error: 'busy' });
   try {
     const sheet = getSheetByConfig(QURILISH_SHEET_NAME, QURILISH_COLUMNS, AVTOSALON_STATUS_HEADER);
     const header = ensureHeader(sheet, QURILISH_COLUMNS, AVTOSALON_STATUS_HEADER);
-    if (findRowById(sheet, header, id)) return out({ ok: true, saved: true, duplicate: true, submissionId: id });
+    const existing = findRowById(sheet, header, id);
+    if (existing) return correctRow(sheet, header, existing, QURILISH_COLUMNS, QURILISH_EDITABLE, data, fp);
 
     const cache = CacheService.getScriptCache();
     const hourKey = 'h_qurilish_' + Utilities.formatDate(new Date(), 'Asia/Tashkent', 'yyyyMMddHH');
@@ -394,13 +424,16 @@ function handleQurilish(data) {
     const contactCount = Number(cache.get(contactKey) || 0);
     if (contactCount >= LIMITS.qurilish.perContact) return out({ ok: false, error: 'contact_rate_limited' });
 
+    data.correctedAt = '';
+    data.corrections = '0';
     appendMapped(sheet, header, QURILISH_COLUMNS, AVTOSALON_STATUS_HEADER, data);
     SpreadsheetApp.flush();
-    if (!findRowById(sheet, header, id)) throw new Error('Row not found after append');
+    const row = findRowById(sheet, header, id);
+    if (!row || storedFingerprint(sheet, header, row) !== fp) throw new Error('Row not confirmed after append');
 
     cache.put(hourKey, String(hourCount + 1), 3600);
     cache.put(contactKey, String(contactCount + 1), LIMITS.qurilish.perContactWindowSec);
-    return out({ ok: true, saved: true, submissionId: id });
+    return out({ ok: true, saved: true, submissionId: id, fingerprint: fp });
   } catch (error) {
     console.error(error);
     return out({ ok: false, error: 'storage_failed' });
@@ -464,7 +497,7 @@ function handleIshlab(data) {
     const sheet = getSheetByConfig(ISHLAB_SHEET_NAME, ISHLAB_COLUMNS, AVTOSALON_STATUS_HEADER);
     const header = ensureHeader(sheet, ISHLAB_COLUMNS, AVTOSALON_STATUS_HEADER);
     const existing = findRowById(sheet, header, id);
-    if (existing) return correctIshlabRow(sheet, header, existing, data, fp);
+    if (existing) return correctRow(sheet, header, existing, ISHLAB_COLUMNS, ISHLAB_EDITABLE, data, fp);
 
     const cache = CacheService.getScriptCache();
     const hourKey = 'h_ishlab_' + Utilities.formatDate(new Date(), 'Asia/Tashkent', 'yyyyMMddHH');
@@ -496,20 +529,22 @@ function handleIshlab(data) {
 /**
  * Bir xil Ariza ID qayta keldi. Ma’lumot bir xil bo‘lsa — oddiy retry (dublikat yaratilmaydi).
  * Farq qilsa — o‘sha qator joyida tuzatiladi (yangi lead emas) va javobda yangi izi qaytariladi.
+ * Uch landing uchun umumiy: javobdagi `fingerprint` — jadvalda hozir turgan ma’lumotning izi.
  */
-function correctIshlabRow(sheet, header, row, data, fp) {
+function correctRow(sheet, header, row, columns, editable, data, fp) {
   const width = header.length;
   const values = sheet.getRange(row, 1, 1, width).getValues()[0].slice();
+  while (values.length < width) values.push('');
   const fpCol = header.indexOf('Ma’lumot izi');
   if (String(values[fpCol]) === fp) return out({ ok: true, saved: true, duplicate: true, submissionId: data.submissionId, fingerprint: fp });
 
   const countCol = header.indexOf('Tuzatishlar soni');
   const count = Number(values[countCol] || 0);
-  if (count >= ISHLAB_MAX_CORRECTIONS) return out({ ok: false, error: 'too_many_corrections' });
+  if (count >= MAX_CORRECTIONS) return out({ ok: false, error: 'too_many_corrections' });
 
   const byKey = {};
-  ISHLAB_COLUMNS.forEach(function (c) { byKey[c[0]] = c[1]; });
-  ISHLAB_EDITABLE.forEach(function (k) { values[header.indexOf(byKey[k])] = clean(data[k]); });
+  columns.forEach(function (c) { byKey[c[0]] = c[1]; });
+  editable.forEach(function (k) { values[header.indexOf(byKey[k])] = clean(data[k]); });
   values[fpCol] = fp;
   values[header.indexOf('Tuzatilgan vaqt')] = new Date();
   values[countCol] = count + 1;
@@ -525,11 +560,11 @@ function storedFingerprint(sheet, header, row) {
 }
 
 /**
- * src/lib/leadFingerprint.ts dagi icFingerprint bilan AYNAN bir xil bo‘lishi shart (test tekshiradi).
+ * src/lib/leadFingerprint.ts dagi leadFingerprint bilan AYNAN bir xil bo‘lishi shart (testlar tekshiradi).
  * Faqat arizaning o‘z maydonlari; UTM/manba kirmaydi.
  */
-function icFingerprint(d) {
-  const s = ISHLAB_EDITABLE.map(function (k) {
+function leadFingerprint(keys, d) {
+  const s = keys.map(function (k) {
     const v = d[k] == null ? '' : String(d[k]);
     return k === 'phone' ? v.replace(/\D/g, '').slice(-9) : v.trim().replace(/\s+/g, ' ');
   }).join('\u241f');
@@ -542,6 +577,8 @@ function icFingerprint(d) {
   }
   return ('0000000' + h1.toString(16)).slice(-8) + ('0000000' + h2.toString(16)).slice(-8);
 }
+
+function icFingerprint(d) { return leadFingerprint(ISHLAB_EDITABLE, d); }
 
 /**
  * UTM/sahifa/referrer — yordamchi ma’lumot. Ular sababli to‘g‘ri ariza rad etilmasligi kerak:

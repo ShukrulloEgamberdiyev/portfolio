@@ -2,6 +2,7 @@ import { DeliveryError, deliverApplication, type DeliveryResult } from './applic
 import { APPLICATION_ENDPOINT, APPLICATION_TOKEN } from './submit';
 import { normalizeLanding } from './attribution';
 import { icFingerprint } from './leadFingerprint';
+import { phoneForServer } from './phone';
 import { getAttribution, track } from './tracking';
 
 export type IcData = {
@@ -11,11 +12,10 @@ export type IcData = {
 /** Flattens the form into the keys the Apps Script expects for the "ISHLAB CHIQARISH LEADLAR" tab. */
 export function buildIshlabPayload(d: IcData, guard: { hp: string; elapsed: number }, submissionId: string): Record<string, string> {
   const a = getAttribution();
-  const digits = d.phone.replace(/\D/g, '').slice(-9);
   return {
     formType: 'ishlab_chiqarish',
     name: d.name.trim(),
-    phone: `+998 ${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5, 7)} ${digits.slice(7, 9)}`,
+    phone: phoneForServer(d.phone),
     product: d.product.trim(),
     region: d.region.trim(),
     channel: d.channel,

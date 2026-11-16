@@ -88,6 +88,7 @@ export const form = {
     contact: 'Shu telefon yoki Telegram orqali yaqinda bir nechta ariza yuborilgan. Keyinroq qayta urinib ko‘ring yoki Telegram orqali yozing — ma’lumotlaringiz saqlanib qoldi.',
     invalid: 'Ariza qabul qilinmadi: ba’zi maydonlar to‘liq emas. Javoblarni tekshirib, qayta yuboring.',
     generic: 'Ariza yuborilmadi. Qayta urinib ko‘ring — kiritilgan ma’lumotlar saqlanib qoldi.',
+    corrections: 'Bu ariza juda ko‘p marta o‘zgartirildi. Qo‘shimcha o‘zgarishlarni Telegram orqali yozing.',
   },
   retry: 'Qayta yuborish',
   errorAlt: 'Muammo takrorlansa, Telegram orqali yozing:',

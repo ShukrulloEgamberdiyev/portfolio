@@ -1,17 +1,15 @@
-import { motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { QrForm } from '../components/qurilish/QrForm';
 import { Dotted, QrCta } from '../components/qurilish/QrUi';
 import { CTA, QR_FORM_ID, hero, offer, problem, register, system } from '../content/qurilish';
 import { captureAttribution, initPixel, track } from '../lib/tracking';
-import { Reveal } from '../ui/Reveal';
+import { Reveal, riseStyle } from '../ui/Reveal';
 import mark from '../assets/fazo-mark.png';
 import heroWide from '../assets/qurilish/hero-1920.jpg';
 import heroWideWebp from '../assets/qurilish/hero-1920.webp';
 import heroMid from '../assets/qurilish/hero-960.jpg';
 import heroMidWebp from '../assets/qurilish/hero-960.webp';
 
-const ease = [0.22, 1, 0.36, 1] as const;
 
 /** No site navigation on this ad landing: one compact brand line, one goal (registration). */
 function Brand({ className = '' }: { className?: string }) {
@@ -42,8 +40,8 @@ function Flow({ steps, className = '' }: { steps: string[]; className?: string }
 
 /* ───────── Hero: the whole offer on the first mobile screen ───────── */
 function Hero() {
-  const reduce = useReducedMotion();
-  const up = (delay: number) => ({ initial: reduce ? false : { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, delay, ease } });
+  // Pure CSS entrance: the offer is in the HTML at full opacity, with or without JavaScript.
+  const up = (delay: number) => ({ style: riseStyle(delay, 14, 0.7) });
   return (
     <section aria-labelledby="qr-hero" className="relative isolate overflow-hidden lg:flex lg:min-h-[86svh] lg:flex-col">
       {/* Phones: compact brand line, a short band of the construction photo, then the offer */}
@@ -71,22 +69,22 @@ function Hero() {
       <div className="shell hidden pt-8 lg:block"><Brand /></div>
       <div className="shell w-full lg:flex lg:flex-1 lg:items-center">
         <div className="pb-10 pt-1 sm:max-w-[600px] lg:max-w-[45%] lg:py-14">
-          <motion.h1 id="qr-hero" {...up(0)}
-            className="text-[1.95rem] font-bold leading-[1.04] tracking-[-0.035em] min-[400px]:text-[2.1rem] sm:text-[2.8rem] lg:text-[3rem] xl:text-[3.5rem]">
+          <h1 id="qr-hero" {...up(0)}
+            className="rise text-[1.95rem] font-bold leading-[1.04] tracking-[-0.035em] min-[400px]:text-[2.1rem] sm:text-[2.8rem] lg:text-[3rem] xl:text-[3.5rem]">
             <Dotted text={hero.title} />
-          </motion.h1>
-          <motion.p {...up(0.06)} className="mt-3 text-[0.98rem] leading-snug text-bone/80 sm:mt-5 sm:text-[1.1rem] sm:leading-relaxed">{hero.text}</motion.p>
-          <motion.dl {...up(0.12)} className="mt-4 divide-y divide-line-strong border border-line-strong bg-surface-1/70 sm:mt-6">
+          </h1>
+          <p {...up(0.06)} className="rise mt-3 text-[0.98rem] leading-snug text-bone/80 sm:mt-5 sm:text-[1.1rem] sm:leading-relaxed">{hero.text}</p>
+          <dl {...up(0.12)} className="rise mt-4 divide-y divide-line-strong border border-line-strong bg-surface-1/70 sm:mt-6">
             {hero.system.map((it) => (
               <div key={it.k} className="flex items-baseline gap-3 px-3.5 py-2.5 sm:px-5 sm:py-3.5">
                 <dt className="w-[92px] shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-violet sm:w-[120px] sm:text-[11px]">{it.k}</dt>
                 <dd className="text-[0.95rem] font-semibold leading-snug text-bone sm:text-[1.05rem]">{it.v}</dd>
               </div>
             ))}
-          </motion.dl>
-          <motion.div {...up(0.18)} className="mt-4 sm:mt-7">
+          </dl>
+          <div {...up(0.18)} className="rise mt-4 sm:mt-7">
             <QrCta location="hero" className="w-full !text-[13px] sm:w-auto sm:min-w-[300px]">{CTA}</QrCta>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

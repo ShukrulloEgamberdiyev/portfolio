@@ -50,6 +50,7 @@ export const form = {
     contact: 'Shu telefon raqami bilan yaqinda bir necha marta ro‘yxatdan o‘tilgan. Keyinroq qayta urinib ko‘ring yoki Telegram orqali yozing.',
     invalid: 'Qabul qilinmadi: ba’zi maydonlar to‘liq emas. Javoblarni tekshirib, qayta yuboring.',
     generic: 'Yuborilmadi. Qayta urinib ko‘ring — kiritilgan ma’lumotlar saqlanib qoldi.',
+    corrections: 'Bu ariza juda ko‘p marta o‘zgartirildi. Qo‘shimcha o‘zgarishlarni Telegram orqali yozing.',
   },
   retry: 'Qayta yuborish',
   errorAlt: 'Muammo takrorlansa, Telegram orqali yozing:',
