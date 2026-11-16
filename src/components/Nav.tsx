@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LANGS, useLang } from '../i18n';
 import { Button } from '../ui/Button';
@@ -10,11 +10,14 @@ export function Nav() {
   const { scrollY } = useScroll();
   const [compact, setCompact] = useState(false);
   const [open, setOpen] = useState(false);
+  const menuBtn = useRef<HTMLButtonElement>(null);
+  /** Esc or the ✕ button: close and return focus to the button that opened the menu (keyboard users stay in place). */
+  const dismiss = () => { setOpen(false); requestAnimationFrame(() => menuBtn.current?.focus()); };
   useMotionValueEvent(scrollY, 'change', (v) => setCompact(v > 40));
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && open) dismiss(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
@@ -32,12 +35,11 @@ export function Nav() {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed inset-x-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${compact ? 'border-b border-line bg-ink/70 backdrop-blur-xl' : 'border-b border-transparent'}`}
+      <header
+        className={`nav-in fixed inset-x-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${compact ? 'border-b border-line bg-ink/70 backdrop-blur-xl' : 'border-b border-transparent'}`}
         style={{ top: 0, paddingTop: 'env(safe-area-inset-top, 0px)' }}>
         <nav aria-label={t.footer.navLabel} className={`shell flex items-center justify-between transition-[height] duration-500 ${compact ? 'h-16' : 'h-20 lg:h-24'}`}>
-          <Link to="/" onClick={close} aria-label="FAZO Digital" data-cursor="hover"><Logo /></Link>
+          <Link to="/" onClick={close} aria-label="FAZO Digital" data-cursor="hover" className="tap"><Logo /></Link>
 
           <ul className="hidden items-center gap-7 whitespace-nowrap xl:flex 2xl:gap-9">
             {links.map((l) => (
@@ -60,13 +62,13 @@ export function Nav() {
             <div className="hidden md:block">
               <Button to="/apply" onClick={close} className={`${compact ? 'h-10' : 'h-11'} min-h-0! py-0! px-5 text-[11px] whitespace-nowrap`}>{t.nav.cta}</Button>
             </div>
-            <button onClick={() => setOpen(true)} className="flex h-11 items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] xl:hidden" aria-expanded={open} aria-controls="mobile-menu">
+            <button ref={menuBtn} onClick={() => setOpen(true)} className="flex h-11 items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] xl:hidden" aria-expanded={open} aria-controls="mobile-menu">
               {t.nav.menu}
               <span aria-hidden className="flex flex-col gap-[5px]"><span className="block h-px w-5 bg-bone" /><span className="block h-px w-3 self-end bg-bone" /></span>
             </button>
           </div>
         </nav>
-      </motion.header>
+      </header>
 
       <AnimatePresence>
         {open && (
@@ -77,7 +79,7 @@ export function Nav() {
             style={{ paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
             <div className="shell flex h-20 items-center justify-between">
               <Logo />
-              <button onClick={() => setOpen(false)} className="h-11 font-mono text-[11px] uppercase tracking-[0.14em]">{t.nav.close} ✕</button>
+              <button onClick={dismiss} className="h-11 font-mono text-[11px] uppercase tracking-[0.14em]">{t.nav.close} ✕</button>
             </div>
             <ul className="shell mt-6 flex flex-1 flex-col justify-center gap-1">
               {links.map((l, i) => (

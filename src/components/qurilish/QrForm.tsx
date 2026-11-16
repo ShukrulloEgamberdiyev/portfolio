@@ -3,7 +3,8 @@ import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { CONTACT } from '../../data/site';
 import { OPT, QR_FORM_ID, REGIONS, form as F } from '../../content/qurilish';
 import { DeliveryError } from '../../lib/applicationTransport';
-import { buildQurilishPayload, isQrSubmissionId, newQrSubmissionId, submitQurilish, trackQrLeadOnce, type QrData } from '../../lib/submitQurilish';
+import { formatPhone, phoneDigits, phoneError } from '../../lib/phone';
+import { buildQurilishPayload, isQrSubmissionId, newQrSubmissionId, qrFingerprint, submitQurilish, trackQrLeadOnce, type QrData } from '../../lib/submitQurilish';
 import { track } from '../../lib/tracking';
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -15,17 +16,13 @@ type Errors = Partial<Record<keyof QrData, string>>;
 const EMPTY: QrData = { name: '', phone: '', company: '', region: '', city: '', stage: '', problem: '', problemOther: '', budget: '', contactTime: '' };
 const ORDER: (keyof QrData)[] = ['name', 'phone', 'company', 'region', 'stage', 'problem', 'problemOther'];
 
-export const phoneDigits = (v: string) => {
-  let digits = v.replace(/\D/g, '');
-  if (digits.length > 9 && digits.startsWith('998')) digits = digits.slice(3); // pasted with country code
-  return digits.slice(0, 9);
-};
-const formatPhone = (d: string) => [d.slice(0, 2), d.slice(2, 5), d.slice(5, 7), d.slice(7, 9)].filter(Boolean).join(' ');
+export { phoneDigits };
 
 export function validateQurilish(d: QrData): Errors {
   const e: Errors = {};
   if (d.name.trim().length < 2) e.name = 'Ismingizni kiriting';
-  if (phoneDigits(d.phone).length !== 9) e.phone = 'Raqamni to‘liq kiriting: +998 XX XXX XX XX';
+  const phoneProblem = phoneError(d.phone);
+  if (phoneProblem) e.phone = phoneProblem;
   if (d.company.trim().length < 2) e.company = 'Kompaniya yoki loyiha nomini kiriting';
   if (!d.region) e.region = 'Hududni tanlang';
   if (!d.stage) e.stage = 'Loyiha bosqichini tanlang';
@@ -94,9 +91,11 @@ export function QrForm() {
   const [errors, setErrors] = useState<Errors>({});
   const [tried, setTried] = useState(false);
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
-  const [errorReason, setErrorReason] = useState<'network' | 'busy' | 'contact' | 'invalid' | 'generic'>('generic');
+  const [errorReason, setErrorReason] = useState<'network' | 'busy' | 'contact' | 'invalid' | 'generic' | 'corrections'>('generic');
   const [honeypot, setHoneypot] = useState('');
   const submissionId = useRef('');
+  /** Fingerprints of earlier attempts under the current id that may have reached the sheet. */
+  const sentFps = useRef<string[]>([]);
   const startedAt = useRef(0);
   const sending = useRef(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -108,7 +107,7 @@ export function QrForm() {
     try {
       const raw = sessionStorage.getItem(DRAFT_KEY);
       if (raw) {
-        const saved = JSON.parse(raw) as { d?: Partial<QrData>; sid?: string };
+        const saved = JSON.parse(raw) as { d?: Partial<QrData>; sid?: string; fps?: string[] };
         if (saved.d) {
           const r = { ...EMPTY, ...saved.d };
           // Drafts from the older, longer form: drop answers that are no longer offered.
@@ -116,14 +115,17 @@ export function QrForm() {
           if (!OPT.problem.includes(r.problem)) r.problem = '';
           setD({ ...r, budget: '', contactTime: '' });
         }
-        if (saved.sid && isQrSubmissionId(saved.sid)) submissionId.current = saved.sid;
+        if (saved.sid && isQrSubmissionId(saved.sid)) {
+          submissionId.current = saved.sid;
+          sentFps.current = Array.isArray(saved.fps) ? saved.fps.filter((f) => typeof f === 'string') : [];
+        }
       }
     } catch { /* ignore */ }
     hydrated.current = true;
   }, []);
   useEffect(() => {
     if (!hydrated.current || status === 'done') return;
-    try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, sid: submissionId.current })); } catch { /* ignore */ }
+    try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, sid: submissionId.current, fps: sentFps.current })); } catch { /* ignore */ }
   }, [d, status]);
 
   const started = () => track('QurilishFormStart', { content_name: 'Qurilish ariza' }, { custom: true, onceKey: 'qr-form-start' });
@@ -158,30 +160,48 @@ export function QrForm() {
     if (Object.keys(e).length) { focusFirstError(e); return; }
     sending.current = true;
     setStatus('sending'); // inputs are disabled while sending: what the user sees is exactly what is sent
-    if (!submissionId.current) submissionId.current = newQrSubmissionId();
-    const id = submissionId.current;
-    try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, sid: id })); } catch { /* ignore */ }
+    if (!submissionId.current) { submissionId.current = newQrSubmissionId(); sentFps.current = []; }
+    const earlier = [...sentFps.current];
+    const persist = () => { try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, sid: submissionId.current, fps: sentFps.current })); } catch { /* ignore */ } };
+    // Recorded before sending: if the reply is lost (or the page reloads), the next attempt knows this data may be stored.
+    sentFps.current = [...earlier, qrFingerprint(d)];
+    persist();
     try {
       if (honeypot) throw new DeliveryError('rejected', 'spam'); // bots never get a success screen, nothing is sent
       const wait = MIN_FILL_MS + 250 - (Date.now() - startedAt.current);
       if (wait > 0) await new Promise((r) => setTimeout(r, wait));
-      await submitQurilish(buildQurilishPayload(d, { hp: honeypot, elapsed: Date.now() - startedAt.current }, id));
+      // Success only after the receiver confirms that this id holds exactly the data shown in the form.
+      const confirmed = await submitQurilish({
+        build: (sid) => buildQurilishPayload(d, { hp: honeypot, elapsed: Date.now() - startedAt.current }, sid),
+        submissionId: submissionId.current,
+        earlier,
+        onNewId: (sid) => { submissionId.current = sid; sentFps.current = [qrFingerprint(d)]; persist(); },
+      });
+      const id = confirmed.submissionId;
       trackQrLeadOnce(id);
       setStatus('done');
+      submissionId.current = '';
+      sentFps.current = [];
       try { sessionStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
-      requestAnimationFrame(() => cardRef.current?.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' }));
+      requestAnimationFrame(() => {
+        cardRef.current?.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+        (cardRef.current?.querySelector('[data-focus-target]') as HTMLElement | null)?.focus({ preventScroll: true });
+      });
     } catch (err) {
       const code = err instanceof DeliveryError ? err.code : 'network';
       const detail = err instanceof DeliveryError ? err.detail : '';
       const field = err instanceof DeliveryError ? err.field : '';
-      if (detail === 'invalid' && field === 'submissionId') submissionId.current = '';
+      // A definite rejection stored nothing: this attempt's data must not count as "possibly stored".
+      if (code === 'rejected' || code === 'http' || code === 'config') { sentFps.current = earlier; persist(); }
+      if (detail === 'invalid' && field === 'submissionId') { submissionId.current = ''; sentFps.current = []; }
       if (detail === 'invalid' && field && field in EMPTY) {
         const fieldErrors: Errors = { [field as keyof QrData]: 'Bu javob qabul qilinmadi — tekshirib, qayta kiriting' };
         setErrors(fieldErrors);
         focusFirstError(fieldErrors);
       }
       setErrorReason(
-        code === 'timeout' || code === 'network' || detail === 'busy' || detail === 'storage_failed' ? 'network'
+        code === 'timeout' || code === 'network' || code === 'bad_response' || detail === 'busy' || detail === 'storage_failed' ? 'network'
+          : detail === 'too_many_corrections' ? 'corrections'
           : detail === 'rate_limited' ? 'busy'
           : detail === 'contact_rate_limited' ? 'contact'
           : detail === 'invalid' ? 'invalid'
@@ -202,15 +222,14 @@ export function QrForm() {
           <span className="flex h-14 w-14 items-center justify-center bg-bone text-ink">
             <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden><path d="m4 11.5 4.5 4.5L18 6.5" stroke="currentColor" strokeWidth="2.2" fill="none" /></svg>
           </span>
-          <h3 className="mt-8 text-[2rem] font-bold leading-[1.05] tracking-[-0.035em] sm:text-[2.6rem]">{F.successTitle.slice(0, -1)}<span className="text-violet">.</span></h3>
+          <h3 data-focus-target tabIndex={-1} className="mt-8 text-[2rem] font-bold leading-[1.05] tracking-[-0.035em] outline-none sm:text-[2.6rem]">{F.successTitle.slice(0, -1)}<span className="text-violet">.</span></h3>
           <p className="mt-4 max-w-[44ch] text-[1.05rem] leading-relaxed text-mist">{F.successText}</p>
         </motion.div>
       ) : (
         <form noValidate onSubmit={(e) => { e.preventDefault(); void submit(); }} onFocus={started} aria-describedby="qr-form-status" aria-label="Ro‘yxatdan o‘tish formasi">
           {/* Honeypot: invisible to people, tempting to bots. */}
           <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
-            <label htmlFor="qr_fax">Fax</label>
-            <input id="qr_fax" name="fax_number" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+            <input id="qr_fax" name="fax_number" type="text" aria-label="Fax" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
           </div>
 
           <fieldset disabled={status === 'sending'} className="min-w-0 border-0 p-0 disabled:opacity-60">

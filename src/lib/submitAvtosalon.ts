@@ -1,4 +1,6 @@
-import { DeliveryError, deliverApplication, type DeliveryResult } from './applicationTransport';
+import { submitConfirmed, type Confirmation } from './confirmedSubmit';
+import { AV_FINGERPRINT_FIELDS, leadFingerprint } from './leadFingerprint';
+import { phoneForServer } from './phone';
 import { APPLICATION_ENDPOINT, APPLICATION_TOKEN } from './submit';
 import { normalizeLanding } from './attribution';
 import { getAttribution, track } from './tracking';
@@ -15,9 +17,7 @@ export type AvData = {
 /** Flattens the form into the column keys the Apps Script expects for the "AVTOSALON LEADLAR" tab. */
 export function buildAvtosalonPayload(d: AvData, guard: { hp: string; elapsed: number }, submissionId: string): Record<string, string> {
   const a = getAttribution();
-  const digits = d.phone.replace(/\D/g, '').slice(-9);
-  return {
-    formType: 'avtosalon',
+  const lead = {
     dealer: d.dealer.trim(),
     region: [d.region, d.city.trim()].filter(Boolean).join(' — '),
     instagram: d.instagram.trim(),
@@ -39,8 +39,13 @@ export function buildAvtosalonPayload(d: AvData, guard: { hp: string; elapsed: n
     problem: d.problem.trim(),
     name: d.name.trim(),
     position: d.position.trim(),
-    phone: `+998 ${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5, 7)} ${digits.slice(7, 9)}`,
-    telegram: d.telegram.trim(),
+    phone: phoneForServer(d.phone),
+    telegram: normalizeTelegram(d.telegram),
+  };
+  return {
+    formType: 'avtosalon',
+    ...lead,
+    fingerprint: leadFingerprint(AV_FINGERPRINT_FIELDS, lead),
     utm_source: a.utm_source ?? '',
     utm_medium: a.utm_medium ?? '',
     utm_campaign: a.utm_campaign ?? '',
@@ -67,18 +72,19 @@ export function newSubmissionId() {
   return `AV-${Date.now().toString(36).toUpperCase()}-${rand.toUpperCase()}`;
 }
 
+/** The receiver expects "@username"; the form accepts it with or without the @. */
+export const normalizeTelegram = (v: string) => { const t = v.trim().replace(/^@+/, ''); return t ? `@${t}` : ''; };
+
+/** Fingerprint of what the form currently holds — changes whenever the visitor edits an answer. */
+export const avFingerprint = (d: AvData) => buildAvtosalonPayload(d, { hp: '', elapsed: 0 }, '').fingerprint;
+
 /**
- * Resolves only after the Apps Script explicitly accepts the lead ({ok:true}, possibly duplicate:true when an
- * earlier attempt with identical content was already stored). Rejects with DeliveryError otherwise.
- * Apps Script cold starts can be slow, hence the longer timeout; a retry after a timeout is de-duplicated server-side.
+ * Resolves only when the receiver confirms that this submission id holds exactly this data
+ * (see confirmedSubmit.ts for the lost-reply rules). A bare {ok:true} is never a saved lead.
+ * Apps Script cold starts can be slow, hence the 25 s limit inside submitConfirmed.
  */
-export async function submitAvtosalon(payload: Record<string, string>): Promise<DeliveryResult> {
-  const result = await deliverApplication(APPLICATION_ENDPOINT, payload, 25000);
-  // A bare {ok:true} (e.g. the endpoint's health answer) is not proof of a saved row.
-  if (result.saved !== true || result.submissionId !== payload.submissionId) {
-    throw new DeliveryError('bad_response', '', 'Receiver did not confirm this submission');
-  }
-  return result;
+export function submitAvtosalon(o: { build: (id: string) => Record<string, string>; submissionId: string; earlier: string[]; onNewId?: (id: string) => void }): Promise<Confirmation> {
+  return submitConfirmed({ endpoint: APPLICATION_ENDPOINT, newId: newSubmissionId, ...o });
 }
 
 /** Valid ids look like AV-<time36>-<random>; the server rejects anything else. */

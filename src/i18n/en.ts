@@ -186,7 +186,12 @@ export const en: Dict = {
     contact: 'Phone or Telegram', contactPh: '+998 90 000 00 00 or @username', contactHint: 'Used only to follow up on this application.',
     next: 'Next', back: 'Back', submit: 'Submit application', sending: 'Sending…', required: 'Complete the required fields correctly to continue.', stepOf: 'Step',
     successTitle: 'Application received.', successText: 'We’ll review it and reach out via Telegram or phone.', successCta: 'Message us on Telegram',
-    error: 'Couldn’t send. Please message us on Telegram: @fazo_digital',
+    retry: 'Send again',
+    fieldName: 'Enter your name', fieldCompany: 'Enter your company or brand', fieldChoice: 'Choose one of the options',
+    fieldContact: 'Enter a full phone number (+998 90 123 45 67) or a Telegram username starting with @',
+    errorNetwork: 'Not sent: the connection dropped or the server did not respond. Check your internet and send again — your answers are kept.',
+    errorBusy: 'Too many applications right now. Send again in a few minutes — your answers are kept.',
+    error: 'Not sent. Try again or message us on Telegram: @fazo_digital',
   },
   final: {
     title: [{ t: 'Growth is' }, { t: 'not an accident.', outline: true }, { t: 'It’s a system', accent: true }],

@@ -10,7 +10,7 @@ export function Footer() {
     { to: '/process', label: t.nav.process }, { to: '/about', label: t.nav.about },
     { to: '/insights', label: t.nav.insights }, { to: '/apply', label: t.apply.label },
   ];
-  const linkCls = 'text-mist transition-colors hover:text-bone';
+  const linkCls = 'tap text-mist transition-colors hover:text-bone';
   return (
     <footer className="relative overflow-hidden border-t border-line pt-16" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <div className="shell relative">
@@ -46,7 +46,7 @@ export function Footer() {
         <div className="flex flex-col justify-between gap-3 border-t border-line py-6 font-mono text-[11px] uppercase tracking-[0.14em] text-ash sm:flex-row">
           <span>{t.footer.rights}</span>
           <span>{t.footer.location}</span>
-          <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-left uppercase tracking-[0.14em] hover:text-bone sm:text-right">{t.footer.top} ↑</button>
+          <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="tap text-left uppercase tracking-[0.14em] hover:text-bone sm:text-right">{t.footer.top} ↑</button>
         </div>
       </div>
     </footer>

@@ -6,3 +6,4 @@ dist-preview
 .DS_Store
 *.log
 .vercel
+audit-shots

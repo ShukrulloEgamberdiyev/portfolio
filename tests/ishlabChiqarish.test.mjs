@@ -30,7 +30,7 @@ function receiver() {
       getRange: (r, c, nr = 1, nc = 1) => {
         const api = {
           getValues: () => [(tab.rows[r - 1] || []).slice(c - 1, c - 1 + nc)],
-          setValues: (v) => { tab.rows[r - 1] = v[0]; return api; },
+          setValues: (v) => { const row = [...(tab.rows[r - 1] || [])]; v[0].forEach((x, k) => { row[c - 1 + k] = x; }); tab.rows[r - 1] = row; return api; },
           setFontWeight: () => api,
           createTextFinder: (text) => ({ matchEntireCell() { return this; }, findNext() {
             for (let i = r; i < r + nr; i++) if (tab.rows[i - 1] && String(tab.rows[i - 1][c - 1]) === text) return { getRow: () => i };
@@ -72,7 +72,7 @@ test('server option lists match the /ishlab-chiqarish form options exactly', () 
   const { IC } = receiver();
   for (const k of ['channel', 'budget']) assert.deepEqual(IC[k], OPT[k], k);
   assert.deepEqual(OPT.budget, ['$500–$1,000', '$1,000–$3,000', '$3,000+', 'Budjet bo‘yicha tavsiya kerak']);
-  assert.deepEqual(OPT.channel, ['Chakana', 'Optom / B2B', 'Chakana + Optom']);
+  assert.deepEqual(OPT.channel, ['Chakana', 'Optom', 'Chakana + Optom']);
 });
 
 test('verified case figures are unchanged', () => {
@@ -105,7 +105,7 @@ test('valid lead goes to ISHLAB CHIQARISH LEADLAR only and confirms the stored f
   assert.equal(tab.rows[1][col(tab, 'Nima ishlab chiqaradi')], 'Krovat va shkaflar');
   assert.equal(tab.rows[1][col(tab, 'Sotuv yo‘nalishi')], 'Chakana + Optom');
   assert.equal(tab.rows[1][col(tab, 'Lead status')], 'Yangi');
-  assert.equal(tab.rows[1][col(tab, 'Ma’lumot izi')], clientFp(valid()));
+  assert.equal(tab.rows[1][col(tab, 'Ma’lumot izi')], 'fp_' + clientFp(valid()));
 });
 
 test('lost reply: resending the identical payload with the same id is idempotent (one row, same confirmation)', () => {
@@ -131,7 +131,7 @@ test('changed payload with the same id is saved as a correction — never a sile
   const row = tab.rows[1];
   assert.equal(row[col(tab, 'Telefon')], "'+998 91 765 43 21");
   assert.equal(row[col(tab, 'Oylik reklama budjeti')], 'Budjet bo‘yicha tavsiya kerak');
-  assert.equal(row[col(tab, 'Ma’lumot izi')], clientFp(changed));
+  assert.equal(row[col(tab, 'Ma’lumot izi')], 'fp_' + clientFp(changed));
   assert.equal(Number(row[col(tab, 'Tuzatishlar soni')]), 1);
   assert.equal(Object.prototype.toString.call(row[col(tab, 'Tuzatilgan vaqt')]), '[object Date]');
   assert.equal(row[col(tab, 'Sana va vaqt')], createdAt, 'original date kept');
@@ -205,4 +205,10 @@ test('per-phone limit applies to new submissions, not to retries or corrections'
   for (let i = 0; i < 3; i++) assert.equal(r.send(valid({ submissionId: `IC-MFX12AB-ABCDEF12${i}0` })).ok, true);
   assert.equal(r.send(valid({ submissionId: 'IC-MFX12AB-ABCDEF1200', problem: 'tuzatildi' })).updated, true);
   assert.equal(r.send(valid({ submissionId: 'IC-MFX12AB-ABCDEF1299' })).error, 'contact_rate_limited');
+});
+
+test('old channel value "Optom / B2B" from a still-open page is still accepted', () => {
+  const r = receiver();
+  const res = r.send({ ...valid(), channel: 'Optom / B2B' });
+  assert.equal(res.saved, true, JSON.stringify(res));
 });

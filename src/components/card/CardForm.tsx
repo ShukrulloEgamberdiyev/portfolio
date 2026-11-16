@@ -4,7 +4,8 @@ import { CONTACT } from '../../data/site';
 import { CARD_OPT, cardForm as F } from '../../content/card';
 import { DeliveryError } from '../../lib/applicationTransport';
 import { EMPTY_CARD, buildCardPayload, newCardSubmissionId, submitCard, type CardData } from '../../lib/submitCard';
-import { Chips, Field, describedBy, inputCls, phoneDigits } from '../qurilish/QrForm';
+import { formatPhone, phoneDigits, phoneError } from '../../lib/phone';
+import { Chips, Field, describedBy, inputCls } from '../qurilish/QrForm';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const DRAFT_KEY = 'fazo.card.draft';
@@ -20,7 +21,6 @@ export const STEP_FIELDS: Key[][] = [
   ['readyBudget', 'problem'],
 ];
 
-const formatPhone = (d: string) => [d.slice(0, 2), d.slice(2, 5), d.slice(5, 7), d.slice(7, 9)].filter(Boolean).join(' ');
 
 /** @username, instagram.com/..., https://sayt.uz — bo‘sh bo‘lsa ham to‘g‘ri (ixtiyoriy maydon). */
 export function isValidLink(v: string) {
@@ -34,7 +34,7 @@ export function validateCardStep(d: CardData, step: number): Errors {
   const e: Errors = {};
   const want = STEP_FIELDS[step];
   if (want.includes('name') && d.name.trim().length < 2) e.name = F.errors.name;
-  if (want.includes('phone') && phoneDigits(d.phone).length !== 9) e.phone = F.errors.phone;
+  if (want.includes('phone') && phoneError(d.phone)) e.phone = phoneError(d.phone);
   if (want.includes('business') && d.business.trim().length < 2) e.business = F.errors.business;
   if (want.includes('link') && !isValidLink(d.link)) e.link = F.errors.link;
   if (want.includes('need') && !CARD_OPT.need.includes(d.need)) e.need = F.errors.need;
@@ -45,7 +45,10 @@ export function validateCardStep(d: CardData, step: number): Errors {
   return e;
 }
 
-type Draft = { d?: Partial<CardData>; step?: number; sid?: string };
+type Draft = { d?: Partial<CardData>; step?: number; sid?: string; sent?: string };
+
+/** What identifies the lead's own answers; a submission id is only ever reused for exactly the same answers. */
+const signature = (d: CardData) => JSON.stringify([d.name.trim(), phoneDigits(d.phone), d.business.trim(), d.link.trim(), d.need, d.experience, d.currentSpend, d.readyBudget, d.problem.trim()]);
 
 /**
  * Ro‘yxatdan o‘tish oynasi. Sahifa ochiq turgan butun vaqt davomida mount bo‘lib turadi
@@ -59,6 +62,8 @@ export function CardForm({ open, onClose }: { open: boolean; onClose: () => void
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
   const [honeypot, setHoneypot] = useState('');
   const submissionId = useRef('');
+  /** Answers last sent under the current id. The /card receiver only knows ids, so changed answers get a new id. */
+  const sentSignature = useRef('');
   const startedAt = useRef(0);
   const sending = useRef(false);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -73,14 +78,14 @@ export function CardForm({ open, onClose }: { open: boolean; onClose: () => void
         const saved = JSON.parse(raw) as Draft;
         if (saved.d) setD({ ...EMPTY_CARD, ...saved.d });
         if (typeof saved.step === 'number' && saved.step >= 0 && saved.step <= 2) setStep(saved.step);
-        if (saved.sid && /^FC-[A-Z0-9]{6,14}-[A-Z0-9]{6,14}$/.test(saved.sid)) submissionId.current = saved.sid;
+        if (saved.sid && /^FC-[A-Z0-9]{6,14}-[A-Z0-9]{6,14}$/.test(saved.sid)) { submissionId.current = saved.sid; sentSignature.current = typeof saved.sent === 'string' ? saved.sent : ''; }
       }
     } catch { /* storage unavailable */ }
     restored.current = true;
   }, []);
   useEffect(() => {
     if (!restored.current || status === 'done') return;
-    try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, step, sid: submissionId.current } satisfies Draft)); } catch { /* ignore */ }
+    try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, step, sid: submissionId.current, sent: sentSignature.current } satisfies Draft)); } catch { /* ignore */ }
   }, [d, step, status]);
 
   // Ochilganda: sahifa skrolini qulflash, fokusni oynaga o‘tkazish, Tab'ni oyna ichida ushlab turish, Escape — yopish.
@@ -176,9 +181,13 @@ export function CardForm({ open, onClose }: { open: boolean; onClose: () => void
     }
     sending.current = true;
     setStatus('sending');
-    if (!submissionId.current) submissionId.current = newCardSubmissionId();
+    // Same answers → same id (a retry never duplicates). Changed answers → new id: the receiver would otherwise
+    // answer "already saved" for the old row and the correction would be lost behind a success screen.
+    const sig = signature(d);
+    if (!submissionId.current || sentSignature.current !== sig) submissionId.current = newCardSubmissionId();
+    sentSignature.current = sig;
     const id = submissionId.current;
-    try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, step, sid: id } satisfies Draft)); } catch { /* ignore */ }
+    try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ d, step, sid: id, sent: sig } satisfies Draft)); } catch { /* ignore */ }
     try {
       if (honeypot) throw new DeliveryError('rejected', 'spam'); // botlarga muvaffaqiyat ekrani ko‘rsatilmaydi
       const wait = MIN_FILL_MS - (Date.now() - startedAt.current);

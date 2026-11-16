@@ -43,7 +43,8 @@ export const CASES: { slug: string; name: string; media?: { poster?: string; vid
 
 export const SIGNATURE = 'NATIJAGA ISHLAYMIZ. SIZ O‘SASIZ.';
 
-export const SITE_URL = 'https://fazodigital.uz';
+/** The host that actually serves the site: fazodigital.uz redirects to www, so canonicals, og:url and the sitemap use www. */
+export const SITE_URL = 'https://www.fazodigital.uz';
 
 export const SECTION_IDS = {
   expertise: 'expertise', work: 'work', process: 'process', about: 'about', insights: 'insights', apply: 'apply', contact: 'contact',

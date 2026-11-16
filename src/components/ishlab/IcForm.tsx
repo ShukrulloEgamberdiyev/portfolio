@@ -6,7 +6,8 @@ import { DeliveryError } from '../../lib/applicationTransport';
 import { icFingerprint } from '../../lib/leadFingerprint';
 import { buildIshlabPayload, isIcSubmissionId, newIcSubmissionId, submitIshlab, trackIcLeadOnce, type IcData } from '../../lib/submitIshlab';
 import { track } from '../../lib/tracking';
-import { Chips, Field, describedBy, inputCls, phoneDigits } from '../qurilish/QrForm';
+import { formatPhone, phoneDigits, phoneError } from '../../lib/phone';
+import { Chips, Field, describedBy, inputCls } from '../qurilish/QrForm';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const DRAFT_KEY = 'fazo.ishlab.draft';
@@ -16,12 +17,12 @@ type Errors = Partial<Record<keyof IcData, string>>;
 
 const EMPTY: IcData = { name: '', phone: '', product: '', region: '', channel: '', budget: '', problem: '' };
 const ORDER: (keyof IcData)[] = ['name', 'phone', 'product', 'region', 'channel', 'budget', 'problem'];
-const formatPhone = (d: string) => [d.slice(0, 2), d.slice(2, 5), d.slice(5, 7), d.slice(7, 9)].filter(Boolean).join(' ');
 
 export function validateIshlab(d: IcData): Errors {
   const e: Errors = {};
   if (d.name.trim().length < 2) e.name = 'Ismingizni kiriting';
-  if (phoneDigits(d.phone).length !== 9) e.phone = 'Raqamni to‘liq kiriting: +998 XX XXX XX XX';
+  const phoneProblem = phoneError(d.phone);
+  if (phoneProblem) e.phone = phoneProblem;
   if (d.product.trim().length < 2) e.product = 'Nima ishlab chiqarishingizni yozing';
   if (d.region.trim().length < 2) e.region = 'Hududingizni yozing';
   if (!OPT.channel.includes(d.channel)) e.channel = 'Sotuv yo‘nalishini tanlang';
@@ -182,8 +183,7 @@ export function IcForm() {
         <form noValidate onSubmit={(e) => { e.preventDefault(); void submit(); }} onFocus={started} aria-describedby="ic-form-status" aria-labelledby="ic-form-heading">
           {/* Honeypot: invisible to people, tempting to bots. */}
           <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
-            <label htmlFor="ic_fax">Fax</label>
-            <input id="ic_fax" name="fax_number" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+            <input id="ic_fax" name="fax_number" type="text" aria-label="Fax" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
           </div>
 
           <div className="border-b border-line px-5 pb-6 pt-8 sm:px-10 sm:pt-10">

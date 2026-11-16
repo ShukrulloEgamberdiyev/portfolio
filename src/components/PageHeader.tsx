@@ -14,7 +14,7 @@ export function PageHeader({ label, title, intro, meta, back }: Props) {
         style={{ background: 'radial-gradient(closest-side, rgba(91,77,255,0.5), transparent)' }} />
       <div className="shell relative">
         {back && (
-          <Link to={back.to} className="mb-8 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-mist transition-colors hover:text-bone">
+          <Link to={back.to} className="tap mb-8 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-mist transition-colors hover:text-bone">
             ← {back.label}
           </Link>
         )}

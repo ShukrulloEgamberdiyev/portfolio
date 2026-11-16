@@ -3,7 +3,18 @@ import type { Lang } from '../i18n/types';
 import { CASES, EXPERTISE, SITE_URL } from '../data/site';
 import { ARTICLES } from '../content/articles';
 
-export type Seo = { title: string; description: string; canonical: string; image?: string };
+export type Seo = { title: string; description: string; canonical: string; image?: string; /** Not a real page (404): keep it out of search results. */ noindex?: boolean };
+
+/** First whole sentence(s) that fit a search snippet — never cut mid-word. */
+export function snippet(text: string, max = 158): string {
+  const clean = text.replace(/\s+/g, ' ').trim();
+  if (clean.length <= max) return clean;
+  const sentences = clean.match(/[^.!?]+[.!?]+/g) ?? [];
+  let out = '';
+  for (const s of sentences) { if ((out + s).trim().length > max) break; out += s; }
+  if (out.trim()) return out.trim();
+  return clean.slice(0, max).replace(/\s+\S*$/, '') + '…';
+}
 
 const SUFFIX = 'FAZO Digital';
 
@@ -18,7 +29,8 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
   const path = normalizePath(rawPath);
   const t = dictionaries[lang];
   const p = pageDictionaries[lang];
-  const canonical = `${SITE_URL}${langPrefix(lang)}${path === '/' ? '/' : path}`;
+  // /ru and /en home pages have no trailing slash: Vercel (trailingSlash: false) redirects /ru/ → /ru.
+  const canonical = `${SITE_URL}${langPrefix(lang)}${path === '/' ? (langPrefix(lang) ? '' : '/') : path}`;
   const make = (title: string, description: string): Seo => ({ title: `${title} — ${SUFFIX}`, description, canonical });
 
   if (path === '/avtosalon') {
@@ -60,12 +72,13 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
   if (path === '/about') return make(p.about.title, p.about.lead);
   if (path === '/insights') return make(p.insightsPage.title, p.insightsPage.intro);
   if (path === '/apply') return make(p.applyPage.title, p.applyPage.intro);
-  if (path === '/privacy') return make(p.privacy.title, p.privacy.sections[0].body.slice(0, 155));
+  if (path === '/privacy') return make(p.privacy.title, snippet(p.privacy.sections[0].body));
 
   const caseSlug = path.startsWith('/work/') ? path.slice(6) : null;
   if (caseSlug) {
     const i = CASES.findIndex((c) => c.slug === caseSlug);
-    if (i >= 0) return make(`${CASES[i].name} — ${t.work.cases[i].industry}`, t.work.cases[i].challenge);
+    // Task + how it was approached: enough for a search snippet, and nothing that is not on the page.
+    if (i >= 0) return make(`${CASES[i].name} — ${t.work.cases[i].industry}`, snippet(`${t.work.cases[i].challenge} ${p.caseDetail.approaches[caseSlug] ?? ''}`));
   }
 
   const expSlug = path.startsWith('/expertise/') ? path.slice(11) : null;
@@ -77,8 +90,9 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
   const artSlug = path.startsWith('/insights/') ? path.slice(10) : null;
   if (artSlug) {
     const a = ARTICLES.find((x) => x.slug === artSlug);
-    if (a) return make(a.title, a.lead);
+    // Articles exist in Uzbek only; the /ru and /en copies show the same text, so they point to the Uzbek original.
+    if (a) return { ...make(a.title, a.lead), canonical: `${SITE_URL}${path}` };
   }
 
-  return make(p.notFound.title, p.notFound.text);
+  return { ...make(p.notFound.title, p.notFound.text), noindex: true };
 }

@@ -11,20 +11,27 @@ const WORKBOOK = '1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo';
  * In-memory stand-in for the Apps Script services the receiver uses. `tabs` and `cache` can be shared
  * between receivers to simulate a new execution (fresh cache = "cache lost") against the same workbook.
  */
-function receiver({ wrongSheet = false, failWrite = false, silentWriteLoss = false, preset = null, hour = '2026092204', tabs = null, cache = null, lockBusy = false } = {}) {
+function receiver({ wrongSheet = false, failWrite = false, silentWriteLoss = false, preset = null, hour = '2026092204', tabs = null, cache = null, lockBusy = false, coerce = false } = {}) {
   cache = cache ?? new Map();
   tabs = tabs ?? new Map();
   let held = false;
+  // Google Sheets kabi: raqamga o‘xshagan matn ("0123…", "12e45…") songa aylanadi.
+  const sheetValue = (v) => (coerce && typeof v === 'string' && /^\s*[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?\s*$/i.test(v) ? Number(v) : v);
+  const writes = [];
   const makeTab = (name, filler = 0, initial = []) => {
     const tab = {
       name, rows: initial.map((r) => [...r]), filler,
-      appendRow(row) { if (failWrite) throw Error('failed'); if (!silentWriteLoss) tab.rows.push(row); },
+      appendRow(row) { if (failWrite) throw Error('failed'); if (!silentWriteLoss) tab.rows.push(row.map(sheetValue)); },
       getLastRow: () => tab.filler + tab.rows.length,
       getLastColumn: () => tab.rows.reduce((m, r) => Math.max(m, r.length), 0),
       getRange: (r, c, nr = 1, nc = 1) => {
         const api = {
           getValues: () => [(tab.rows[r - 1 - tab.filler] || []).slice(c - 1, c - 1 + nc)],
-          setValues: (v) => { tab.rows[r - 1 - tab.filler] = v[0]; return api; },
+          setValues: (v) => {
+            const i = r - 1 - tab.filler; const row = tab.rows[i] ? [...tab.rows[i]] : [];
+            v[0].forEach((x, k) => { row[c - 1 + k] = sheetValue(x); writes.push({ tab: name, row: r, col: c + k }); });
+            tab.rows[i] = row; return api;
+          },
           setFontWeight: () => api,
           createTextFinder: (text) => ({
             matchEntireCell() { return this; },
@@ -46,7 +53,8 @@ function receiver({ wrongSheet = false, failWrite = false, silentWriteLoss = fal
   };
   if (!tabs.size) {
     if (preset) makeTab('AVTOSALON LEADLAR', 0, preset);
-    makeTab('Sayt arizalari', 5);
+    // Jonli "Sayt arizalari" varag‘i: eski skript yaratgan 17 ustun + Holat sarlavhasi.
+    makeTab('Sayt arizalari', 0, [['Sana', 'Ism', 'Kompaniya', 'Sayt / Instagram', 'Soha', 'Oylik daromad', 'Reklama xarajati', 'Byudjet', 'Muammo', 'Izoh', 'Maqsad', 'Qaror qabul qiluvchi', 'Aloqa', 'Til', 'UTM source', 'UTM campaign', 'Sahifa', 'Holat']]);
   }
   const sandbox = {
     console: { error() {} },
@@ -70,10 +78,11 @@ function receiver({ wrongSheet = false, failWrite = false, silentWriteLoss = fal
   vm.createContext(sandbox);
   vm.runInContext(source, sandbox);
   const send = (payload) => sandbox.doPost({ postData: { contents: JSON.stringify(payload) } });
-  const siteRows = () => tabs.get('Sayt arizalari').rows;
+  const siteRows = () => tabs.get('Sayt arizalari').rows.slice(1);
+  const siteHeader = () => tabs.get('Sayt arizalari').rows[0];
   const avtoTab = () => tabs.get('AVTOSALON LEADLAR');
   const avtoRows = () => (avtoTab() ? avtoTab().rows.slice(1) : []);
-  return { send, tabs, cache, siteRows, avtoTab, avtoRows, get: sandbox.doGet };
+  return { send, tabs, cache, siteRows, siteHeader, avtoTab, avtoRows, writes, get: sandbox.doGet, fp: sandbox.leadFingerprint, AV_EDITABLE: vm.runInContext('AVTOSALON_EDITABLE', sandbox) };
 }
 
 /* ───────── general site form (behaviour unchanged) ───────── */
@@ -85,7 +94,19 @@ test('site: appends to Sayt arizalari and sanitises formula prefixes', () => {
   assert.equal(r.send(site).ok, true);
   assert.equal(r.siteRows().length, 1);
   assert.equal(r.siteRows()[0][2], "'=bad()");
-  assert.equal(r.siteRows()[0].at(-1), 'Yangi');
+  assert.equal(r.siteRows()[0][r.siteHeader().indexOf('Holat')], 'Yangi');
+});
+test('site: a stored application is confirmed explicitly (saved + the request id), a lost write is not', () => {
+  const r = receiver();
+  const res = r.send({ ...site, submissionId: 'SA-MUH60GB01-A1B2C3D4E5' });
+  assert.deepEqual([res.ok, res.saved, res.submissionId], [true, true, 'SA-MUH60GB01-A1B2C3D4E5']);
+  const lost = receiver({ silentWriteLoss: true });
+  assert.equal(lost.send(site).ok, false);
+});
+test('site: a very long page URL does not reject the application', () => {
+  const r = receiver();
+  assert.equal(r.send({ ...site, page: 'https://www.fazodigital.uz/apply?fbclid=' + 'x'.repeat(5000) }).ok, true);
+  assert.equal(r.siteRows()[0][16].length, 1000);
 });
 test('site: identical retry is acknowledged without a duplicate row', () => {
   const r = receiver(); r.send(site);
@@ -161,12 +182,30 @@ test('1. plain retry with the same id → one row', () => {
   assert.equal(r.avtoRows().length, 1);
 });
 
-test('2. same id with a changed payload → still one row', () => {
+test('2. same id with a changed payload → the stored row is corrected, never a silent success for old data, never a 2nd row', () => {
   const r = receiver(); const a = avto();
-  r.send(a);
-  assert.equal(r.send({ ...a, dealer: 'Boshqa nom', budget: '$5,000–7,000' }).duplicate, true);
+  const first = r.send(a);
+  const changed = r.send({ ...a, dealer: 'Boshqa nom', budget: '$5,000–7,000' });
+  assert.deepEqual([changed.ok, changed.saved, changed.updated, changed.duplicate], [true, true, true, undefined]);
+  assert.notEqual(changed.fingerprint, first.fingerprint, 'the confirmation describes the new data');
   assert.equal(r.avtoRows().length, 1);
-  assert.equal(r.avtoRows()[0][col(r, 'Avtosalon nomi')], 'TEST — AVTOSALON QA');
+  assert.equal(r.avtoRows()[0][col(r, 'Avtosalon nomi')], 'Boshqa nom');
+  assert.equal(r.avtoRows()[0][col(r, 'Marketing + reklama budjeti (oylik)')], '$5,000–7,000');
+  assert.equal(r.avtoRows()[0][col(r, 'Tuzatishlar soni')], 1);
+  // attribution and status are not touched by a correction
+  assert.equal(r.avtoRows()[0][col(r, 'UTM Source')], 'facebook');
+  assert.equal(r.avtoRows()[0][col(r, 'Lead status')], 'Yangi');
+});
+
+test('2b. a row saved by the older script (no fingerprint column) is upgraded in place on retry', () => {
+  const header = ['Ariza ID', 'Avtosalon nomi', 'Lead status'];
+  const a = avto();
+  const r = receiver({ preset: [header, [a.submissionId, 'TEST — AVTOSALON QA', 'Aloqaga chiqildi']] });
+  const res = r.send(a);
+  assert.equal(res.saved, true); assert.equal(typeof res.fingerprint, 'string');
+  assert.equal(r.avtoRows().length, 1);
+  assert.equal(r.avtoRows()[0][col(r, 'Lead status')], 'Aloqaga chiqildi', 'manual status survives');
+  assert.equal(r.send(a).duplicate, true);
 });
 
 test('3. retry after the cache was lost → found by Ariza ID in the sheet, one row', () => {
@@ -197,13 +236,21 @@ test('5. invalid phone / budget / option / goalsOther / id → rejected with the
     [{ instagram: 'bad handle!' }, 'instagram'], [{ website: 'not a site' }, 'website'],
     [{ dealer: 'x'.repeat(161) }, 'dealer'], [{ dealer: 42 }, 'dealer'], [{ problem: 'abc' }, 'problem'],
     [{ submissionId: 'AV-TEST-1' }, 'submissionId'], [{ submissionId: undefined }, 'submissionId'],
-    [{ utm_source: 'x'.repeat(201) }, 'utm_source'],
   ];
   for (const [patch, field] of cases) {
     const res = r.send(avto(patch));
     assert.deepEqual([res.ok, res.error, res.field], [false, 'invalid', field], JSON.stringify(patch));
   }
   assert.equal(r.avtoRows().length, 0);
+});
+
+test('5a. a long ad URL or oversized UTM never blocks a correctly filled application — it is shortened', () => {
+  const r = receiver();
+  const res = r.send(avto({ page: 'https://www.fazodigital.uz/avtosalon?fbclid=' + 'x'.repeat(4000), utm_source: 'u'.repeat(900), referrer: 42 }));
+  assert.equal(res.saved, true, JSON.stringify(res));
+  assert.equal(r.avtoRows()[0][col(r, 'Landing / sahifa manbasi')].length, 1000);
+  assert.equal(r.avtoRows()[0][col(r, 'UTM Source')].length, 200);
+  assert.equal(r.avtoRows()[0][col(r, 'Referrer')], '');
 });
 
 test('5b. valid edge values are accepted (Aniq bilmayman, no Boshqa, website URL, instagram URL, no brand text)', () => {
@@ -266,4 +313,74 @@ test('write failure, silent write loss, busy lock or wrong workbook never report
     assert.deepEqual([res.ok, res.error], [false, 'storage_failed'], JSON.stringify(config));
   }
   assert.deepEqual(receiver({ lockBusy: true }).send(avto()).error, 'busy');
+});
+
+/* ───────── "Ma’lumot izi": Sheets raqamga aylantirmasligi ───────── */
+
+/** Sheets songa aylantiradigan izni beradigan avtosalon arizasini topadi (≈0,1% holat). */
+function numericLookingLead(r, pattern) {
+  for (let i = 0; i < 200000; i++) {
+    const a = avto({ dealer: `TEST salon ${i}` });
+    if (pattern.test(r.fp(r.AV_EDITABLE, a))) return a;
+  }
+  throw new Error('no sample found');
+}
+
+for (const [label, pattern] of [['only digits', /^\d{16}$/], ['digits-e-digits', /^\d+e\d+$/]]) {
+  test(`fingerprint that Sheets would turn into a number (${label}) is stored as text and confirmed`, () => {
+    const r = receiver({ coerce: true });
+    const a = numericLookingLead(r, pattern);
+    const res = r.send(a);
+    assert.deepEqual([res.ok, res.saved], [true, true], JSON.stringify(res));
+    const cell = r.avtoRows()[0][col(r, 'Ma’lumot izi')];
+    assert.equal(cell, 'fp_' + res.fingerprint);
+    assert.equal(res.fingerprint, r.fp(r.AV_EDITABLE, a), 'response carries the raw fingerprint');
+    const again = r.send(a);
+    assert.deepEqual([again.ok, again.duplicate], [true, true]);
+    assert.equal(r.avtoRows().length, 1);
+  });
+}
+
+test('old rows with an unprefixed fingerprint still match (no false correction)', () => {
+  const r = receiver(); const a = avto();
+  const res = r.send(a);
+  const c = col(r, 'Ma’lumot izi');
+  r.avtoTab().rows[1][c] = res.fingerprint; // eski skript prefikssiz yozgan
+  const again = r.send(a);
+  assert.equal(again.duplicate, true);
+  assert.equal(r.avtoRows()[0][col(r, 'Tuzatishlar soni')], '0');
+});
+
+test('correction writes only the changed cells, manual columns are never rewritten', () => {
+  const r = receiver({ preset: [['Ariza ID', 'Avtosalon nomi', 'Hisob (formula)', 'Lead status']] });
+  const a = avto();
+  r.send(a);
+  r.avtoTab().rows[1][2] = '=B2&"!"';
+  r.writes.length = 0;
+  const res = r.send({ ...a, dealer: 'Yangi nom' });
+  assert.equal(res.updated, true);
+  const header = r.avtoTab().rows[0];
+  const written = r.writes.map((w) => header[w.col - 1]).sort();
+  assert.deepEqual(written, ['Avtosalon nomi', 'Ma’lumot izi', 'Tuzatilgan vaqt', 'Tuzatishlar soni'].sort());
+  assert.equal(r.avtoRows()[0][2], '=B2&"!"');
+  assert.equal(r.avtoRows()[0][1], 'Yangi nom');
+});
+
+test('avtosalon: the old goal wording from a still-open page is still accepted', () => {
+  const r = receiver();
+  assert.equal(r.send(avto({ goals: 'CRM va lead nazoratini yo‘lga qo‘yish' })).saved, true);
+  assert.equal(r.send(avto({ goals: 'CRM va murojaatlar nazoratini yo‘lga qo‘yish', phone: '+998 93 000 00 01', telegram: '@other_user' })).saved, true);
+});
+
+test('site: existing columns stay in place, the new attribution columns and Ariza ID are added after Holat', () => {
+  const r = receiver();
+  const id = 'SA-MUH60GB01-A1B2C3D4E5';
+  assert.equal(r.send({ ...site, submissionId: id, utm_medium: 'paid', utm_content: 'reel', utm_term: 'k', fbclid: 'FB', referrer: 'https://l.instagram.com/', utm_source: 'facebook' }).saved, true);
+  const h = r.siteHeader(); const row = r.siteRows()[0];
+  assert.deepEqual(h.slice(0, 18).at(-1), 'Holat');
+  assert.deepEqual(h.slice(18), ['UTM medium', 'UTM content', 'UTM term', 'fbclid', 'Referrer', 'Ariza ID']);
+  assert.equal(row[h.indexOf('Holat')], 'Yangi');
+  assert.equal(row[h.indexOf('UTM source')], 'facebook');
+  for (const [k, v] of [['UTM medium', 'paid'], ['UTM content', 'reel'], ['UTM term', 'k'], ['fbclid', 'FB'], ['Referrer', 'https://l.instagram.com/'], ['Ariza ID', id]]) assert.equal(row[h.indexOf(k)], v, k);
+  assert.equal(row.length, h.length);
 });

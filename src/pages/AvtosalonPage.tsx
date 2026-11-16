@@ -5,12 +5,11 @@ import { AvForm } from '../components/avtosalon/AvForm';
 import { AvCta, Eyebrow, Icon, Section, SectionCta, SectionHead, goToForm } from '../components/avtosalon/AvUi';
 import { AV_FORM_ID, SYSTEM_ID, expectations, form, hero, how, problems, system } from '../content/avtosalon';
 import { captureAttribution, initPixel, track } from '../lib/tracking';
-import { Reveal } from '../ui/Reveal';
+import { Reveal, riseStyle } from '../ui/Reveal';
 import heroWide from '../assets/avtosalon/hero-1600.jpg';
 import heroMid from '../assets/avtosalon/hero-960.jpg';
 import detailImg from '../assets/avtosalon/detail-720.jpg';
 
-const ease = [0.22, 1, 0.36, 1] as const;
 /** 1×1 transparent GIF: each hero <picture> only downloads the photo for its own breakpoint. */
 const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
@@ -40,7 +39,6 @@ function Header() {
 
 /* ───────── 1. Hero ───────── */
 function Hero() {
-  const reduce = useReducedMotion();
   return (
     <section aria-labelledby="av-hero" className="av-hero relative isolate overflow-hidden pt-14 sm:pt-16 lg:flex lg:min-h-[100svh] lg:items-end lg:pb-16 lg:pt-28">
       {/* Mobile / tablet visual: flexes to the space left after header + copy + CTA, so the CTA stays in the first screen */}
@@ -66,36 +64,36 @@ function Hero() {
 
       <div className="av-hero-copy shell grid w-full items-end gap-12 lg:grid-cols-12">
         <div className="lg:col-span-7 xl:col-span-7">
-          <motion.div initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease }}>
+          <div className="rise" style={riseStyle(0, 16, 0.8)}>
             <Eyebrow>{hero.audience}<span className="hidden sm:inline"> · {hero.region}</span></Eyebrow>
-          </motion.div>
-          <motion.h1 id="av-hero" initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08, ease }}
-            className="av-hero-title mt-3 max-w-[16ch] font-bold leading-[1.02] tracking-[-0.04em] sm:mt-6 sm:text-[3.4rem] lg:text-[3.5rem] xl:text-[4.2rem] 2xl:text-[4.8rem]">
+          </div>
+          <h1 id="av-hero" style={riseStyle(0.08, 24, 0.9)}
+            className="rise av-hero-title mt-3 max-w-[16ch] font-bold leading-[1.02] tracking-[-0.04em] sm:mt-6 sm:text-[3.4rem] lg:text-[3.5rem] xl:text-[4.2rem] 2xl:text-[4.8rem]">
             Avtosaloningiz uchun <span className="text-signal">marketing va sotuv</span> tizimini quramiz
-          </motion.h1>
-          <motion.p initial={reduce ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.16, ease }}
-            className="mt-3 max-w-[52ch] text-[1rem] leading-snug text-bone/75 sm:mt-6 sm:text-[1.15rem] sm:leading-relaxed">
+          </h1>
+          <p style={riseStyle(0.16, 20, 0.9)}
+            className="rise mt-3 max-w-[52ch] text-[1rem] leading-snug text-bone/75 sm:mt-6 sm:text-[1.15rem] sm:leading-relaxed">
             <span className="sm:hidden">{hero.textShort}</span><span className="hidden sm:inline">{hero.text}</span>
-          </motion.p>
+          </p>
 
           {/* System indicator */}
-          <motion.ol initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.9, delay: 0.3 }}
-            aria-label="Tizim zanjiri" className="mt-8 hidden flex-wrap sm:flex items-center gap-x-1.5 gap-y-2">
+          <ol style={riseStyle(0.3, 0, 0.9)}
+            aria-label="Tizim zanjiri" className="fade-in mt-8 hidden flex-wrap sm:flex items-center gap-x-1.5 gap-y-2">
             {hero.chain.map((c, i) => (
               <li key={c} className="flex items-center gap-1.5">
-                <motion.span initial={reduce ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 + i * 0.09, ease }}
-                  className={`inline-flex h-8 items-center rounded-full border px-3 font-mono text-[11px] uppercase tracking-[0.1em] backdrop-blur ${i === hero.chain.length - 1 ? 'border-signal/70 bg-signal/10 text-signal' : 'border-line-strong bg-ink/40 text-bone/85'}`}>
+                <span style={riseStyle(0.4 + i * 0.09, 6, 0.5)}
+                  className={`rise inline-flex h-8 items-center rounded-full border px-3 font-mono text-[11px] uppercase tracking-[0.1em] backdrop-blur ${i === hero.chain.length - 1 ? 'border-signal/70 bg-signal/10 text-signal' : 'border-line-strong bg-ink/40 text-bone/85'}`}>
                   {c}
-                </motion.span>
+                </span>
                 {i < hero.chain.length - 1 && <span aria-hidden className="text-[11px] text-signal/70">→</span>}
               </li>
             ))}
-          </motion.ol>
+          </ol>
 
-          <motion.div initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.45, ease }} className="mt-5 sm:mt-10">
+          <div style={riseStyle(0.45, 16, 0.8)} className="rise mt-5 sm:mt-10">
             <AvCta location="hero" className="w-full sm:w-auto">{hero.cta}</AvCta>
             <p className="mt-4 hidden max-w-[46ch] sm:block text-[0.9rem] leading-snug text-mist">{hero.note}</p>
-          </motion.div>
+          </div>
         </div>
 
       </div>
@@ -104,11 +102,11 @@ function Hero() {
 }
 
 /* ───────── 2. Problems (4) ───────── */
-const PROBLEM_ICONS = ['quality', 'chart', 'lost', 'team'];
+const PROBLEM_ICONS = ['chart', 'lost', 'crm', 'team'];
 function Problems() {
   return (
     <Section labelledBy="av-problems">
-      <SectionHead index="01" eyebrow={problems.eyebrow} title={problems.title} id="av-problems" />
+      <SectionHead index="01" eyebrow={problems.eyebrow} title={problems.title} text={problems.text} id="av-problems" />
       <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-4">
         {problems.cards.map((c, i) => (
           <Reveal as="li" key={c.t} delay={i * 0.06}
@@ -118,7 +116,8 @@ function Problems() {
             <div className="flex gap-4 sm:block">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] border border-line-strong text-signal"><Icon name={PROBLEM_ICONS[i]} /></span>
               <div className="pr-6 sm:pr-0">
-                <h3 className="text-[1.1rem] font-semibold uppercase leading-snug tracking-[0.01em] text-bone sm:mt-8 sm:text-[1.15rem]">{c.t}</h3>
+                <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-signal sm:mt-8">{c.at}</p>
+                <h3 className="mt-1.5 text-[1.1rem] font-semibold uppercase leading-snug tracking-[0.01em] text-bone sm:text-[1.15rem]">{c.t}</h3>
                 <p className="mt-1.5 text-[0.95rem] leading-relaxed text-mist sm:mt-2">{c.d}</p>
               </div>
             </div>
@@ -132,7 +131,6 @@ function Problems() {
 
 /* ───────── 3. Marketing → Sotuv — one system (was: system flow + bridge + team) ───────── */
 function FlowColumn({ title, items, tone }: { title: string; items: string[]; tone: 'marketing' | 'sales' }) {
-  const reduce = useReducedMotion();
   const accent = tone === 'sales';
   return (
     <div className={`relative h-full rounded-[18px] border p-6 sm:p-8 ${accent ? 'border-signal/35 bg-[linear-gradient(160deg,rgba(245,195,59,0.08),rgba(11,11,13,0.9)_55%)]' : 'border-line-strong bg-surface-1/80'}`}>
@@ -143,11 +141,10 @@ function FlowColumn({ title, items, tone }: { title: string; items: string[]; to
       <ol className="relative mt-6">
         <span aria-hidden className={`absolute bottom-5 left-[15px] top-5 w-px ${accent ? 'bg-gradient-to-b from-signal/70 to-signal/15' : 'bg-gradient-to-b from-bone/30 to-line'}`} />
         {items.map((it, i) => (
-          <motion.li key={it} initial={reduce ? false : { opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '0px 0px -10% 0px' }}
-            transition={{ duration: 0.5, delay: i * 0.06, ease }} className="relative flex items-center gap-4 py-1.5">
+          <Reveal as="li" key={it} y={10} delay={i * 0.06} className="relative flex items-center gap-4 py-1.5">
             <span className={`relative z-10 flex h-[31px] w-[31px] shrink-0 items-center justify-center rounded-full border font-mono text-[10.5px] ${accent ? 'border-signal/70 bg-ink text-signal' : i === items.length - 1 ? 'border-signal bg-signal font-semibold text-ink' : 'border-line-strong bg-ink text-mist'}`}>{String(i + 1).padStart(2, '0')}</span>
             <span className="text-[1rem] font-medium text-bone/90 sm:text-[1.05rem]">{it}</span>
-          </motion.li>
+          </Reveal>
         ))}
       </ol>
     </div>
@@ -313,7 +310,7 @@ function MiniFooter() {
         <Logo className="text-[14px]" markClass="h-5" />
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <span>FAZO Digital © 2026</span>
-          <a href="/privacy" target="_blank" rel="noopener" className="transition-colors hover:text-bone">Maxfiylik siyosati</a>
+          <a href="/privacy" target="_blank" rel="noopener" className="tap transition-colors hover:text-bone">Maxfiylik siyosati</a>
         </div>
       </div>
     </footer>

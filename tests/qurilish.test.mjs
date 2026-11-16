@@ -23,7 +23,7 @@ function receiver() {
       getRange: (r, c, nr = 1, nc = 1) => {
         const api = {
           getValues: () => [(tab.rows[r - 1] || []).slice(c - 1, c - 1 + nc)],
-          setValues: (v) => { tab.rows[r - 1] = v[0]; return api; },
+          setValues: (v) => { const row = [...(tab.rows[r - 1] || [])]; v[0].forEach((x, k) => { row[c - 1 + k] = x; }); tab.rows[r - 1] = row; return api; },
           setFontWeight: () => api,
           createTextFinder: (text) => ({ matchEntireCell() { return this; }, findNext() {
             for (let i = r; i < r + nr; i++) if (tab.rows[i - 1] && String(tab.rows[i - 1][c - 1]) === text) return { getRow: () => i };
@@ -117,4 +117,54 @@ test('budget is optional now (6-field form), older payloads with budget and old 
     stage: 'Qurilish tugagan / sotuv davom etmoqda', problem: 'Reklama ishlayapti, lekin natija qoniqtirmaydi' }));
   assert.equal(old.ok, true); assert.equal(old.saved, true);
   assert.equal(r.send(valid({ submissionId: 'QR-MFX12AB-NEWSTAGE01', phone: '+998 91 000 00 02', stage: 'Qurilish tugagan, sotuv davom etmoqda' })).ok, true);
+});
+
+/* ───────── lost reply, changed data, long URLs ───────── */
+
+const tsModule = async (rel) => {
+  const src = await readFile(new URL(rel, import.meta.url), 'utf8');
+  const out = ts.transpileModule(src, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText;
+  return import(`data:text/javascript;base64,${Buffer.from(out).toString('base64')}`);
+};
+const fp = await tsModule('../src/lib/leadFingerprint.ts');
+
+test('client and server compute the same fingerprint for a qurilish lead', () => {
+  const r = receiver();
+  const res = r.send(valid());
+  assert.equal(res.fingerprint, fp.leadFingerprint(fp.QR_FINGERPRINT_FIELDS, valid()));
+  // formatting and attribution do not change it; a real change does
+  assert.equal(fp.leadFingerprint(fp.QR_FINGERPRINT_FIELDS, valid({ name: '  Aziz ', phone: '+998901234567', page: 'x' })), res.fingerprint);
+  assert.notEqual(fp.leadFingerprint(fp.QR_FINGERPRINT_FIELDS, valid({ phone: '+998 90 123 45 68' })), res.fingerprint);
+});
+
+test('lost reply, then the visitor changes the data: the same id is corrected in place and confirmed with the NEW data', () => {
+  const r = receiver();
+  const first = r.send(valid()); // stored, but the answer never reaches the browser
+  const second = r.send(valid({ phone: '+998 91 765 43 21', company: 'To‘g‘ri nom' }));
+  assert.deepEqual([second.ok, second.saved, second.updated], [true, true, true]);
+  assert.notEqual(second.fingerprint, first.fingerprint);
+  assert.equal(second.fingerprint, fp.leadFingerprint(fp.QR_FINGERPRINT_FIELDS, valid({ phone: '+998 91 765 43 21', company: 'To‘g‘ri nom' })));
+  const tab = r.tabs.get('QURILISH LEADLAR'); const h = tab.rows[0];
+  assert.equal(tab.rows.length, 2, 'still one lead');
+  assert.equal(tab.rows[1][h.indexOf('Telefon')], "'+998 91 765 43 21");
+  assert.equal(tab.rows[1][h.indexOf('Kompaniya')], 'To‘g‘ri nom');
+  assert.equal(tab.rows[1][h.indexOf('Tuzatishlar soni')], 1);
+  // the identical request again is a plain duplicate
+  assert.equal(r.send(valid({ phone: '+998 91 765 43 21', company: 'To‘g‘ri nom' })).duplicate, true);
+});
+
+test('corrections are capped; the cap is reported, not hidden behind a success', () => {
+  const r = receiver(); r.send(valid());
+  for (let i = 0; i < 5; i++) assert.equal(r.send(valid({ company: `Nom ${i}` })).updated, true);
+  const over = r.send(valid({ company: 'Yana' }));
+  assert.deepEqual([over.ok, over.error], [false, 'too_many_corrections']);
+});
+
+test('a long ad URL in the hidden page field never blocks a valid application', () => {
+  const r = receiver();
+  const res = r.send(valid({ page: 'https://www.fazodigital.uz/qurilish?fbclid=' + 'a'.repeat(6000), utm_campaign: 'c'.repeat(700), referrer: 'r'.repeat(900) }));
+  assert.equal(res.saved, true, JSON.stringify(res));
+  const tab = r.tabs.get('QURILISH LEADLAR'); const h = tab.rows[0];
+  assert.equal(tab.rows[1][h.indexOf('Landing / sahifa manbasi')].length, 1000);
+  assert.equal(tab.rows[1][h.indexOf('UTM Campaign')].length, 200);
 });
