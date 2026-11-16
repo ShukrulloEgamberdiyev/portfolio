@@ -72,7 +72,7 @@ test('server option lists match the /ishlab-chiqarish form options exactly', () 
   const { IC } = receiver();
   for (const k of ['channel', 'budget']) assert.deepEqual(IC[k], OPT[k], k);
   assert.deepEqual(OPT.budget, ['$500–$1,000', '$1,000–$3,000', '$3,000+', 'Budjet bo‘yicha tavsiya kerak']);
-  assert.deepEqual(OPT.channel, ['Chakana', 'Optom / B2B', 'Chakana + Optom']);
+  assert.deepEqual(OPT.channel, ['Chakana', 'Optom', 'Chakana + Optom']);
 });
 
 test('verified case figures are unchanged', () => {
@@ -205,4 +205,10 @@ test('per-phone limit applies to new submissions, not to retries or corrections'
   for (let i = 0; i < 3; i++) assert.equal(r.send(valid({ submissionId: `IC-MFX12AB-ABCDEF12${i}0` })).ok, true);
   assert.equal(r.send(valid({ submissionId: 'IC-MFX12AB-ABCDEF1200', problem: 'tuzatildi' })).updated, true);
   assert.equal(r.send(valid({ submissionId: 'IC-MFX12AB-ABCDEF1299' })).error, 'contact_rate_limited');
+});
+
+test('old channel value "Optom / B2B" from a still-open page is still accepted', () => {
+  const r = receiver();
+  const res = r.send({ ...valid(), channel: 'Optom / B2B' });
+  assert.equal(res.saved, true, JSON.stringify(res));
 });

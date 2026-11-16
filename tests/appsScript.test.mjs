@@ -363,3 +363,9 @@ test('correction writes only the changed cells, manual columns are never rewritt
   assert.equal(r.avtoRows()[0][2], '=B2&"!"');
   assert.equal(r.avtoRows()[0][1], 'Yangi nom');
 });
+
+test('avtosalon: the old goal wording from a still-open page is still accepted', () => {
+  const r = receiver();
+  assert.equal(r.send(avto({ goals: 'CRM va lead nazoratini yo‘lga qo‘yish' })).saved, true);
+  assert.equal(r.send(avto({ goals: 'CRM va murojaatlar nazoratini yo‘lga qo‘yish', phone: '+998 93 000 00 01', telegram: '@other_user' })).saved, true);
+});

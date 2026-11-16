@@ -112,8 +112,10 @@ const AV = {
   crm: ['Ha', 'Yo‘q', 'Bilmayman'],
   leadSystem: ['CRM', 'Google Sheets', 'Excel', 'Telegram', 'Tizim yo‘q', 'Boshqa'],
   goals: ['Sifatli murojaatlar sonini oshirish', 'Marketingni to‘liq tizimlashtirish', 'Target reklamani kuchaytirish',
-    'Kontent va brend ko‘rinishini yaxshilash', 'CRM va lead nazoratini yo‘lga qo‘yish', 'Mavjud sotuv bo‘limini kuchaytirish',
+    'Kontent va brend ko‘rinishini yaxshilash', 'CRM va murojaatlar nazoratini yo‘lga qo‘yish', 'Mavjud sotuv bo‘limini kuchaytirish',
     'Sotuv bo‘limini noldan qurish', 'Marketing va sotuvni bitta tizimga bog‘lash', 'Kompleks marketing va sotuv boshqaruvi', 'Boshqa'],
+  // Oldingi forma matni: eski sahifa yoki ochiq qolgan tab yuborsa ham qabul qilinadi.
+  legacy: { goals: ['CRM va lead nazoratini yo‘lga qo‘yish'] },
 };
 
 /* ───────── Qurilish (turar joy quruvchilari) arizasi ───────── */
@@ -189,8 +191,9 @@ const MAX_CORRECTIONS = 5;
 
 /* Frontend (src/content/ishlab.ts → OPT) bilan bir xil ruxsat etilgan qiymatlar. */
 const IC = {
-  channel: ['Chakana', 'Optom / B2B', 'Chakana + Optom'],
+  channel: ['Chakana', 'Optom', 'Chakana + Optom'],
   budget: ['$500–$1,000', '$1,000–$3,000', '$3,000+', 'Budjet bo‘yicha tavsiya kerak'],
+  legacy: { channel: ['Optom / B2B'] }, // oldingi forma qiymati — eski sahifadan kelsa ham qabul qilinadi
 };
 
 /* ───────── Limitlar (sozlanadi) ─────────
@@ -380,7 +383,7 @@ function validateAvtosalon(d) {
   const goalsRaw = str('goals');
   if (!goalsRaw) return 'goals';
   const goals = goalsRaw.split('; ');
-  if (goals.some(function (g) { return AV.goals.indexOf(g) < 0; }) || hasDuplicates(goals)) return 'goals';
+  if (goals.some(function (g) { return AV.goals.indexOf(g) < 0 && AV.legacy.goals.indexOf(g) < 0; }) || hasDuplicates(goals)) return 'goals';
   if (goals.indexOf('Boshqa') >= 0) {
     if (!within('goalsOther', 2, MAX_LEN.goalsOther)) return 'goalsOther';
   } else if (!optional('goalsOther', MAX_LEN.goalsOther)) return 'goalsOther';
@@ -617,7 +620,7 @@ function validateIshlab(d) {
   if (!/^\+998\d{9}$/.test((str('phone') || '').replace(/[\s()-]/g, ''))) return 'phone';
   if (!within('product', 2, MAX_LEN.dealer)) return 'product';
   if (!within('region', 2, 120)) return 'region';
-  if (!oneOf('channel', IC.channel)) return 'channel';
+  if (!oneOf('channel', IC.channel) && !oneOf('channel', IC.legacy.channel)) return 'channel';
   if (!oneOf('budget', IC.budget)) return 'budget';
   if (!optional('problem', MAX_LEN.problem)) return 'problem';
 

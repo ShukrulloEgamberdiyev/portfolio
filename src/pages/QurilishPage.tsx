@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { QrForm } from '../components/qurilish/QrForm';
 import { Dotted, QrCta } from '../components/qurilish/QrUi';
-import { CTA, QR_FORM_ID, hero, offer, problem, register, system } from '../content/qurilish';
+import { CTA, QR_FORM_ID, hero, offer, problem, process, register, system } from '../content/qurilish';
 import { captureAttribution, initPixel, track } from '../lib/tracking';
 import { Reveal, riseStyle } from '../ui/Reveal';
 import mark from '../assets/fazo-mark.png';
@@ -112,7 +112,35 @@ function Problem() {
   );
 }
 
-/* ───────── B. System + C. Partnership ───────── */
+/* ───────── B. What the service does: the path of a targeted enquiry ───────── */
+function Process() {
+  return (
+    <section aria-labelledby="qr-process" className="border-t border-line py-12 sm:py-16 lg:py-20">
+      <div className="shell grid gap-8 lg:grid-cols-12 lg:gap-14">
+        <Reveal className="lg:col-span-5">
+          <h2 id="qr-process" className="text-[1.8rem] font-bold leading-[1.05] tracking-[-0.035em] sm:text-[2.4rem] lg:text-[2.8rem]">{process.title}</h2>
+          <p className="mt-4 max-w-[46ch] text-[1rem] leading-relaxed text-mist sm:text-[1.05rem]">{process.text}</p>
+        </Reveal>
+        <div className="lg:col-span-7">
+          <ol className="divide-y divide-line border-y border-line">
+            {process.steps.map((s, i) => (
+              <Reveal as="li" key={s.t} delay={i * 0.05} className="grid grid-cols-[2.25rem_1fr] gap-x-3 py-5 sm:grid-cols-[3rem_1fr] sm:py-6">
+                <span aria-hidden className="tabular pt-0.5 font-mono text-[12px] text-violet">0{i + 1}</span>
+                <div>
+                  <h3 className="text-[1.08rem] font-semibold leading-snug tracking-[-0.01em] text-bone sm:text-[1.2rem]">{s.t}</h3>
+                  <p className="mt-1.5 text-[0.95rem] leading-relaxed text-mist sm:text-[1rem]">{s.d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ol>
+          <p className="mt-4 text-[0.9rem] text-ash">{process.note}</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────── C. System + D. Partnership ───────── */
 function SystemOffer() {
   return (
     <section aria-labelledby="qr-system" className="border-t border-line py-12 sm:py-16 lg:py-20">
@@ -215,6 +243,7 @@ export default function QurilishPage() {
     <div className="relative">
       <Hero />
       <Problem />
+      <Process />
       <SystemOffer />
       <Registration />
       <MiniFooter />

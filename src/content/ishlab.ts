@@ -13,8 +13,8 @@ export const hero = {
   eyebrow: 'Ishlab chiqarish bizneslari uchun',
   titleA: 'Mahsulot ishlab chiqarasiz.',
   titleB: 'Biz unga mijoz olib keladigan marketing tizimini quramiz.',
-  text: 'FAZO Digital ishlab chiqarish bizneslari uchun strategiya, kontent, reklama, landing, CRM va sotuv jarayonlarini yagona tizimga bog‘laydi.',
-  chain: ['Strategiya', 'Reklama', 'Lead', 'CRM', 'Sotuv jarayoni'],
+  text: 'FAZO Digital ishlab chiqarish bizneslari uchun strategiya, kontent, reklama, sahifa, CRM va sotuv jarayonlarini yagona tizimga bog‘laydi.',
+  chain: ['Strategiya', 'Reklama', 'Murojaat', 'CRM', 'Sotuv jarayoni'],
   cta: 'Loyihani muhokama qilish',
   ctaSecondary: 'Tizim qanday ishlaydi?',
 };
@@ -25,10 +25,10 @@ export const problem = {
   text: 'Sex ishlayapti. Mahsulot tayyor. Jamoa bor. Lekin yangi buyurtmalar tizimli kelmasa, ishlab chiqarish imkoniyatidan to‘liq foydalanish qiyinlashadi.',
   cards: [
     { t: 'Reklama bor, lekin tizim yo‘q', d: 'Kampaniyalar ishlaydi, ammo qaysi reklama real mijoz olib kelayotgani aniq kuzatilmaydi.' },
-    { t: 'Kontent bor, lekin sotuvga bog‘lanmagan', d: 'Instagram yuritiladi, lekin kontentdan lead va keyingi sotuv jarayonigacha aniq yo‘l qurilmagan.' },
-    { t: 'Lead keladi, keyin yo‘qoladi', d: 'Murojaat tushadi, lekin follow-up va nazorat bo‘lmagani sabab ayrim potensial mijozlar yo‘qoladi.' },
-    { t: 'Optom va chakana aralashib ketgan', d: '1 dona mahsulot oladigan xaridor bilan katta hajmda xarid qiladigan mijozga bir xil offer ishlatiladi.' },
-    { t: 'Mijoz manbasi noma’lum', d: 'Qaysi kanal, kreativ yoki offer yaxshi ishlayotganini ko‘rsatadigan analitika yetarli emas.' },
+    { t: 'Kontent bor, lekin sotuvga bog‘lanmagan', d: 'Instagram yuritiladi, lekin kontentdan murojaat va keyingi sotuv jarayonigacha aniq yo‘l qurilmagan.' },
+    { t: 'Murojaat keladi, keyin yo‘qoladi', d: 'Murojaat tushadi, lekin qayta aloqa va nazorat bo‘lmagani sabab ayrim potensial mijozlar yo‘qoladi.' },
+    { t: 'Optom va chakana aralashib ketgan', d: '1 dona mahsulot oladigan xaridor bilan katta hajmda xarid qiladigan mijozga bir xil taklif beriladi.' },
+    { t: 'Mijoz manbasi noma’lum', d: 'Qaysi kanal, reklama materiali yoki taklif yaxshi ishlayotganini ko‘rsatadigan analitika yetarli emas.' },
     { t: 'Marketing bo‘laklarga bo‘lingan', d: 'SMM boshqa tomonda, target boshqa tomonda, sotuv bo‘limi esa alohida ishlaydi.' },
   ],
   statement: 'Muammo faqat reklamada bo‘lmasligi mumkin. Muammo butun jarayon bir-biriga ulanmaganida bo‘lishi mumkin.',
@@ -48,7 +48,7 @@ export const diagnostics = {
     { t: 'Mahsulot va taklif', d: 'Assortiment, narx va xaridorga beriladigan taklif' },
     { t: 'Bozor va auditoriya', d: 'Kim sotib oladi, qayerda va qanday hajmda' },
     { t: 'Hozirgi marketing', d: 'Reklama, kontent va murojaat manbalari' },
-    { t: 'Sotuv jarayoni', d: 'Lead qanday qabul qilinadi va kim bilan ishlaydi' },
+    { t: 'Sotuv jarayoni', d: 'Murojaat qanday qabul qilinadi va u bilan kim ishlaydi' },
   ],
   cta: 'Biznesimni tahlil qilish',
 };
@@ -59,22 +59,22 @@ export const channels = {
   text: 'Chakana xaridor va katta hajmda xarid qiluvchi mijoz bir xil qaror qabul qilmaydi. Shuning uchun ularga bir xil reklama ko‘rsatish shart emas.',
   cards: [
     {
-      tag: 'Chakana / B2C',
+      tag: 'Chakana',
       qty: '1',
       title: 'Oxirgi xaridorga sotish',
-      text: 'Mahsulotni bevosita iste’molchiga sotish uchun alohida offer, kreativ va reklama voronkasi quriladi.',
+      text: 'Mahsulotni bevosita iste’molchiga sotish uchun alohida taklif, reklama materiallari va reklama yo‘li quriladi.',
       segmentsLabel: 'Kimlar uchun',
-      segments: ['Uy uchun xarid qiluvchilar', 'Individual buyurtmachilar', 'Retail xaridorlar'],
-      flow: ['Kreativ', 'Reklama', 'Landing / Direct', 'Lead', 'Menejer'],
+      segments: ['Uy uchun xarid qiluvchilar', 'Individual buyurtmachilar', 'Do‘kondan xarid qiluvchilar'],
+      flow: ['Reklama materiali', 'Reklama', 'Sahifa / Direct', 'Murojaat', 'Menejer'],
     },
     {
-      tag: 'Optom / B2B',
+      tag: 'Optom',
       qty: '50',
       title: 'Katta hajmdagi mijozlarni jalb qilish',
-      text: 'Optom va korporativ mijozlar uchun alohida kommunikatsiya, offer va lead yig‘ish tizimi quriladi.',
+      text: 'Optom va korporativ mijozlar uchun alohida muloqot, taklif va murojaat yig‘ish tizimi quriladi.',
       segmentsLabel: 'Segmentlar',
-      segments: ['Dilerlar', 'Resellerlar', 'Do‘konlar', 'Mehmonxonalar', 'Hostellar', 'Tashkilotlar', 'Korporativ xaridorlar', 'Boshqa bizneslar'],
-      flow: ['B2B offer', 'Reklama', 'Landing', 'Ariza', 'CRM', 'Sotuv menejeri'],
+      segments: ['Dilerlar', 'Qayta sotuvchilar', 'Do‘konlar', 'Mehmonxonalar', 'Hostellar', 'Tashkilotlar', 'Korporativ xaridorlar', 'Boshqa bizneslar'],
+      flow: ['Optom taklifi', 'Reklama', 'Sahifa', 'Ariza', 'CRM', 'Sotuv menejeri'],
     },
   ],
   example: '1 dona krovat oladigan xaridor bilan 50 dona oladigan biznes egasiga bir xil reklama ishlamasligi kerak.',
@@ -86,14 +86,14 @@ export const system = {
   text: 'Bizning vazifamiz faqat reklama yoqish emas. Potensial mijoz reklamangizni ko‘rganidan boshlab sotuv jamoasiga yetib borgunigacha bo‘lgan yo‘lni bir tizimga bog‘lash.',
   stages: [
     { t: 'Strategiya', d: 'Bozor, auditoriya, maqsad' },
-    { t: 'Offer', d: 'Nima uchun aynan sizdan' },
-    { t: 'Kontent', d: 'Kreativ, syomka, dizayn' },
+    { t: 'Taklif', d: 'Nima uchun aynan sizdan' },
+    { t: 'Kontent', d: 'Reklama materiallari, suratga olish, dizayn' },
     { t: 'Target reklama', d: 'Kerakli auditoriyaga chiqish' },
-    { t: 'Landing / Direct', d: 'Murojaat qabul qilinadigan joy' },
-    { t: 'Lead', d: 'Qiziqqan potensial mijoz' },
+    { t: 'Sahifa / Direct', d: 'Murojaat qabul qilinadigan joy' },
+    { t: 'Murojaat', d: 'Qiziqqan potensial mijoz' },
     { t: 'CRM', d: 'Har bir murojaat nazoratda' },
     { t: 'Menejer', d: 'Tezkor aloqa va taklif' },
-    { t: 'Follow-up', d: 'Qaror qabul qilguncha aloqa' },
+    { t: 'Qayta aloqa', d: 'Qaror qabul qilguncha aloqa' },
     { t: 'Natija va analitika', d: 'Qaysi kanal ishlayotgani ko‘rinadi' },
   ],
   focus: 5,
@@ -103,7 +103,7 @@ export const system = {
     { name: 'Sotuv jarayoni', from: 6, to: 8 },
     { name: 'Nazorat', from: 9, to: 9 },
   ],
-  highlightA: 'Lead olib kelishning o‘zi yetarli emas.',
+  highlightA: 'Murojaat olib kelishning o‘zi yetarli emas.',
   highlightB: 'Uni yo‘qotmaslik ham kerak.',
 };
 
@@ -112,12 +112,12 @@ export const modules = {
   title: 'Biznesingiz uchun kerakli qismlarni bitta tizimga yig‘amiz.',
   note: 'Qaysi qismlar kerakligi biznesning hozirgi holatiga qarab aniqlanadi.',
   items: [
-    { t: 'Marketing strategiyasi', d: 'Pozitsioning, auditoriya, raqobatchilar, offer va reklama strategiyasi.' },
-    { t: 'Kontent', d: 'Kreativ konseptlar, syomka, Reels, dizayn, copywriting va reklama materiallari.' },
-    { t: 'Target reklama', d: 'Segmentatsiya, kampaniyalar, retargeting va reklama optimizatsiyasi.' },
-    { t: 'Landing', d: 'Kerak bo‘lsa mahsulot, optom yo‘nalish yoki alohida offer uchun landing page.' },
-    { t: 'CRM', d: 'Leadlar, statuslar, follow-up va menejerlar ishini nazorat qilish tizimi.' },
-    { t: 'Sotuv jarayoni', d: 'Kerak bo‘lsa sotuv skriptlari, KPI, menejerlar jarayoni va lead bilan ishlash tizimini shakllantirish.' },
+    { t: 'Marketing strategiyasi', d: 'Pozitsioning, auditoriya, raqobatchilar, taklif va reklama strategiyasi.' },
+    { t: 'Kontent', d: 'Reklama g‘oyalari, suratga olish, Reels, dizayn, reklama matnlari va materiallari.' },
+    { t: 'Target reklama', d: 'Auditoriyani ajratish, kampaniyalar, qiziqqanlarga qayta reklama va reklamani yaxshilash.' },
+    { t: 'Sahifa', d: 'Kerak bo‘lsa mahsulot, optom yo‘nalish yoki alohida taklif uchun alohida sahifa.' },
+    { t: 'CRM', d: 'Murojaatlar, ularning holati, qayta aloqa va menejerlar ishini nazorat qilish tizimi.' },
+    { t: 'Sotuv jarayoni', d: 'Kerak bo‘lsa suhbat skriptlari, ish ko‘rsatkichlari, menejerlar jarayoni va murojaat bilan ishlash tizimini shakllantirish.' },
   ],
 };
 
@@ -138,7 +138,7 @@ export const caseStudy = {
   ],
   story: [
     { k: 'Vazifa', d: 'Mebel mahsulotlariga yangi mijozlar oqimini yaratish va reklama orqali kelayotgan talabni sotuv jarayoniga bog‘lash.' },
-    { k: 'Yondashuv', d: 'Mahsulot offerlari, reklama kreativlari, auditoriyalar va lead bilan ishlash jarayoni ustida ishladik.' },
+    { k: 'Yondashuv', d: 'Mahsulot takliflari, reklama materiallari, auditoriyalar va murojaat bilan ishlash jarayoni ustida ishladik.' },
     { k: 'Natija', d: 'Ko‘rsatilgan davr ichida reklama orqali kelgan mijozlar hisobiga 404 dona mahsulot sotildi.' },
   ],
   disclaimer: 'Bu natija aynan ushbu loyiha va ko‘rsatilgan davrga tegishli. Natijalar mahsulot, narx, bozor, reklama budjeti va sotuv jarayoniga qarab farq qiladi.',
@@ -159,8 +159,8 @@ export const states = {
   title: 'Hozir biznesingiz qaysi bosqichda?',
   items: [
     { t: 'Ishlab chiqarish bor. Marketing tizimi yo‘q.', d: 'Noldan mijoz jalb qilish tizimini shakllantiramiz.' },
-    { t: 'Reklama bor. Natija qoniqtirmaydi.', d: 'Amaldagi marketing, offer, kreativ va lead jarayonini tahlil qilib, zaif nuqtalarni aniqlaymiz.' },
-    { t: 'Leadlar keladi. Sotuv jarayoni sust.', d: 'CRM, follow-up va menejerlar bilan ishlash jarayonini tartibga solishga yordam beramiz.' },
+    { t: 'Reklama bor. Natija qoniqtirmaydi.', d: 'Amaldagi marketing, taklif, reklama materiallari va murojaat jarayonini tahlil qilib, zaif nuqtalarni aniqlaymiz.' },
+    { t: 'Murojaatlar keladi. Sotuv jarayoni sust.', d: 'CRM, qayta aloqa va menejerlar bilan ishlash jarayonini tartibga solishga yordam beramiz.' },
   ],
   cta: 'Qaysi bosqichdaligimni aniqlash',
 };
@@ -171,10 +171,10 @@ export const process = {
   steps: [
     { t: 'Ariza', d: 'Biznesingiz haqida asosiy ma’lumotlarni olamiz.' },
     { t: 'Diagnostika', d: 'Mahsulot, bozor, marketing va sotuv jarayonini ko‘rib chiqamiz.' },
-    { t: 'Strategiya', d: 'Auditoriya, offer va mijoz jalb qilish modelini belgilaymiz.' },
-    { t: 'Tizimni qurish', d: 'Kerakli kontent, reklama, landing, CRM va boshqa qismlar tayyorlanadi.' },
-    { t: 'Ishga tushirish', d: 'Kampaniyalar ishga tushadi va lead oqimi kuzatiladi.' },
-    { t: 'Optimallashtirish', d: 'Natijalarga qarab kreativlar, reklama va jarayonlar yaxshilanadi.' },
+    { t: 'Strategiya', d: 'Auditoriya, taklif va mijoz jalb qilish modelini belgilaymiz.' },
+    { t: 'Tizimni qurish', d: 'Kerakli kontent, reklama, sahifa, CRM va boshqa qismlar tayyorlanadi.' },
+    { t: 'Ishga tushirish', d: 'Kampaniyalar ishga tushadi va murojaatlar oqimi kuzatiladi.' },
+    { t: 'Optimallashtirish', d: 'Natijalarga qarab reklama materiallari, reklama va jarayonlar yaxshilanadi.' },
   ],
 };
 
@@ -197,10 +197,10 @@ export const faq = {
   eyebrow: 'Savollar',
   title: 'Ko‘p beriladigan savollar.',
   items: [
-    { q: 'Faqat target reklama qilib berasizlarmi?', a: 'Bizning asosiy yondashuvimiz faqat reklama kabinetini boshqarish emas. Reklama natijasi offer, kreativ, landing va sotuv jarayoniga ham bog‘liq bo‘lgani uchun loyihaga tizim sifatida qaraymiz.' },
-    { q: 'Kontentni ham tayyorlaysizlarmi?', a: 'Loyiha ehtiyojiga qarab syomka, montaj, dizayn, copywriting va reklama kreativlarini tayyorlash jarayonga kiritilishi mumkin.' },
-    { q: 'CRM bo‘lmasa nima qilamiz?', a: 'Kerak bo‘lsa leadlarni yig‘ish, statuslar va follow-up jarayonini nazorat qilish uchun CRM tizimini qurishga yordam beramiz.' },
-    { q: 'Sotuv bo‘limimiz bo‘lmasa-chi?', a: 'Loyiha ehtiyojiga qarab sotuv jarayoni, skriptlar, KPI va menejerlar bilan ishlash tizimini shakllantirishga yordam berishimiz mumkin.' },
+    { q: 'Faqat target reklama qilib berasizlarmi?', a: 'Bizning asosiy yondashuvimiz faqat reklama kabinetini boshqarish emas. Reklama natijasi taklif, reklama materiallari, sahifa va sotuv jarayoniga ham bog‘liq bo‘lgani uchun loyihaga tizim sifatida qaraymiz.' },
+    { q: 'Kontentni ham tayyorlaysizlarmi?', a: 'Loyiha ehtiyojiga qarab suratga olish, montaj, dizayn, reklama matnlari va materiallarini tayyorlash jarayonga kiritilishi mumkin.' },
+    { q: 'CRM bo‘lmasa nima qilamiz?', a: 'Kerak bo‘lsa murojaatlarni yig‘ish, ularning holati va qayta aloqa jarayonini nazorat qilish uchun CRM tizimini qurishga yordam beramiz.' },
+    { q: 'Sotuv bo‘limimiz bo‘lmasa-chi?', a: 'Loyiha ehtiyojiga qarab sotuv jarayoni, suhbat skriptlari, ish ko‘rsatkichlari va menejerlar bilan ishlash tizimini shakllantirishga yordam berishimiz mumkin.' },
     { q: 'Faqat Toshkentdagi bizneslar bilan ishlaysizlarmi?', a: 'Yo‘q. O‘zbekiston bo‘ylab ishlab chiqarish bizneslari bilan loyihalarni ko‘rib chiqamiz.' },
     { q: 'Qancha reklama budjeti kerak?', a: 'Bu mahsulot, hudud, auditoriya va maqsadga bog‘liq. Diagnostikadan keyin loyiha uchun real reklama budjeti bo‘yicha tavsiya beriladi.' },
     { q: 'Natija qancha vaqtda chiqadi?', a: 'Aniq muddatni oldindan kafolatlab bo‘lmaydi. Natija mahsulot, narx, bozor, reklama budjeti va sotuv jarayoniga bog‘liq. Dastlabki ma’lumotlar asosida kampaniyalar bosqichma-bosqich optimallashtiriladi.' },
@@ -248,6 +248,6 @@ export const form = {
 };
 
 export const OPT = {
-  channel: ['Chakana', 'Optom / B2B', 'Chakana + Optom'],
+  channel: ['Chakana', 'Optom', 'Chakana + Optom'],
   budget: ['$500–$1,000', '$1,000–$3,000', '$3,000+', 'Budjet bo‘yicha tavsiya kerak'],
 };

@@ -102,11 +102,11 @@ function Hero() {
 }
 
 /* ───────── 2. Problems (4) ───────── */
-const PROBLEM_ICONS = ['quality', 'chart', 'lost', 'team'];
+const PROBLEM_ICONS = ['chart', 'lost', 'crm', 'team'];
 function Problems() {
   return (
     <Section labelledBy="av-problems">
-      <SectionHead index="01" eyebrow={problems.eyebrow} title={problems.title} id="av-problems" />
+      <SectionHead index="01" eyebrow={problems.eyebrow} title={problems.title} text={problems.text} id="av-problems" />
       <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4 lg:gap-4">
         {problems.cards.map((c, i) => (
           <Reveal as="li" key={c.t} delay={i * 0.06}
@@ -116,7 +116,8 @@ function Problems() {
             <div className="flex gap-4 sm:block">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] border border-line-strong text-signal"><Icon name={PROBLEM_ICONS[i]} /></span>
               <div className="pr-6 sm:pr-0">
-                <h3 className="text-[1.1rem] font-semibold uppercase leading-snug tracking-[0.01em] text-bone sm:mt-8 sm:text-[1.15rem]">{c.t}</h3>
+                <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-signal sm:mt-8">{c.at}</p>
+                <h3 className="mt-1.5 text-[1.1rem] font-semibold uppercase leading-snug tracking-[0.01em] text-bone sm:text-[1.15rem]">{c.t}</h3>
                 <p className="mt-1.5 text-[0.95rem] leading-relaxed text-mist sm:mt-2">{c.d}</p>
               </div>
             </div>

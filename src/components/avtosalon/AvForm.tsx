@@ -364,7 +364,7 @@ export function AvForm() {
         <Chips id="rop" label="Sotuv bo‘limi rahbari (ROP) bormi?" options={OPT.rop} value={d.rop} onChange={pick('rop')} error={E('rop')} columns="grid-cols-2" />
         <Chips id="crm" label="CRM ishlatasizmi?" options={OPT.crm} value={d.crm} onChange={pick('crm')} error={E('crm')} columns="grid-cols-3" />
       </div>
-      <Chips id="leadSystem" label="Leadlarni hozir qayerda yuritasiz?" options={OPT.leadSystem} value={d.leadSystem} onChange={pick('leadSystem')} error={E('leadSystem')} columns="grid-cols-2 sm:grid-cols-3" />
+      <Chips id="leadSystem" label="Murojaatlarni hozir qayerda yuritasiz?" options={OPT.leadSystem} value={d.leadSystem} onChange={pick('leadSystem')} error={E('leadSystem')} columns="grid-cols-2 sm:grid-cols-3" />
     </div>,
 
     <div key="s3" className="space-y-7">

@@ -7,22 +7,23 @@ export const hero = {
   audience: 'Avtosalonlar uchun',
   region: 'Butun O‘zbekiston bo‘ylab',
   title: 'Avtosaloningiz uchun marketing va sotuv tizimini quramiz',
-  text: 'Strategiya, kontent, target, leadlar, CRM va sotuv jarayonlarini bitta tizimga bog‘laymiz.',
+  text: 'Strategiya, kontent, target reklama, murojaatlar, CRM va sotuv jarayonlarini bitta tizimga bog‘laymiz.',
   /** Mobile hero: shorter line so the CTA fits the first screen (Instagram in-app browser). */
-  textShort: 'Strategiya, target, lead, CRM va sotuvni bitta tizimga bog‘laymiz.',
-  chain: ['Strategiya', 'Kontent', 'Target', 'Lead', 'CRM', 'Sotuv'],
+  textShort: 'Strategiya, reklama, murojaat, CRM va sotuvni bitta tizimga bog‘laymiz.',
+  chain: ['Strategiya', 'Kontent', 'Reklama', 'Murojaat', 'CRM', 'Sotuv'],
   cta: 'Ariza qoldirish',
   note: 'Avtosaloningiz haqida qisqacha ma’lumot qoldiring — jamoamiz siz bilan bog‘lanadi.',
 };
 
 export const problems = {
   eyebrow: 'Muammo',
-  title: 'Reklama ishlayapti. Lekin tizim ishlayaptimi?',
+  title: 'Reklama ishlayapti. Murojaat sotuvgacha yetib boryaptimi?',
+  text: 'Mijoz yo‘li: reklama → murojaat → operator → savdo. Ko‘p avtosalonlarda mijoz shu zanjirning bir bo‘g‘inida yo‘qoladi — reklama aybdor bo‘lmasa ham.',
   cards: [
-    { t: 'Sifatsiz leadlar', d: 'Murojaatlar keladi, lekin xaridga tayyor mijozlar kam.' },
-    { t: 'Natija noaniq', d: 'Qaysi reklama va offer real natija berayotgani aniq ko‘rinmaydi.' },
-    { t: 'Leadlar yo‘qoladi', d: 'Murojaat kelganidan keyingi jarayon yetarlicha nazorat qilinmaydi.' },
-    { t: 'Sotuv nazoratsiz', d: 'Menejerlar, follow-up va mijoz bilan ishlash yagona tizimga tushmagan.' },
+    { at: 'Reklama → murojaat', t: 'Murojaat manbasi noma’lum', d: 'Qaysi reklama, qaysi taklif va qaysi kanaldan kelgan mijoz avtomobil sotib olganini hech kim ko‘rmaydi. Budjet taxmin bilan taqsimlanadi.' },
+    { at: 'Murojaat → operator', t: 'Javob kechikadi', d: 'Murojaat Direct, Telegram yoki telefonga tushadi, lekin unga darhol javob beradigan aniq mas’ul yo‘q. Mijoz kutib turmaydi — boshqa salonga yozadi.' },
+    { at: 'Operator → savdo', t: 'Qayta qo‘ng‘iroq qilinmaydi', d: 'Birinchi suhbatdan keyin mijoz “o‘ylab ko‘raman” deydi va unga qayta qo‘ng‘iroq qilish hech qayerda belgilanmaydi.' },
+    { at: 'Savdo', t: 'Menejer ishi ko‘rinmaydi', d: 'Kim nechta mijoz bilan gaplashdi, kim qayerda to‘xtadi — rahbar buni faqat menejerning so‘zidan biladi.' },
   ],
   cta: 'Yechimni ko‘rish',
 };
@@ -32,11 +33,11 @@ export const SYSTEM_ID = 'tizim';
 export const system = {
   eyebrow: 'Biz nima qilamiz',
   title: 'Marketingdan sotuvgacha — bitta tizim',
-  text: 'Bizning ishimiz reklama ishga tushirish bilan tugamaydi. Lead kelishidan boshlab uni sotuv bo‘limida to‘g‘ri ishlashgacha bo‘lgan jarayonni tizimlashtiramiz.',
-  marketing: ['Strategiya', 'Offer', 'Kontent', 'Kreativ', 'Target', 'Landing', 'Lead'],
-  sales: ['CRM', 'Sotuv voronkasi', 'Skriptlar', 'Menejerlar', 'Follow-up', 'Nazorat', 'Analitika'],
+  text: 'Bizning ishimiz reklama ishga tushirish bilan tugamaydi. Murojaat kelishidan boshlab sotuv bo‘limi u bilan to‘g‘ri ishlashigacha bo‘lgan jarayonni tizimlashtiramiz.',
+  marketing: ['Strategiya', 'Taklif', 'Kontent', 'Reklama materiallari', 'Target reklama', 'Sahifa', 'Murojaat'],
+  sales: ['CRM', 'Sotuv bosqichlari', 'Suhbat skriptlari', 'Menejerlar', 'Qayta aloqa', 'Nazorat', 'Analitika'],
   statement: 'Bularning barchasini bitta jamoa bilan yo‘lga qo‘yamiz.',
-  sub: 'Strategiya, copywriting, dizayn, kontent, reklama va sotuv tizimi uchun alohida-alohida mutaxassis qidirishingiz shart emas.',
+  sub: 'Strategiya, reklama matnlari, dizayn, kontent, reklama va sotuv tizimi uchun alohida-alohida mutaxassis qidirishingiz shart emas.',
   cta: 'Loyihani muhokama qilish',
 };
 
@@ -46,9 +47,9 @@ export const expectations = {
   sub: 'Raqamlarni va’da qilmaymiz. Ishlaydigan tizim qurishga e’tibor beramiz.',
   cards: [
     { t: 'Sifatli murojaatlar uchun tizim', d: 'Kerakli auditoriyani jalb qilishga yo‘naltirilgan marketing va reklama.' },
-    { t: 'Marketing + sotuv bog‘lanishi', d: 'Reklamadan kelgan lead sotuv jarayonigacha kuzatiladigan tizim.' },
-    { t: 'CRM va lead nazorati', d: 'Leadlar qayerda ekanini va ular bilan qanday ishlanayotganini nazorat qilish.' },
-    { t: 'Doimiy optimizatsiya', d: 'Qaysi offer, kreativ va reklama yaxshiroq ishlayotganiga qarab marketingni rivojlantirish.' },
+    { t: 'Marketing + sotuv bog‘lanishi', d: 'Reklamadan kelgan murojaat sotuv jarayonigacha kuzatiladigan tizim.' },
+    { t: 'CRM va murojaatlar nazorati', d: 'Har bir murojaat qayerda ekanini va u bilan qanday ishlanayotganini nazorat qilish.' },
+    { t: 'Doimiy optimizatsiya', d: 'Qaysi taklif, reklama materiali va kanal yaxshiroq ishlayotganiga qarab marketingni rivojlantirish.' },
   ],
   cta: 'Ariza qoldirish',
 };
@@ -122,7 +123,7 @@ export const OPT = {
     'Marketingni to‘liq tizimlashtirish',
     'Target reklamani kuchaytirish',
     'Kontent va brend ko‘rinishini yaxshilash',
-    'CRM va lead nazoratini yo‘lga qo‘yish',
+    'CRM va murojaatlar nazoratini yo‘lga qo‘yish',
     'Mavjud sotuv bo‘limini kuchaytirish',
     'Sotuv bo‘limini noldan qurish',
     'Marketing va sotuvni bitta tizimga bog‘lash',

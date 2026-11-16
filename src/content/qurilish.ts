@@ -11,7 +11,7 @@ export const hero = {
   text: 'Meta Ads va Google Ads orqali murojaatlar oqimini yo‘lga qo‘yib, ularni CRM va sotuv bo‘limiga bog‘laymiz.',
   system: [
     { k: 'Mijoz oqimi', v: 'Meta Ads + Google Ads' },
-    { k: 'Tizim', v: 'Landing → CRM → Sotuv' },
+    { k: 'Tizim', v: 'Sahifa → CRM → Sotuv' },
   ],
   imageAlt: 'Kunduzgi yorug‘likda qurilayotgan zamonaviy turar joy majmuasi: ko‘p qavatli binolar va minorali kran',
 };
@@ -23,7 +23,21 @@ export const problem = {
 
 export const system = {
   title: 'Biz jarayonni bitta tizimga bog‘laymiz.',
-  steps: ['Meta + Google', 'Landing', 'Murojaat', 'CRM', 'Sotuv'],
+  steps: ['Meta + Google', 'Sahifa', 'Murojaat', 'CRM', 'Sotuv'],
+};
+
+/** What the service covers, step by step: how a targeted enquiry reaches the sales team. No figures, no promises. */
+export const process = {
+  title: 'Maqsadli murojaat qanday keladi?',
+  text: 'Bizning ishimiz reklamani yoqish bilan tugamaydi. Xaridor reklamani ko‘rganidan sotuv bo‘limingiz u bilan gaplashguncha bo‘lgan yo‘lni quramiz va yuritamiz.',
+  steps: [
+    { t: 'Loyiha va xaridorni aniqlash', d: 'Turar joy majmuangiz, hududi, narx segmenti va kim sotib olishini birga ko‘rib chiqamiz. Reklama shu xaridorga qaratiladi.' },
+    { t: 'Meta Ads va Google Ads', d: 'Instagram, Facebook va Google’da kampaniyalarni sozlaymiz va yuritamiz: auditoriya, hudud, reklama matni va budjet taqsimoti.' },
+    { t: 'Murojaat sahifasi', d: 'Reklamadan kelgan odam loyiha haqida asosiy ma’lumotni ko‘radi va qisqa forma orqali murojaat qoldiradi.' },
+    { t: 'CRM ga tushirish', d: 'Har bir murojaat qaysi reklamadan kelgani bilan CRM ga yoziladi — hech biri chatlarda yo‘qolmaydi.' },
+    { t: 'Sotuv bo‘limiga uzatish', d: 'Murojaat menejeringizga yetadi, uning holati kuzatiladi. Qaysi reklama sotuvga olib kelayotganini ko‘rib, kampaniyalarni o‘zgartiramiz.' },
+  ],
+  note: 'Aniq ish hajmi loyihangiz bosqichi va sotuv bo‘limingiz holatiga qarab kelishiladi.',
 };
 
 export const offer = {
