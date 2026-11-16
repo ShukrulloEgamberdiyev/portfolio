@@ -424,8 +424,7 @@ export function AvForm() {
         <form noValidate onSubmit={(e) => { e.preventDefault(); void goNext(); }} onFocus={started} aria-describedby="av-form-status">
           {/* Honeypot: invisible to people, tempting to bots. */}
           <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
-            <label htmlFor="av_fax">Fax</label>
-            <input id="av_fax" name="fax_number" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+            <input id="av_fax" name="fax_number" type="text" aria-label="Fax" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
           </div>
 
           {/* Progress */}

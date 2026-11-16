@@ -53,7 +53,8 @@ function receiver({ wrongSheet = false, failWrite = false, silentWriteLoss = fal
   };
   if (!tabs.size) {
     if (preset) makeTab('AVTOSALON LEADLAR', 0, preset);
-    makeTab('Sayt arizalari', 5);
+    // Jonli "Sayt arizalari" varag‘i: eski skript yaratgan 17 ustun + Holat sarlavhasi.
+    makeTab('Sayt arizalari', 0, [['Sana', 'Ism', 'Kompaniya', 'Sayt / Instagram', 'Soha', 'Oylik daromad', 'Reklama xarajati', 'Byudjet', 'Muammo', 'Izoh', 'Maqsad', 'Qaror qabul qiluvchi', 'Aloqa', 'Til', 'UTM source', 'UTM campaign', 'Sahifa', 'Holat']]);
   }
   const sandbox = {
     console: { error() {} },
@@ -77,10 +78,11 @@ function receiver({ wrongSheet = false, failWrite = false, silentWriteLoss = fal
   vm.createContext(sandbox);
   vm.runInContext(source, sandbox);
   const send = (payload) => sandbox.doPost({ postData: { contents: JSON.stringify(payload) } });
-  const siteRows = () => tabs.get('Sayt arizalari').rows;
+  const siteRows = () => tabs.get('Sayt arizalari').rows.slice(1);
+  const siteHeader = () => tabs.get('Sayt arizalari').rows[0];
   const avtoTab = () => tabs.get('AVTOSALON LEADLAR');
   const avtoRows = () => (avtoTab() ? avtoTab().rows.slice(1) : []);
-  return { send, tabs, cache, siteRows, avtoTab, avtoRows, writes, get: sandbox.doGet, fp: sandbox.leadFingerprint, AV_EDITABLE: vm.runInContext('AVTOSALON_EDITABLE', sandbox) };
+  return { send, tabs, cache, siteRows, siteHeader, avtoTab, avtoRows, writes, get: sandbox.doGet, fp: sandbox.leadFingerprint, AV_EDITABLE: vm.runInContext('AVTOSALON_EDITABLE', sandbox) };
 }
 
 /* ───────── general site form (behaviour unchanged) ───────── */
@@ -92,7 +94,7 @@ test('site: appends to Sayt arizalari and sanitises formula prefixes', () => {
   assert.equal(r.send(site).ok, true);
   assert.equal(r.siteRows().length, 1);
   assert.equal(r.siteRows()[0][2], "'=bad()");
-  assert.equal(r.siteRows()[0].at(-1), 'Yangi');
+  assert.equal(r.siteRows()[0][r.siteHeader().indexOf('Holat')], 'Yangi');
 });
 test('site: a stored application is confirmed explicitly (saved + the request id), a lost write is not', () => {
   const r = receiver();
@@ -368,4 +370,17 @@ test('avtosalon: the old goal wording from a still-open page is still accepted',
   const r = receiver();
   assert.equal(r.send(avto({ goals: 'CRM va lead nazoratini yo‘lga qo‘yish' })).saved, true);
   assert.equal(r.send(avto({ goals: 'CRM va murojaatlar nazoratini yo‘lga qo‘yish', phone: '+998 93 000 00 01', telegram: '@other_user' })).saved, true);
+});
+
+test('site: existing columns stay in place, the new attribution columns and Ariza ID are added after Holat', () => {
+  const r = receiver();
+  const id = 'SA-MUH60GB01-A1B2C3D4E5';
+  assert.equal(r.send({ ...site, submissionId: id, utm_medium: 'paid', utm_content: 'reel', utm_term: 'k', fbclid: 'FB', referrer: 'https://l.instagram.com/', utm_source: 'facebook' }).saved, true);
+  const h = r.siteHeader(); const row = r.siteRows()[0];
+  assert.deepEqual(h.slice(0, 18).at(-1), 'Holat');
+  assert.deepEqual(h.slice(18), ['UTM medium', 'UTM content', 'UTM term', 'fbclid', 'Referrer', 'Ariza ID']);
+  assert.equal(row[h.indexOf('Holat')], 'Yangi');
+  assert.equal(row[h.indexOf('UTM source')], 'facebook');
+  for (const [k, v] of [['UTM medium', 'paid'], ['UTM content', 'reel'], ['UTM term', 'k'], ['fbclid', 'FB'], ['Referrer', 'https://l.instagram.com/'], ['Ariza ID', id]]) assert.equal(row[h.indexOf(k)], v, k);
+  assert.equal(row.length, h.length);
 });

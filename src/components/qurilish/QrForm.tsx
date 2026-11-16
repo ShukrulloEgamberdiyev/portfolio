@@ -229,8 +229,7 @@ export function QrForm() {
         <form noValidate onSubmit={(e) => { e.preventDefault(); void submit(); }} onFocus={started} aria-describedby="qr-form-status" aria-label="Ro‘yxatdan o‘tish formasi">
           {/* Honeypot: invisible to people, tempting to bots. */}
           <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
-            <label htmlFor="qr_fax">Fax</label>
-            <input id="qr_fax" name="fax_number" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+            <input id="qr_fax" name="fax_number" type="text" aria-label="Fax" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
           </div>
 
           <fieldset disabled={status === 'sending'} className="min-w-0 border-0 p-0 disabled:opacity-60">

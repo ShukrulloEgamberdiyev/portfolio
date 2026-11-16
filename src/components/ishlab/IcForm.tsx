@@ -183,8 +183,7 @@ export function IcForm() {
         <form noValidate onSubmit={(e) => { e.preventDefault(); void submit(); }} onFocus={started} aria-describedby="ic-form-status" aria-labelledby="ic-form-heading">
           {/* Honeypot: invisible to people, tempting to bots. */}
           <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
-            <label htmlFor="ic_fax">Fax</label>
-            <input id="ic_fax" name="fax_number" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+            <input id="ic_fax" name="fax_number" type="text" aria-label="Fax" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
           </div>
 
           <div className="border-b border-line px-5 pb-6 pt-8 sm:px-10 sm:pt-10">

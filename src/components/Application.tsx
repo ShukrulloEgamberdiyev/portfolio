@@ -233,8 +233,7 @@ export function Application({ compact = false }: { compact?: boolean } = {}) {
               <form ref={formRef} onSubmit={(e) => { e.preventDefault(); void next(); }} noValidate aria-describedby="apply-status">
                 {/* Honeypot: invisible to people, tempting to bots. */}
                 <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
-                  <label htmlFor="fax_number">Fax</label>
-                  <input id="fax_number" name="fax_number" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                  <input id="fax_number" name="fax_number" type="text" aria-label="Fax" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
                 </div>
                 <div className="flex items-center justify-between gap-4">
                   <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-mist">

@@ -25,7 +25,9 @@ const ISHLAB_SHEET_NAME = 'ISHLAB CHIQARISH LEADLAR';
 const TOKEN = 'fazo-2026-maxfiy';
 const MIN_FILL_MS = 4000;
 
-/* ───────── Umumiy sayt arizasi (o‘zgarmagan) ───────── */
+/* ───────── Umumiy sayt arizasi ─────────
+ * Sarlavha nomi bo‘yicha yoziladi (appendMapped). Mavjud 17 ustun + "Holat" joyida qoladi; oxirgi 6 ustun
+ * (UTM medium … Ariza ID) birinchi arizada "Holat"dan o‘ngga qo‘shiladi — hech narsa surilmaydi. */
 
 const COLUMNS = [
   ['submittedAt', 'Sana'],
@@ -45,7 +47,14 @@ const COLUMNS = [
   ['utm_source', 'UTM source'],
   ['utm_campaign', 'UTM campaign'],
   ['page', 'Sahifa'],
+  ['utm_medium', 'UTM medium'],
+  ['utm_content', 'UTM content'],
+  ['utm_term', 'UTM term'],
+  ['fbclid', 'fbclid'],
+  ['referrer', 'Referrer'],
+  ['submissionId', 'Ariza ID'],
 ];
+const SITE_STATUS_HEADER = 'Holat';
 const SITE_REQUIRED = ['name', 'company', 'industry', 'revenue', 'spend', 'budget', 'problem', 'objective', 'decision', 'contact'];
 
 /* ───────── Avtosalon arizasi ───────── */
@@ -256,7 +265,7 @@ function handleSite(data) {
     lock = LockService.getScriptLock();
     lock.waitLock(10000);
     const cache = CacheService.getScriptCache();
-    const fingerprint = COLUMNS.filter(function (c) { return c[0] !== 'submittedAt'; })
+    const fingerprint = COLUMNS.filter(function (c) { return c[0] !== 'submittedAt' && c[0] !== 'submissionId'; })
       .map(function (c) { return String(data[c[0]] || '').trim(); }).join('|');
     const duplicateKey = 'd_' + Utilities.base64EncodeWebSafe(
       Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, fingerprint));
@@ -265,11 +274,12 @@ function handleSite(data) {
     const count = Number(cache.get(hourKey) || 0);
     if (count >= LIMITS.site.perHour) return out({ ok: false, error: 'rate_limited' });
 
-    const sheet = getSheetByConfig(SHEET_NAME, COLUMNS, 'Holat');
-    const row = COLUMNS.map(function (c) { return c[0] === 'submittedAt' ? new Date() : clean(data[c[0]]); });
-    row.push('Yangi');
+    normalizeAttribution(data); // uzun UTM/sahifa manzili arizani rad etmaydi — qisqartiriladi
+    if (!siteId(data)) data.submissionId = '';
+    const sheet = getSheetByConfig(SHEET_NAME, COLUMNS, SITE_STATUS_HEADER);
+    const header = ensureHeader(sheet, COLUMNS, SITE_STATUS_HEADER);
     const before = sheet.getLastRow();
-    sheet.appendRow(row);
+    appendMapped(sheet, header, COLUMNS, SITE_STATUS_HEADER, data);
     SpreadsheetApp.flush();
     // Qator haqiqatan qo‘shilganini tekshiramiz: jim yo‘qolgan yozuv hech qachon muvaffaqiyat emas.
     if (sheet.getLastRow() <= before) throw new Error('Row not found after append');
