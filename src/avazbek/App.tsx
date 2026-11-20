@@ -1,10 +1,15 @@
 import Navbar from './Navbar';
 import Hero from './Hero';
-import Portfolio from './Portfolio';
+import Intro from './Intro';
+import ProjectWorld from './ProjectWorld';
+import VideoWork from './VideoWork';
+import Creative from './Creative';
+import Brands from './Brands';
 import Resume from './Resume';
 import About from './About';
 import Contact from './Contact';
 import RevealObserver from './RevealObserver';
+import Cursor from './Cursor';
 import { site, contacts } from './content';
 
 /** Avazbek Meliqoziyev personal portfolio — fazodigital.uz/avazbek. FAZO header/footer ishlatilmaydi. */
@@ -28,12 +33,17 @@ export default function AvazbekApp() {
       <Navbar />
       <main>
         <Hero />
-        <Portfolio />
+        <Intro />
+        <ProjectWorld />
+        <VideoWork />
+        <Creative />
+        <Brands />
         <Resume />
         <About />
         <Contact />
       </main>
       <RevealObserver />
+      <Cursor />
     </>
   );
 }

@@ -1,82 +1,75 @@
+import { useRef } from 'react';
 import Img from './Img';
-import { about, approach, network } from './content';
+import { approach, network } from './content';
+import { useScrollFx } from './motion';
 
-/** Men haqimda (ikkinchi fon): ofis rasmi + qisqa bio, ixcham yondashuv oqimi, keng jamoaviy rasm. */
+/**
+ * YONDASHUV + PROFESSIONAL MUHIT — qora bo'lim.
+ * Biznes → Auditoriya → Offer → Kontent → Reklama → Natija: chiziq scroll bilan chiziladi, bosqichlar ketma-ket yonadi.
+ * So'ng to'liq kenglikdagi kinematografik jamoaviy rasm minimal yozuv bilan.
+ */
 export default function About() {
+  const ref = useRef<HTMLElement>(null);
+
+  useScrollFx(ref, ({ gsap }) => {
+    const st = { trigger: '[data-flow]', start: 'top 75%', end: 'bottom 45%', scrub: 0.6 };
+    gsap.fromTo('[data-flow-line]', { scaleX: 0, scaleY: 0 }, { scaleX: 1, scaleY: 1, ease: 'none', scrollTrigger: st });
+    gsap.fromTo('[data-flow-step]', { opacity: 0.18 }, { opacity: 1, stagger: 0.5, ease: 'none', scrollTrigger: st });
+    gsap.fromTo('[data-corp-img]', { scale: 1.25 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '[data-corp]', start: 'top bottom', end: 'bottom bottom', scrub: 0.8 } });
+    gsap.fromTo('[data-corp]', { clipPath: 'inset(8% 6% 8% 6% round 32px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none', scrollTrigger: { trigger: '[data-corp]', start: 'top bottom', end: 'center center', scrub: 0.8 } });
+  });
+
   return (
-    <section id="about" className="section relative bg-mist">
-      <div className="shell">
-        {/* rasm + bio */}
-        <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
-          <figure data-reveal="image" className="lg:col-span-5">
-            <div className="media relative aspect-[4/5] bg-card shadow-[var(--shadow-soft)] sm:aspect-[5/4] lg:aspect-[4/5]">
-              <Img
-                src="/avazbek/images/office.jpg"
-                alt="Avazbek Meliqoziyev ofisda"
-                width={640}
-                height={640}
-                fill
-                className="object-cover object-[46%_28%]"
-              />
-            </div>
-          </figure>
+    <section ref={ref} aria-labelledby="approach-title" className="relative z-10 -mt-10 overflow-hidden rounded-t-[32px] bg-night pt-[clamp(5rem,3.4rem+6vw,9rem)] text-paper sm:-mt-14 sm:rounded-t-[48px]">
+      <div aria-hidden className="data-grid pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,#000,transparent_60%)]" />
 
-          <div className="lg:col-span-7">
-                        <h2 data-reveal className="t-h2">{about.title}</h2>
-            <p data-reveal className="t-lead mt-6 max-w-[30ch] text-ink">{about.lead}</p>
-            <p data-reveal className="t-body mt-4 max-w-[48ch] text-graphite">{about.text}</p>
-            <ul data-reveal className="mt-8 grid grid-cols-1 gap-2.5 min-[420px]:grid-cols-2">
-              {about.facts.map((f) => (
-                <li key={f} className="t-small flex items-center gap-3 rounded-[12px] border border-line bg-card px-4 py-3 text-ink">
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
-                  {f}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+      <div className="shell relative">
+        <p data-reveal className="t-label flex items-center gap-2 text-violet-4">
+          <span className="h-1.5 w-1.5 rounded-full bg-violet-3" /> Biznes → Natija
+        </p>
+        <h2 id="approach-title" data-reveal className="t-mega mt-5 text-[clamp(3rem,9vw,9rem)]">
+          Ishlash <span className="grad-text">yondashuvim</span>
+        </h2>
 
-        {/* ishlash yondashuvi */}
-        <div className="card mt-14 p-6 sm:p-8 lg:mt-20">
-          <p data-reveal className="t-label text-graphite">{approach.title}</p>
-          <ol className="relative mt-6 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-6">
-            <span aria-hidden className="absolute left-0 right-0 top-[5px] hidden h-px bg-line lg:block" />
-            {approach.steps.map((s, i) => {
-              const last = i === approach.steps.length - 1;
-              return (
-                <li key={s} data-reveal style={{ ['--d' as string]: i }} className="relative">
-                  <span
-                    aria-hidden
-                    className={`relative block h-[11px] w-[11px] rounded-full border-2 ${last ? 'border-accent bg-accent' : 'border-[#b9c6db] bg-card'}`}
-                  />
-                  <span className="mt-3 block font-mono text-[11px] text-graphite">{String(i + 1).padStart(2, '0')}</span>
-                  <span className={`t-h4 mt-0.5 block ${last ? 'text-accent' : ''}`}>{s}</span>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-
-        {/* professional muhit */}
-        <figure className="mt-14 lg:mt-20">
-          <div data-reveal="image" className="media relative aspect-[4/3] bg-card shadow-[var(--shadow-soft)] sm:aspect-[16/9] lg:aspect-[21/9]">
-            <Img
-              src="/avazbek/images/corporate.jpg"
-              srcSet="/avazbek/images/corporate-960.jpg 960w, /avazbek/images/corporate.jpg 1920w"
-              sizes="(min-width: 1280px) 1184px, 100vw"
-              width={1920}
-              height={1440}
-              alt="Avazbek Meliqoziyev hamkasblar va jamoa bilan"
-              fill
-              className="object-cover object-[50%_45%]"
-            />
-          </div>
-          <figcaption className="mt-6 grid gap-2 lg:grid-cols-12 lg:gap-8">
-            <span className="t-h3 lg:col-span-5">{network.title}</span>
-            <span className="t-body max-w-[56ch] text-graphite lg:col-span-7 lg:pt-1">{network.text}</span>
-          </figcaption>
-        </figure>
+        <ol data-flow className="relative mt-14 grid gap-0 lg:mt-20 lg:grid-cols-6">
+          {/* chiziq: desktopda gorizontal, mobilda vertikal */}
+          <span aria-hidden className="absolute left-0 right-0 top-[7px] hidden h-px bg-white/12 lg:block" />
+          <span aria-hidden data-flow-line className="absolute left-0 right-0 top-[7px] hidden h-px origin-left bg-linear-to-r from-violet-1 via-violet-3 to-violet-4 lg:block" />
+          <span aria-hidden className="absolute bottom-0 left-[7px] top-0 w-px bg-white/12 lg:hidden" />
+          <span aria-hidden data-flow-line className="absolute bottom-0 left-[7px] top-0 w-px origin-top bg-linear-to-b from-violet-1 via-violet-3 to-violet-4 lg:hidden" />
+          {approach.steps.map((s, i) => {
+            const last = i === approach.steps.length - 1;
+            return (
+              <li key={s} data-flow-step className="relative flex items-baseline gap-5 py-4 pl-8 lg:block lg:py-0 lg:pl-0 lg:pr-4">
+                <span aria-hidden className={`absolute left-0 top-[1.55rem] h-[15px] w-[15px] rounded-full border-2 lg:static lg:block ${last ? 'border-violet-4 bg-violet-3 shadow-[0_0_20px_rgb(168_85_247/0.8)]' : 'border-violet-4 bg-night'}`} />
+                <span className="font-mono text-[11px] tracking-[0.16em] text-muted lg:mt-6 lg:block">{String(i + 1).padStart(2, '0')}</span>
+                <span className={`t-mega block text-[clamp(2rem,1.4rem+1.8vw,3.25rem)] lg:mt-2 ${last ? 'grad-text' : 'text-paper'}`}>{s}</span>
+              </li>
+            );
+          })}
+        </ol>
       </div>
+
+      {/* professional muhit */}
+      <figure data-corp className="relative mt-24 h-[78svh] min-h-[420px] overflow-hidden bg-night-2 lg:mt-36 lg:h-[100svh]">
+        <Img
+          data-corp-img
+          src="/avazbek/images/corporate.jpg"
+          srcSet="/avazbek/images/corporate-960.jpg 960w, /avazbek/images/corporate.jpg 1920w"
+          sizes="100vw"
+          width={1920}
+          height={1440}
+          alt="Avazbek Meliqoziyev hamkasblar va jamoa bilan"
+          fill
+          className="object-cover object-[50%_45%]"
+        />
+        <div aria-hidden className="absolute inset-0 bg-linear-to-t from-night via-night/30 to-night/10" />
+        <div aria-hidden className="absolute inset-x-5 inset-y-6 crop-marks sm:inset-x-8 lg:inset-x-12 lg:inset-y-10" />
+        <figcaption className="shell absolute inset-x-0 bottom-0 pb-10 lg:pb-16">
+          <span className="t-mega block text-[clamp(2.75rem,8vw,8rem)] text-paper">{network.title}</span>
+          <span className="t-body mt-4 block max-w-[52ch] text-paper/80">{network.text}</span>
+        </figcaption>
+      </figure>
     </section>
   );
 }

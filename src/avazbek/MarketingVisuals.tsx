@@ -27,7 +27,13 @@ export function StrategyVisual() {
         {[[330, 150], [270, 230], [340, 240], [250, 160]].map(([x, y], i) => (
           <circle key={`c${i}`} cx={x} cy={y} r="5" className="fill-ink" />
         ))}
-        <circle cx="300" cy="190" r="6" fill="#4568c4" />
+        <circle cx="300" cy="190" r="6" fill="#7c3aed" />
+      </svg>
+      {/* voronka */}
+      <svg viewBox="0 0 120 110" className="absolute bottom-[6%] left-[5%] w-[24%]" fill="none">
+        {[0, 1, 2, 3].map((k) => (
+          <path key={k} d={`M${6 + k * 12} ${6 + k * 26} H${114 - k * 12} L${110 - k * 12 - 10} ${28 + k * 26} H${10 + k * 12 + 10} Z`} className={k === 3 ? 'fill-accent' : 'fill-ink/10'} />
+        ))}
       </svg>
       <span className="kicker absolute left-[9%] top-[8%] text-ink/45">Bozor</span>
       <span className="kicker absolute right-[8%] top-[20%] text-ink/45">Segment</span>
@@ -52,7 +58,7 @@ export function AdsVisual() {
             className={k === 5 ? 'text-accent' : 'text-ink/12'}
           />
         ))}
-        <circle cx="560" cy="62" r="7" fill="#4568c4" />
+        <circle cx="560" cy="62" r="7" fill="#7c3aed" />
       </svg>
       {/* ad preview card with real poster */}
       <div className="absolute bottom-[6%] right-[4%] w-[38%] min-w-[150px] overflow-hidden rounded-[10px] bg-card shadow-[var(--shadow-lift)] ring-1 ring-line">
@@ -76,7 +82,24 @@ export function AdsVisual() {
 export function ContentVisual() {
   const days = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'];
   return (
-    <div aria-hidden className="relative flex h-full w-full select-none items-center justify-center gap-[6%] px-[6%]">
+    <div aria-hidden className="relative flex h-full w-full select-none items-center justify-center gap-[6%] px-[6%] pb-[14%]">
+      {/* montaj timeline */}
+      <div className="absolute inset-x-[6%] bottom-[5%] space-y-1.5">
+        {[
+          [[0, 18], [20, 22], [44, 14], [60, 26], [88, 12]],
+          [[6, 30], [40, 34], [78, 20]],
+          [[0, 100]],
+        ].map((track, t) => (
+          <div key={t} className="relative h-3 rounded-[3px] bg-ink/5">
+            {track.map(([l, w], k) => (
+              <span key={k} className={`absolute inset-y-0 rounded-[3px] ${t === 0 ? 'bg-accent/80' : t === 1 ? 'bg-ink/30' : 'bg-violet-4/50'}`} style={{ left: `${l}%`, width: `${w}%` }} />
+            ))}
+          </div>
+        ))}
+        <span className="absolute -top-2 bottom-0 left-[57%] w-px bg-accent">
+          <span className="absolute -left-[3px] -top-1 h-2 w-[7px] rounded-[2px] bg-accent" />
+        </span>
+      </div>
       {/* calendar */}
       <div className="hidden w-[46%] sm:block">
         <p className="kicker text-ink/45">Kontent reja</p>
@@ -97,7 +120,7 @@ export function ContentVisual() {
         </div>
       </div>
       {/* phone */}
-      <div className="relative w-[40%] max-w-[210px] rounded-[30px] border-[5px] border-ink bg-ink shadow-[0_16px_32px_-22px_rgb(20_36_59/0.5)]">
+      <div className="relative w-[40%] max-w-[210px] rounded-[30px] border-[5px] border-ink bg-ink shadow-[0_16px_32px_-22px_rgb(76_29_149/0.45)]">
         <div className="relative aspect-[9/19] overflow-hidden rounded-[24px]">
           <Img src={videos[0].poster} alt="" fill className="object-cover" />
           <div className="absolute inset-0 bg-linear-to-t from-ink/70 via-transparent to-ink/20" />

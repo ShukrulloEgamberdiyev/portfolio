@@ -25,14 +25,14 @@ export default function Navbar() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${
           scrolled || open
-            ? "border-b border-line bg-paper/95 backdrop-blur-md"
+            ? "border-b border-white/10 bg-night/75 backdrop-blur-md max-sm:bg-night/95 max-sm:backdrop-blur-none"
             : "border-b border-transparent"
         }`}
       >
         <nav className="shell flex h-16 items-center justify-between lg:h-[72px]" aria-label="Asosiy menyu">
-          <a href="#top" className="inline-flex min-h-[44px] items-center text-[17px] font-semibold tracking-[-0.03em]" onClick={() => setOpen(false)}>
+          <a href="#top" className="t-mega inline-flex min-h-[44px] items-center text-[22px] tracking-[0.02em] text-paper" onClick={() => setOpen(false)}>
             {site.shortName.replace(".", "")}
-            <span className="text-accent">.</span>
+            <span className="text-violet-3">.</span>
           </a>
 
           <ul className="hidden items-center gap-8 lg:flex">
@@ -40,10 +40,10 @@ export default function Navbar() {
               <li key={n.href}>
                 <a
                   href={n.href}
-                  className="group relative inline-flex min-h-[44px] items-center text-[14px] font-medium text-ink/70 transition-colors hover:text-ink"
+                  className="group relative inline-flex min-h-[44px] items-center text-[14px] font-medium text-paper/70 transition-colors hover:text-paper"
                 >
                   {n.label}
-                  <span className="absolute bottom-2.5 left-0 h-px w-full origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100" />
+                  <span className="absolute bottom-2.5 left-0 h-px w-full origin-left scale-x-0 bg-violet-3 transition-transform duration-300 group-hover:scale-x-100" />
                 </a>
               </li>
             ))}
@@ -55,19 +55,19 @@ export default function Navbar() {
             </a>
             <button
               type="button"
-              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-line bg-card lg:hidden"
+              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-night/60 lg:hidden"
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? "Menyuni yopish" : "Menyuni ochish"}
               onClick={() => setOpen((v) => !v)}
             >
               <span
-                className={`absolute h-px w-[18px] bg-ink transition-transform duration-300 ${
+                className={`absolute h-px w-[18px] bg-paper transition-transform duration-300 ${
                   open ? "rotate-45" : "-translate-y-[4px]"
                 }`}
               />
               <span
-                className={`absolute h-px w-[18px] bg-ink transition-transform duration-300 ${
+                className={`absolute h-px w-[18px] bg-paper transition-transform duration-300 ${
                   open ? "-rotate-45" : "translate-y-[4px]"
                 }`}
               />
@@ -78,7 +78,7 @@ export default function Navbar() {
 
       <div
         id="mobile-menu"
-        className={`fixed inset-0 z-40 bg-paper transition-[opacity,visibility] duration-500 lg:hidden ${
+        className={`fixed inset-0 z-40 bg-night text-paper transition-[opacity,visibility] duration-500 lg:hidden ${
           open ? "visible opacity-100" : "invisible opacity-0"
         }`}
       >
@@ -97,10 +97,10 @@ export default function Navbar() {
                 <a
                   href={n.href}
                   onClick={() => setOpen(false)}
-                  className="flex items-baseline justify-between border-b border-line py-4 text-[clamp(28px,8vw,36px)] font-semibold tracking-[-0.035em]"
+                  className="flex items-baseline justify-between t-mega border-b border-white/12 py-4 text-[clamp(40px,12vw,56px)]"
                 >
                   {n.label}
-                  <span className="font-mono text-xs text-accent">0{i + 1}</span>
+                  <span className="font-mono text-xs text-violet-4">0{i + 1}</span>
                 </a>
               </li>
             ))}

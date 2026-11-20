@@ -37,6 +37,24 @@ export const hero = {
   label: "Marketing • SMM • Target • Kontent",
   statement: "Marketingni biznes natijasiga bog‘layman.",
   subtitle: "SMM, Meta Ads, kontent va marketing strategiyasi orqali brendlarning o‘sishi ustida ishlayman.",
+  /** Reference uslubidagi hero matnlari */
+  backdropWord: "Portfolio",
+  hello: "Salom, men",
+  roleLine: "Marketing • SMM • Target",
+  short: "Marketing, reklama va kontentni biznes natijasiga bog‘layman.",
+  topLeft: ["Marketing specialist", "SMM • Target • Kontent"],
+  topRight: "Open for collaboration",
+  bottomLeft: "Toshkent — O‘zbekiston",
+  bottomRight: "2026",
+  coords: "41.31° N · 69.24° E",
+  /** Faqat tasdiqlangan ko‘rsatkichlar (19+ brend — Shukrullo tasdiqlagan) */
+  stats: [
+    { value: "19+", label: "Brendlar" },
+    { value: "3", label: "Asosiy yo‘nalish" },
+    { value: "SMM", label: "Meta Ads · Kontent" },
+  ],
+  /** Fon ostidagi giant so'zlar (intro bo'limi) */
+  bands: ["Marketing", "SMM", "Target", "Kontent"],
 };
 
 export const about = {
@@ -53,7 +71,9 @@ export const approach = {
 
 /** Natijalar: FAQAT tasdiqlangan raqam. Yangi tasdiqlangan raqam bo'lsa shu yerga qo'shiladi. */
 export const trust = {
-  /** "19+" FAZO Digital reference'idan olingan (agentlik da'vosi) — Avazbek uchun tasdiqlanmagan, shuning uchun raqamsiz. */
+  /** 19+ — Shukrullo tasdiqlagan (2026-11). */
+  value: "19+",
+  label: "Brendlar",
   title: "Turli sohalardagi brendlar bilan ishlaganman",
   text: "Avtosalon, restoran, ko‘chmas mulk, ta’lim va ishlab chiqarish yo‘nalishidagi bizneslar bilan marketing, target va kontent loyihalari.",
 };
@@ -93,9 +113,11 @@ export const portfolio = {
   kicker: "Tanlangan ishlar",
   title: "Portfolio",
   text: "Marketing, kontent va reklama yo‘nalishidagi ishlardan namunalar.",
-  worksTitle: "Videolar",
-  worksText: "Real loyihalardan video materiallar. Kartochkada faqat videoda ko‘rinadigan ma’lumot berilgan.",
-  creativeTitle: "Yo‘nalishlar",
+  worksTitle: "Video ishlari",
+  worksText: "Suratga olish, montaj va qisqa formatdagi kontent — real loyihalardan.",
+  creativeTitle: "Marketing & Creative",
+  worldTitle: "Loyihalar olami",
+  worldText: "Brendlar, videolar va kreativlar — bitta marketing tizimi atrofida.",
 };
 
 /** Marketing & Creative — 3 ta vizual blok. Vizuallar illyustratsiya, real kabinet ma'lumoti emas. */
@@ -115,7 +137,7 @@ export const creative = [
   {
     no: "03",
     title: "Kontent va video",
-    text: "Reels, reklama kreativlari va short-form kontent ishlab chiqaman.",
+    text: "Reels, reklama kreativlari va qisqa formatdagi kontent ishlab chiqaman.",
     visual: "content" as const,
   },
 ];
