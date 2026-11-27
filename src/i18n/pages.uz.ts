@@ -8,7 +8,7 @@ export const pagesUz: PageDict = {
     ctaButton: 'Strategik uchraşuvga ariza qoldiriş', ctaSecondary: 'Telegram orqali bog‘laniş',
   },
   work: {
-    title: 'Natijalar', intro: 'Har bir loyihada bitta savolga javob berganmiz: pul qayerda yo‘qolyapti va uni qanday qaytariş mumkin.',
+    title: 'Loyihalar', intro: 'Har bir loyihada bitta savolga javob berganmiz: pul qayerda yo‘qolyapti va uni qanday qaytariş mumkin.',
     featured: 'Tanlangan loyihalar', other: 'Boşqa loyihalar', otherNote: 'Uşbu brendlar bilan SMM, maqsadli reklama, kontent yoki sotuv yo‘nalişlarida işlaganmiz.',
   },
   caseDetail: {

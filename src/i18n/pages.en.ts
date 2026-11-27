@@ -8,7 +8,7 @@ export const pagesEn: PageDict = {
     ctaButton: 'Submit an application', ctaSecondary: 'Message on Telegram',
   },
   work: {
-    title: 'Work', intro: 'In every project we answered one question: where is the money being lost, and how do we get it back?',
+    title: 'Projects', intro: 'In every project we answered one question: where is the money being lost, and how do we get it back?',
     featured: 'Detailed cases', other: 'Other projects', otherNote: 'Brands we have worked with on SMM, paid acquisition, content or sales.',
   },
   caseDetail: {
