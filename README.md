@@ -26,7 +26,9 @@ npm run preview      # build natijasini lokalda ko‘rish
 /privacy               Maxfiylik siyosati
 /avtosalon             Avtosalonlar uchun landing (faqat UZ, alohida header/footer, 4 bosqichli ariza)
 /qurilish              Turar joy quruvchilari uchun landing (faqat UZ, alohida header/footer, 1 bosqichli ariza)
-/ishlab-chiqarish      Ishlab chiqarish bizneslari uchun landing (faqat UZ, alohida header/footer, 1 bosqichli ariza)
+/ishlab-chiqarish      Ishlab chiqarish bizneslari uchun landing (faqat UZ)
+/talim                 Ta’lim markazlari uchun landing (faqat UZ)
+/card                  Raqamli vizitka (popup forma)
 /avazbek               Avazbek Meliqoziyev shaxsiy portfoliosi (alohida entry, o‘z navbar/footer/CSS; kod: src/avazbek, assetlar: public/avazbek)
 ```
 Har biri `/ru/...` va `/en/...` ko‘rinishida ham mavjud.
@@ -46,11 +48,11 @@ docs/apps-script.gs     Google Sheets'ga ariza yozadigan skript
 ```
 
 ## Ariza → Google Sheets
-Ariza xizmati 2026-09-22 kuni ishga tushirildi. Arizalar [Targeting Xizmat → Sayt arizalari](https://docs.google.com/spreadsheets/d/1pGD_lRrl9cz_CWWRQgRncFoJwShUz3K1qpiFFrcywYo/edit#gid=1999326885) varag‘iga yoziladi.
+Barcha formalar `/api/lead` orqali yangi **FAZO Digital** jadvaliga yoziladi — `docs/LEADS.md`. Eski "Targeting Xizmat" jadvali o‘zgarishsiz qoldi.
+CRM imkoniyatlari bo‘yicha saytda nima ko‘rsatilgani: `docs/CRM-AUDIT.md`.
 
-Amaldagi endpoint `src/lib/submit.ts` ichida tayyor. Ushbu versiyani build va deploy qilish kifoya. `VITE_APPLICATION_ENDPOINT` va `VITE_APPLICATION_TOKEN` faqat ulanishni almashtirish uchun ixtiyoriy; eski noto‘g‘ri qiymatlar Vercel’da bo‘lsa, ularni olib tashlang yoki yangilang va qayta build qiling.
-
-Muvaffaqiyat ekrani faqat xizmat `{ok:true}` qaytarganda chiqadi. Telegram bildirishnomasi ulanmagan. Google Apps Script kodi `docs/apps-script.gs` ichida; xizmat yangilanganda mavjud deployment uchun yangi versiya chiqaring.
+## Yozuv uslubi
+O‘zbekcha matnlarda sayt uchun tanlangan uslub: sh → ş, Sh/SH → Ş (faqat shu). `node scripts/uz-sh.mjs --check $(cat scripts/uz-files.txt)` tekshiradi, `--write` qo‘llaydi. Kod identifikatorlari, URL, brend nomlari va mijoz kiritgan ma’lumot o‘zgartirilmaydi.
 
 ## /avtosalon landing
 - Alohida sahifa: `avtosalon.html` → `src/avtosalon-main.tsx` → `src/AvtosalonApp.tsx`. Reklama trafigi asosiy sayt JS'ini yuklamaydi. Build `dist/avtosalon.html` va `dist/avtosalon/index.html` ni prerender qiladi.
