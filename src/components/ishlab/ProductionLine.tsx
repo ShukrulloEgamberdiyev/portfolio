@@ -93,8 +93,8 @@ function ProductionLineSvg({ className = '' }: { className?: string }) {
           <stop offset="1" stopColor="#f5f5f5" stopOpacity="0" />
         </linearGradient>
         <radialGradient id="ic-demand" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#7a6bff" stopOpacity="0.22" />
-          <stop offset="1" stopColor="#7a6bff" stopOpacity="0" />
+          <stop offset="0" stopColor="#325bff" stopOpacity="0.22" />
+          <stop offset="1" stopColor="#325bff" stopOpacity="0" />
         </radialGradient>
         <clipPath id="ic-belt-clip"><rect x={BELT_X0} y="330" width={BELT_X1 - BELT_X0} height={BELT_Y - 330} /></clipPath>
       </defs>
@@ -174,11 +174,11 @@ function ProductionLineSvg({ className = '' }: { className?: string }) {
       </g>
 
       {/* demand / lead layer rising from the line */}
-      <path className="ic-draw" d={`M${BELT_X1 - 40} ${BELT_Y - 110} V210 H470 V150`} fill="none" stroke="#7a6bff" strokeOpacity="0.75" strokeWidth="1.2" vectorEffect="non-scaling-stroke" pathLength={1} />
+      <path className="ic-draw" d={`M${BELT_X1 - 40} ${BELT_Y - 110} V210 H470 V150`} fill="none" stroke="#325bff" strokeOpacity="0.75" strokeWidth="1.2" vectorEffect="non-scaling-stroke" pathLength={1} />
       {[[BELT_X1 - 40, 330], [BELT_X1 - 40, 210], [470, 150]].map(([x, y], i) => (
         <g key={i}>
-          <circle cx={x} cy={y} r="9" fill="#7a6bff" fillOpacity="0.14" className="ic-pulse" style={{ animationDelay: `${i * 0.6}s` }} />
-          <circle cx={x} cy={y} r="3.5" fill="#050505" stroke="#7a6bff" strokeWidth="1.2" />
+          <circle cx={x} cy={y} r="9" fill="#325bff" fillOpacity="0.14" className="ic-pulse" style={{ animationDelay: `${i * 0.6}s` }} />
+          <circle cx={x} cy={y} r="3.5" fill="#050505" stroke="#325bff" strokeWidth="1.2" />
         </g>
       ))}
 

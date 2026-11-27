@@ -10,7 +10,7 @@ export function CtaBlock() {
   return (
     <section className="relative overflow-hidden border-t border-line py-24 lg:py-36">
       <span aria-hidden className="pointer-events-none absolute -bottom-[40vh] left-1/2 h-[80vh] w-[110vw] -translate-x-1/2 rounded-[50%] opacity-30 blur-[120px]"
-        style={{ background: 'radial-gradient(closest-side, rgba(91,77,255,0.5), transparent)' }} />
+        style={{ background: 'radial-gradient(closest-side, rgba(50,91,255,0.5), transparent)' }} />
       <div className="shell relative grid gap-10 lg:grid-cols-12 lg:items-end">
         <div className="lg:col-span-7">
           <Headline lines={[{ t: p.common.ctaTitle, accent: true }]} className="display-md" />

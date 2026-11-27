@@ -73,7 +73,7 @@ export const form = {
   title: 'Avtosaloningiz haqida qisqacha ma’lumot qoldiring',
   text: 'Javoblaringiz orqali marketing va sotuv holatingizni oldindan tushunib, suhbatga tayyorlanamiz.',
   aside: [
-    'Ariza 3–4 daqiqa oladi',
+    'Ariza 1–2 daqiqa oladi',
     'Xizmat narxi arizani ko‘rib chiqqach, individual muhokama qilinadi',
     'Ma’lumotlaringiz faqat siz bilan bog‘lanish uchun ishlatiladi',
   ],
@@ -98,37 +98,4 @@ export const form = {
   privacy: 'Arizani yuborish orqali ma’lumotlaringiz',
   privacyLink: 'maxfiylik siyosati',
   privacyTail: 'asosida qayta ishlanishiga rozilik bildirasiz.',
-};
-
-export const REGIONS = [
-  'Toshkent shahri', 'Toshkent viloyati', 'Andijon viloyati', 'Buxoro viloyati', 'Farg‘ona viloyati', 'Jizzax viloyati',
-  'Xorazm viloyati', 'Namangan viloyati', 'Navoiy viloyati', 'Qashqadaryo viloyati', 'Qoraqalpog‘iston Respublikasi',
-  'Samarqand viloyati', 'Sirdaryo viloyati', 'Surxondaryo viloyati',
-];
-
-export const OPT = {
-  carTypes: ['Yangi avtomobillar', 'Ishlatilgan avtomobillar', 'Elektromobil / gibrid', 'Premium segment', 'Tijorat transporti'],
-  branches: ['1', '2', '3–5', '6+'],
-  stock: ['0–9', '10–29', '30–49', '50–99', '100+'],
-  marketingOwner: ['Ichki jamoa', 'Agentlik', 'Freelancer', 'O‘zimiz', 'Hozir hech kim', 'Boshqa'],
-  targetStatus: ['Ha', 'Yo‘q', 'Vaqti-vaqti bilan'],
-  budget: ['$2,000–3,000', '$3,000–5,000', '$5,000–7,000', '$7,000–10,000+'],
-  monthlySales: ['0–9', '10–29', '30–49', '50–99', '100+'],
-  salesStaff: ['Hozir yo‘q', '1–2', '3–5', '6–9', '10+'],
-  rop: ['Ha', 'Yo‘q'],
-  crm: ['Ha', 'Yo‘q', 'Bilmayman'],
-  leadSystem: ['CRM', 'Google Sheets', 'Excel', 'Telegram', 'Tizim yo‘q', 'Boshqa'],
-  goals: [
-    'Sifatli murojaatlar sonini oshirish',
-    'Marketingni to‘liq tizimlashtirish',
-    'Target reklamani kuchaytirish',
-    'Kontent va brend ko‘rinishini yaxshilash',
-    'CRM va murojaatlar nazoratini yo‘lga qo‘yish',
-    'Mavjud sotuv bo‘limini kuchaytirish',
-    'Sotuv bo‘limini noldan qurish',
-    'Marketing va sotuvni bitta tizimga bog‘lash',
-    'Kompleks marketing va sotuv boshqaruvi',
-    'Boshqa',
-  ],
-  positions: ['Asoschi / egasi', 'Direktor', 'Tijorat direktori', 'Marketing rahbari', 'Sotuv bo‘limi rahbari'],
 };

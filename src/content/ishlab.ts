@@ -215,39 +215,3 @@ export const finalCta = {
   cta: 'Loyihani muhokama qilish',
   aside: ['Ariza 1–2 daqiqa oladi', 'Ma’lumotlaringiz faqat siz bilan bog‘lanish uchun ishlatiladi'],
 };
-
-/* ───────── Form ───────── */
-
-export const form = {
-  title: 'Biznesingiz haqida qisqacha ma’lumot',
-  submit: 'Loyihani yuborish',
-  sending: 'Yuborilmoqda…',
-  required: 'Belgilangan maydonlarni to‘ldiring.',
-  errors: {
-    network: 'Ariza yuborilmadi: aloqa uzildi yoki server javob bermadi. Internetni tekshirib, qayta yuboring — kiritilgan ma’lumotlar saqlanib qoldi.',
-    busy: 'Hozir arizalar juda ko‘p. Bir necha daqiqadan so‘ng qayta yuboring — kiritilgan ma’lumotlar saqlanib qoldi.',
-    contact: 'Shu telefon raqamidan yaqinda bir nechta ariza yuborilgan. Keyinroq qayta urinib ko‘ring yoki Telegram orqali yozing.',
-    invalid: 'Ariza qabul qilinmadi: ba’zi maydonlar to‘liq emas. Javoblarni tekshirib, qayta yuboring.',
-    generic: 'Ariza yuborilmadi. Qayta urinib ko‘ring — kiritilgan ma’lumotlar saqlanib qoldi.',
-    mismatch: 'Server arizangizni joriy ma’lumotlar bilan tasdiqlamadi. Qayta yuboring — ariza bitta bo‘lib qoladi, ikkinchi nusxa yaratilmaydi.',
-    corrections: 'Bu ariza juda ko‘p marta o‘zgartirildi. Iltimos, qo‘shimcha o‘zgarishlarni Telegram orqali yozing.',
-  },
-  submitCorrection: 'Tuzatishni yuborish',
-  correctionTitle: 'Oldingi yuborish natijasi noma’lum.',
-  correctionText: 'Ariza allaqachon saqlangan bo‘lishi mumkin. Hozir yuborsangiz, o‘zgartirgan ma’lumotlaringiz o‘sha arizaga tuzatish sifatida yoziladi — ikkinchi ariza yaratilmaydi.',
-  updatedTitle: 'Arizangiz yangilandi.',
-  updatedText: 'O‘zgartirishlar oldingi arizangizga saqlandi — ikkinchi ariza yaratilmadi. FAZO Digital jamoasi siz bilan bog‘lanadi.',
-  retry: 'Qayta yuborish',
-  errorAlt: 'Muammo takrorlansa, Telegram orqali yozing:',
-  successTitle: 'Arizangiz qabul qilindi.',
-  successText: 'FAZO Digital jamoasi ma’lumotlarni ko‘rib chiqadi va siz bilan bog‘lanadi.',
-  privacy: 'Yuborish orqali ma’lumotlaringiz',
-  privacyLink: 'maxfiylik siyosati',
-  privacyTail: 'asosida qayta ishlanishiga rozilik bildirasiz.',
-  budgetHint: 'Reklama uchun ajratiladigan budjet. Bu FAZO Digital xizmati narxi emas. Aniq bilmasangiz — “Budjet bo‘yicha tavsiya kerak”ni tanlang.',
-};
-
-export const OPT = {
-  channel: ['Chakana', 'Optom', 'Chakana + Optom'],
-  budget: ['$500–$1,000', '$1,000–$3,000', '$3,000+', 'Budjet bo‘yicha tavsiya kerak'],
-};

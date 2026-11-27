@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { QrForm } from '../components/qurilish/QrForm';
+import { LeadForm } from '../forms/LeadForm';
 import { Dotted, QrCta } from '../components/qurilish/QrUi';
 import { CTA, QR_FORM_ID, hero, offer, problem, process, register, system } from '../content/qurilish';
 import { captureAttribution, initPixel, track } from '../lib/tracking';
@@ -151,16 +151,15 @@ function SystemOffer() {
         <Reveal delay={0.05}><Flow steps={system.steps} className="mt-6 sm:mt-8" /></Reveal>
 
         <Reveal delay={0.1} className="mt-10 sm:mt-14">
-          <div aria-label="Hamkorlik" className="flex flex-col gap-5 border border-line-strong bg-surface-1/80 p-5 sm:p-8 lg:flex-row lg:items-center lg:justify-between">
+          <div className="grid gap-6 border border-line-strong bg-surface-1/80 p-5 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-mist">{offer.label}</p>
-              <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="tabular text-[2.2rem] font-bold leading-none tracking-[-0.04em] text-bone sm:text-[2.8rem]">{offer.price}</span>
-                <span className="font-mono text-[13px] uppercase tracking-[0.1em] text-mist">{offer.per}</span>
-              </p>
-              <p className="mt-2.5 text-[0.95rem] text-bone/80">{offer.adBudget}</p>
+              <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] text-mist">{offer.label}</h3>
+              <ul className="mt-4 space-y-2.5 text-[0.98rem] leading-snug text-bone/90">
+                {offer.gets.map((g) => <li key={g} className="flex gap-2.5"><span aria-hidden className="text-lamp">✓</span>{g}</li>)}
+              </ul>
+              <p className="mt-5 text-[0.92rem] text-mist">{offer.price} {offer.adBudget}</p>
             </div>
-            <QrCta location="pricing" className="w-full !text-[13px] lg:w-auto lg:min-w-[280px]">{CTA}</QrCta>
+            <QrCta location="offer" className="w-full !text-[13px] lg:w-auto lg:min-w-[280px]">{CTA}</QrCta>
           </div>
         </Reveal>
       </div>
@@ -180,7 +179,9 @@ function Registration() {
           </div>
         </div>
         <div className="lg:col-span-8">
-          <QrForm />
+          <div className="border border-line-strong bg-surface-1/70 p-5 sm:p-8" style={{ '--lf-accent': 'var(--color-lamp)', '--lf-on-accent': '#050505' } as React.CSSProperties}>
+            <LeadForm formId="qurilish" />
+          </div>
         </div>
       </div>
     </section>
@@ -243,8 +244,8 @@ export default function QurilishPage() {
     <div className="relative">
       <Hero />
       <Problem />
-      <Process />
       <SystemOffer />
+      <Process />
       <Registration />
       <MiniFooter />
       <StickyCta />

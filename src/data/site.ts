@@ -7,7 +7,8 @@ export const CONTACT = {
   domain: 'fazodigital.uz',
 };
 
-export const STATS = { campaigns: 200, clients: 50, brands: 19 };
+/** Only confirmed figures: 19+ brands (confirmed by the owner, 2026-11). Campaign and client counts were not verified and are not shown. */
+export const STATS = { brands: 19 };
 
 /** Replace `logo` with an imported monochrome SVG when brand files are available. */
 export const CLIENTS: { name: string; logo?: string }[] = [

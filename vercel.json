@@ -21,6 +21,11 @@
       "permanent": true
     },
     {
+      "source": "/talim/",
+      "destination": "/talim",
+      "permanent": true
+    },
+    {
       "source": "/card/",
       "destination": "/card",
       "permanent": true
@@ -114,6 +119,12 @@
     {
       "source": "/crm/:path*",
       "destination": "https://fazo-digital-crm.vercel.app/crm/:path*"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/lead-retry",
+      "schedule": "0 4 * * *"
     }
   ]
 }

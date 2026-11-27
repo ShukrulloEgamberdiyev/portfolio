@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import mark from '../assets/fazo-mark.png';
-import { CardForm } from '../components/card/CardForm';
+import { FormDialog } from '../forms/FormDialog';
+import { ctaClick } from '../lib/analytics';
 import { CONTACT } from '../data/site';
 import { contactBlock as C, identity as I, servicesBlock as S } from '../content/card';
 import { captureAttribution } from '../lib/tracking';
@@ -113,14 +114,14 @@ function Contact({ onRegister }: { onRegister: () => void }) {
 export default function CardPage() {
   const [open, setOpen] = useState(false);
   useEffect(() => { captureAttribution(); }, []);
-  const openForm = useCallback(() => setOpen(true), []);
+  const openForm = useCallback(() => { ctaClick('card-register'); setOpen(true); }, []);
   const closeForm = useCallback(() => setOpen(false), []);
 
   return (
     <>
       {/* Yengil statik yorug‘lik — asosiy saytdagi binafsha "atmosfera"ning sokin varianti. */}
       <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-0 h-[70vh] opacity-60"
-        style={{ background: 'radial-gradient(60% 55% at 50% 0%, rgba(91,77,255,0.22), rgba(47,69,255,0.06) 55%, transparent 80%)' }} />
+        style={{ background: 'radial-gradient(60% 55% at 50% 0%, rgba(50,91,255,0.22), rgba(47,69,255,0.06) 55%, transparent 80%)' }} />
 
       <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[460px] flex-col px-4 pb-[calc(env(safe-area-inset-bottom,0px)+20px)] pt-10 sm:px-6 sm:pt-16">
         <Identity />
@@ -143,7 +144,7 @@ export default function CardPage() {
         </footer>
       </div>
 
-      <CardForm open={open} onClose={closeForm} />
+      <FormDialog open={open} onClose={closeForm} formId="card" title={C.formTitle} closeLabel={C.close} />
     </>
   );
 }

@@ -1,32 +1,25 @@
-import { Hero } from '../components/Hero';
-import { AuthorityStrip } from '../components/AuthorityStrip';
 import { ClientMarquee } from '../components/ClientMarquee';
-import { Problem } from '../components/Problem';
-import { GrowthSystem } from '../components/GrowthSystem';
-import { Expertise } from '../components/Expertise';
-import { SelectedWork } from '../components/SelectedWork';
-import { WhyFazo } from '../components/WhyFazo';
-import { Process } from '../components/Process';
-import { Insights } from '../components/Insights';
-import { Engagement } from '../components/Engagement';
-import { Application } from '../components/Application';
 import { FinalCTA } from '../components/FinalCTA';
+import { HomeApply, HomeCases, HomeCrm, HomeFaq, HomeFit, HomeHero, HomeProblems, HomeProcess, HomeServices } from '../components/home/HomeSections';
 
+/**
+ * Home: who we serve and the problem → problems the owner recognises → services with clear limits →
+ * CRM + Meta CAPI (the chain from ads to recorded sales) → projects (verified facts only) → process →
+ * who it suits → FAQ → application → direct contacts.
+ */
 export default function Home() {
   return (
     <>
-      <Hero />
-      <AuthorityStrip />
+      <HomeHero />
       <ClientMarquee />
-      <Problem />
-      <GrowthSystem />
-      <Expertise />
-      <SelectedWork />
-      <WhyFazo />
-      <Process />
-      <Insights />
-      <Engagement />
-      <Application />
+      <HomeProblems />
+      <HomeServices />
+      <HomeCrm />
+      <HomeCases />
+      <HomeProcess />
+      <HomeFit />
+      <HomeFaq />
+      <HomeApply />
       <FinalCTA />
     </>
   );

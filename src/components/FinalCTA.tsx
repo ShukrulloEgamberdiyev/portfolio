@@ -19,7 +19,7 @@ export function FinalCTA() {
   return (
     <section id={SECTION_IDS.contact} aria-labelledby="final-title" className="relative overflow-hidden border-t border-line pb-16 pt-28 lg:pb-24 lg:pt-48">
       <span aria-hidden className="pointer-events-none absolute -bottom-[40vh] left-1/2 h-[90vh] w-[120vw] -translate-x-1/2 rounded-[50%] opacity-40 blur-[120px]"
-        style={{ background: 'radial-gradient(closest-side, rgba(91,77,255,0.55), rgba(47,69,255,0.2) 55%, transparent)' }} />
+        style={{ background: 'radial-gradient(closest-side, rgba(50,91,255,0.55), rgba(47,69,255,0.2) 55%, transparent)' }} />
       <div className="shell relative">
         <Headline id="final-title" lines={f.title} className="display-xl" />
         <div className="mt-14 grid gap-10 lg:mt-20 lg:grid-cols-12 lg:items-end">

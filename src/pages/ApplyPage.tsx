@@ -1,6 +1,6 @@
 import { useLang } from '../i18n';
-import { Application } from '../components/Application';
 import { FinalCTA } from '../components/FinalCTA';
+import { HomeApply } from '../components/home/HomeSections';
 import { PageHeader } from '../components/PageHeader';
 
 export default function ApplyPage() {
@@ -8,7 +8,7 @@ export default function ApplyPage() {
   return (
     <>
       <PageHeader label={p.applyPage.title} title={p.applyPage.title} intro={p.applyPage.intro} />
-      <Application compact />
+      <HomeApply compact />
       <FinalCTA />
     </>
   );

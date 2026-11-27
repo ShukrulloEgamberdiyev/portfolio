@@ -4,6 +4,7 @@ import App from './App';
 import AvtosalonApp from './AvtosalonApp';
 import QurilishApp from './QurilishApp';
 import IshlabApp from './IshlabApp';
+import TalimApp from './TalimApp';
 import CardApp from './CardApp';
 import AvazbekApp from './avazbek/App';
 import type { Lang } from './i18n/types';
@@ -34,6 +35,11 @@ export function renderQurilish() {
 /** Prerender for the standalone /ishlab-chiqarish landing (its own client entry: src/ishlab-chiqarish-main.tsx). */
 export function renderIshlab() {
   return renderToString(<IshlabApp />);
+}
+
+/** Prerender for the standalone /talim landing (its own client entry: src/talim-main.tsx). */
+export function renderTalim() {
+  return renderToString(<TalimApp />);
 }
 
 /** Prerender for the /card digital business card (its own client entry: src/card-main.tsx). */

@@ -2,6 +2,7 @@ import { dictionaries, pageDictionaries, langPrefix } from '../i18n';
 import type { Lang } from '../i18n/types';
 import { CASES, EXPERTISE, SITE_URL } from '../data/site';
 import { ARTICLES } from '../content/articles';
+import { HOME } from '../i18n/home.data';
 
 export type Seo = { title: string; description: string; canonical: string; image?: string; /** Not a real page (404): keep it out of search results. */ noindex?: boolean };
 
@@ -57,6 +58,14 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
       image: `${SITE_URL}/og-ishlab-chiqarish.jpg`,
     };
   }
+  if (path === '/talim') {
+    return {
+      title: 'Ta’lim markazlari uchun marketing va qabul tizimi | FAZO Digital',
+      description: 'FAZO Digital o‘quv markazlari va xususiy maktablar uchun kontent, Meta reklama va CRM orqali murojaatlarni qabulgacha kuzatiladigan tizimga bog‘laydi.',
+      canonical: `${SITE_URL}/talim`,
+      image: `${SITE_URL}/og-image.jpg`,
+    };
+  }
   if (path === '/card') {
     return {
       title: 'FAZO Digital — Marketing · SMM · Targeting',
@@ -65,7 +74,7 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
       image: `${SITE_URL}/og-image.jpg`,
     };
   }
-  if (path === '/') return { title: t.meta.title, description: t.meta.description, canonical };
+  if (path === '/') return { title: HOME[lang].meta.title, description: HOME[lang].meta.description, canonical };
   if (path === '/work') return make(p.work.title, p.work.intro);
   if (path === '/expertise') return make(p.expertise.title, p.expertise.intro);
   if (path === '/process') return make(p.processPage.title, p.processPage.intro);

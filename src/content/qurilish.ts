@@ -40,58 +40,21 @@ export const process = {
   note: 'Aniq ish hajmi loyihangiz bosqichi va sotuv bo‘limingiz holatiga qarab kelishiladi.',
 };
 
+/** What the client gets — no price figure: the published $5,000–7,000 was not confirmed against current terms. */
 export const offer = {
-  label: 'FAZO Digital xizmati',
-  price: '$5,000–$7,000',
-  per: '/ oy',
-  adBudget: 'Reklama budjeti alohida ajratiladi.',
+  label: 'Siz nima olasiz',
+  gets: [
+    'Loyihangiz xaridoriga qaratilgan Meta Ads kampaniyalari va ularni muntazam optimallashtirish',
+    'Reklama taklifiga mos murojaat sahifasi',
+    'Har bir murojaat manbasi bilan bir joyda — chatlarda yo‘qolmaydi',
+    'Sotuv bo‘limingizga uzatilgan murojaatlar holatini kuzatish',
+    'Oy yakunida hisobot: reklama sarfi, murojaatlar va qayd etilgan sotuvlar',
+  ],
+  price: 'Xizmat narxi loyiha hajmiga qarab tahlildan keyin yozma taklifda ko‘rsatiladi.',
+  adBudget: 'Reklama budjeti alohida ajratiladi va reklama platformasiga to‘lanadi.',
 };
 
 export const register = {
   title: 'Ro‘yxatdan o‘tish',
   text: 'Loyihangiz haqida qisqacha ma’lumot qoldiring. Jamoamiz siz bilan bog‘lanadi.',
-};
-
-/* ───────── Form ───────── */
-
-export const form = {
-  submit: 'Ro‘yxatdan o‘tish',
-  sending: 'Yuborilmoqda…',
-  required: 'Belgilangan maydonlarni to‘ldiring.',
-  errors: {
-    network: 'Yuborilmadi: aloqa uzildi yoki server javob bermadi. Internetni tekshirib, qayta yuboring — kiritilgan ma’lumotlar saqlanib qoldi.',
-    busy: 'Hozir so‘rovlar juda ko‘p. Bir necha daqiqadan so‘ng qayta yuboring — kiritilgan ma’lumotlar saqlanib qoldi.',
-    contact: 'Shu telefon raqami bilan yaqinda bir necha marta ro‘yxatdan o‘tilgan. Keyinroq qayta urinib ko‘ring yoki Telegram orqali yozing.',
-    invalid: 'Qabul qilinmadi: ba’zi maydonlar to‘liq emas. Javoblarni tekshirib, qayta yuboring.',
-    generic: 'Yuborilmadi. Qayta urinib ko‘ring — kiritilgan ma’lumotlar saqlanib qoldi.',
-    corrections: 'Bu ariza juda ko‘p marta o‘zgartirildi. Qo‘shimcha o‘zgarishlarni Telegram orqali yozing.',
-  },
-  retry: 'Qayta yuborish',
-  errorAlt: 'Muammo takrorlansa, Telegram orqali yozing:',
-  successTitle: 'Ro‘yxatdan o‘tdingiz.',
-  successText: 'Jamoamiz loyihangizni ko‘rib chiqadi va siz bilan bog‘lanadi.',
-  privacy: 'Yuborish orqali ma’lumotlaringiz',
-  privacyLink: 'maxfiylik siyosati',
-  privacyTail: 'asosida qayta ishlanishiga rozilik bildirasiz.',
-};
-
-export const REGIONS = [
-  'Toshkent shahri', 'Toshkent viloyati', 'Andijon viloyati', 'Buxoro viloyati', 'Farg‘ona viloyati', 'Jizzax viloyati',
-  'Xorazm viloyati', 'Namangan viloyati', 'Navoiy viloyati', 'Qashqadaryo viloyati', 'Qoraqalpog‘iston Respublikasi',
-  'Samarqand viloyati', 'Sirdaryo viloyati', 'Surxondaryo viloyati',
-];
-
-export const OPT = {
-  stage: ['Qurilish jarayonida', 'Sotuv boshlangan', 'Qurilish tugagan, sotuv davom etmoqda', 'Yangi loyiha'],
-  problem: [
-    'Murojaatlar kam',
-    'Murojaatlar sifati past',
-    'Sotuv sust',
-    'Marketing tizimi yo‘q',
-    'Sotuv bo‘limi yo‘q',
-    'Boshqa',
-  ],
-  /** Not asked on the page any more (6-field form); the server still accepts them when sent. */
-  budget: ['$1,000 gacha', '$1,000–$3,000', '$3,000–$5,000', '$5,000+'],
-  contactTime: ['Imkon qadar tezroq', 'Ertalab (9:00–12:00)', 'Tushdan keyin (12:00–18:00)', 'Kechqurun (18:00–20:00)'],
 };

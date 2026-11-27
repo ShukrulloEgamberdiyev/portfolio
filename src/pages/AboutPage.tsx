@@ -28,8 +28,6 @@ export default function AboutPage() {
             <Label>{a.numbersTitle}</Label>
             <dl className="mt-6 space-y-6">
               {[
-                { v: STATS.campaigns, l: t.stats.campaigns },
-                { v: STATS.clients, l: t.stats.clients },
                 { v: STATS.brands, l: t.stats.brands },
               ].map((n) => (
                 <div key={n.l} className="flex items-baseline justify-between gap-4 border-b border-line pb-4 last:border-0 last:pb-0">

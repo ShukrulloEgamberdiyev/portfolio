@@ -19,8 +19,8 @@
   --color-ash: #7d7d87;      /* tertiary — ≥4.5:1 on ink for small text (WCAG AA) */
   --color-line: rgb(245 245 245 / 0.09);
   --color-line-strong: rgb(245 245 245 / 0.18);
-  --color-violet: #7a6bff;   /* accent — used as light, rarely as fill */
-  --color-cobalt: #2f45ff;
+  --color-violet: #325bff;   /* FAZO brand blue — main accent (token name kept for existing classes) */
+  --color-cobalt: #1f3fd9;
   --color-signal: #f5c33b;   /* yellow accent — used by the /avtosalon landing */
   --color-alert: #ff7a6b;    /* form validation messages on /avtosalon, /qurilish */
   --color-lamp: #e8b86a;     /* warm accent — /qurilish info markers */
@@ -170,3 +170,35 @@
   .loader { display: none; }
 }
 @media print { .loader { display: none; } }
+
+/* ───────── Lead form (src/forms/LeadForm.tsx) — shared by the main site, /card and sector landings ─────────
+ * Accent comes from --lf-accent so each landing can keep its own colour; default is the FAZO blue. */
+.lf { position: relative; --lf-accent-c: var(--lf-accent, var(--color-violet)); }
+.lf-accent { color: var(--lf-accent-c); }
+.lf-bar { background: var(--lf-accent-c); transition: width 0.5s var(--ease-fazo); }
+.lf-option-on { background: color-mix(in srgb, var(--lf-accent-c) 22%, transparent); box-shadow: inset 0 0 0 1.5px var(--lf-accent-c); }
+.lf-option:has(input:focus-visible) { outline: 1.5px solid var(--lf-accent-c); outline-offset: 3px; }
+.lf-dot { background: var(--lf-accent-c); }
+.lf-input {
+  width: 100%; min-height: 52px; padding: 12px 14px; font-size: 16px; /* 16px: no zoom-on-focus on iOS */
+  color: var(--color-bone); background: rgb(245 245 245 / 0.03); border: 1px solid var(--color-line-strong); border-radius: 0;
+  transition: border-color 0.2s, background-color 0.2s; scroll-margin: 96px;
+}
+.lf-input::placeholder { color: var(--color-ash); }
+.lf-input:focus { outline: none; border-color: var(--lf-accent-c); background: rgb(245 245 245 / 0.05); }
+.lf-input[aria-invalid="true"] { border-color: var(--color-alert); }
+.lf-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 12px 22px;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--color-bone); border: 1px solid var(--color-line-strong); transition: background-color 0.25s, border-color 0.25s, opacity 0.2s;
+}
+.lf-btn:hover { border-color: rgb(245 245 245 / 0.6); }
+.lf-btn-primary { background: var(--lf-accent-c); border-color: transparent; color: var(--lf-on-accent, #fff); }
+.lf-btn-primary:hover { background: color-mix(in srgb, var(--lf-accent-c) 85%, #fff); border-color: transparent; }
+.lf-btn:disabled { opacity: 0.7; cursor: progress; }
+.lf-error { color: var(--color-alert); font-size: 0.9rem; line-height: 1.45; }
+.lf-spinner { width: 14px; height: 14px; border-radius: 999px; border: 2px solid rgb(255 255 255 / 0.35); border-top-color: #fff; animation: lf-spin 0.8s linear infinite; }
+@keyframes lf-spin { to { transform: rotate(360deg); } }
+@keyframes lf-step-in { from { opacity: 0; transform: translateY(8px); } }
+.lf-step { animation: lf-step-in 0.35s var(--ease-fazo) both; }
+@media (prefers-reduced-motion: reduce) { .lf-step, .lf-bar { animation: none; transition: none; } .lf-spinner { animation-duration: 1.6s !important; animation-iteration-count: infinite !important; } }

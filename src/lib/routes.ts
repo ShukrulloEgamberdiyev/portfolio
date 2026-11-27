@@ -17,4 +17,4 @@ export const ROUTES: string[] = [
 ];
 
 /** Uzbek-only landing pages: prerendered once (no /ru, /en copies) and listed in the sitemap. */
-export const UZ_ONLY_ROUTES: string[] = ['/avtosalon', '/qurilish', '/ishlab-chiqarish', '/card', '/avazbek'];
+export const UZ_ONLY_ROUTES: string[] = ['/avtosalon', '/qurilish', '/ishlab-chiqarish', '/talim', '/card', '/avazbek'];

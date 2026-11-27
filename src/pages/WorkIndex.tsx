@@ -26,7 +26,7 @@ export default function WorkIndex() {
               <Link to={`/work/${c.slug}`} className="group block" data-cursor="hover">
                 <div className="relative aspect-[5/4] overflow-hidden bg-surface-2">
                   <span aria-hidden className="absolute inset-0 transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-110"
-                    style={{ background: `radial-gradient(60% 55% at ${LIGHTS[i]}, rgba(91,77,255,0.26), transparent 78%)` }} />
+                    style={{ background: `radial-gradient(60% 55% at ${LIGHTS[i]}, rgba(50,91,255,0.26), transparent 78%)` }} />
                   <span aria-hidden className="absolute inset-0 opacity-50"
                     style={{ backgroundImage: 'linear-gradient(rgba(245,245,245,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(245,245,245,0.045) 1px, transparent 1px)', backgroundSize: '56px 56px' }} />
                   <span className="absolute left-6 top-6 font-mono text-[10.5px] uppercase tracking-[0.14em] text-mist">{c.industry}</span>

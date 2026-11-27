@@ -1,7 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { Logo } from '../components/Logo';
-import { AvForm } from '../components/avtosalon/AvForm';
+import { LeadForm } from '../forms/LeadForm';
 import { AvCta, Eyebrow, Icon, Section, SectionCta, SectionHead, goToForm } from '../components/avtosalon/AvUi';
 import { AV_FORM_ID, SYSTEM_ID, expectations, form, hero, how, problems, system } from '../content/avtosalon';
 import { captureAttribution, initPixel, track } from '../lib/tracking';
@@ -261,7 +261,9 @@ function ApplicationSection() {
           </div>
         </div>
         <div className="lg:col-span-8">
-          <AvForm />
+          <div className="border border-line-strong bg-surface-1/70 p-5 sm:p-8" style={{ '--lf-accent': 'var(--color-signal)', '--lf-on-accent': '#050505' } as React.CSSProperties}>
+            <LeadForm formId="avtosalon" />
+          </div>
         </div>
       </div>
     </section>

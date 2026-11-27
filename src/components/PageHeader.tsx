@@ -11,7 +11,7 @@ export function PageHeader({ label, title, intro, meta, back }: Props) {
   return (
     <header className="relative overflow-hidden pt-32 lg:pt-44">
       <span aria-hidden className="pointer-events-none absolute -top-[30vh] left-1/2 h-[70vh] w-[100vw] -translate-x-1/2 rounded-full opacity-25 blur-[120px]"
-        style={{ background: 'radial-gradient(closest-side, rgba(91,77,255,0.5), transparent)' }} />
+        style={{ background: 'radial-gradient(closest-side, rgba(50,91,255,0.5), transparent)' }} />
       <div className="shell relative">
         {back && (
           <Link to={back.to} className="tap mb-8 inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-mist transition-colors hover:text-bone">

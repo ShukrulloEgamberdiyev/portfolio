@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useId, useRef, useState } from 'react';
 import { Logo } from '../components/Logo';
-import { IcForm } from '../components/ishlab/IcForm';
+import { LeadForm } from '../forms/LeadForm';
 import { Chain, Check, Dotted, Eyebrow, IcCta, Section, SectionHead, goTo } from '../components/ishlab/IcUi';
 import { ProductionLine } from '../components/ishlab/ProductionLine';
 import {
@@ -253,7 +253,7 @@ function Channels() {
         {channels.cards.map((c, ci) => {
           const b2b = ci === 1;
           return (
-            <Reveal key={c.tag} delay={ci * 0.08} className={`relative flex flex-col overflow-hidden border ${b2b ? 'border-violet/45 bg-[linear-gradient(160deg,rgba(122,107,255,0.10),rgba(122,107,255,0.0)_55%)]' : 'border-line-strong bg-surface-1/70'}`}>
+            <Reveal key={c.tag} delay={ci * 0.08} className={`relative flex flex-col overflow-hidden border ${b2b ? 'border-violet/45 bg-[linear-gradient(160deg,rgba(50,91,255,0.10),rgba(50,91,255,0.0)_55%)]' : 'border-line-strong bg-surface-1/70'}`}>
               <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4 sm:px-8">
                 <span className={`font-mono text-[11px] uppercase tracking-[0.14em] ${b2b ? 'text-violet' : 'text-forge'}`}>{c.tag}</span>
                 <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ash">Yo‘l {pad2(ci + 1)}</span>
@@ -305,7 +305,7 @@ function Pipeline() {
   const groupOf = (i: number) => system.groups.findIndex((g) => i >= g.from && i <= g.to);
   const isFocus = (i: number) => i === system.focus;
   const node = (i: number) => (
-    <span className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border font-mono text-[12px] ${isFocus(i) ? 'border-violet bg-violet text-white shadow-[0_0_40px_-4px_rgba(122,107,255,0.7)]' : i === system.stages.length - 1 ? 'border-forge/70 bg-ink text-forge' : 'border-line-strong bg-ink text-bone'}`}>{pad2(i + 1)}</span>
+    <span className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border font-mono text-[12px] ${isFocus(i) ? 'border-violet bg-violet text-white shadow-[0_0_40px_-4px_rgba(50,91,255,0.7)]' : i === system.stages.length - 1 ? 'border-forge/70 bg-ink text-forge' : 'border-line-strong bg-ink text-bone'}`}>{pad2(i + 1)}</span>
   );
 
   return (
@@ -339,7 +339,7 @@ function Pipeline() {
             {r === 0 && (
               <div aria-hidden className="relative h-16">
                 <svg className="absolute inset-0 h-full w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 64">
-                  <path d="M90 0 V32 H10 V64" fill="none" stroke="#7a6bff" strokeOpacity="0.5" strokeDasharray="1.2 1.2" vectorEffect="non-scaling-stroke" />
+                  <path d="M90 0 V32 H10 V64" fill="none" stroke="#325bff" strokeOpacity="0.5" strokeDasharray="1.2 1.2" vectorEffect="non-scaling-stroke" />
                 </svg>
               </div>
             )}
@@ -369,7 +369,7 @@ function Pipeline() {
       </ol>
 
       <Reveal className="mt-10 lg:mt-14">
-        <div className="relative overflow-hidden border border-violet/40 bg-[linear-gradient(120deg,rgba(122,107,255,0.14),rgba(122,107,255,0.02)_60%)] p-6 sm:p-10">
+        <div className="relative overflow-hidden border border-violet/40 bg-[linear-gradient(120deg,rgba(50,91,255,0.14),rgba(50,91,255,0.02)_60%)] p-6 sm:p-10">
           <p className="text-[1.45rem] font-bold leading-[1.15] tracking-[-0.025em] text-bone/60 sm:text-[2rem]">{system.highlightA}</p>
           <p className="text-[1.45rem] font-bold leading-[1.15] tracking-[-0.025em] text-bone sm:text-[2rem]"><Dotted text={system.highlightB} /></p>
         </div>
@@ -625,7 +625,7 @@ function ApplicationSection() {
             </h2>
             <p className="mt-5 max-w-[46ch] text-[1.05rem] leading-relaxed text-mist">{finalCta.text}</p>
             <a href={`#${IC_FORM_ID}-card`} data-cursor="hover"
-              onClick={(e) => { e.preventDefault(); track('IshlabCTA', { location: 'final' }, { custom: true }); scrollToId(`${IC_FORM_ID}-card`); window.setTimeout(() => (document.getElementById('name') as HTMLInputElement | null)?.focus({ preventScroll: true }), 700); }}
+              onClick={(e) => { e.preventDefault(); track('IshlabCTA', { location: 'final' }, { custom: true }); scrollToId(`${IC_FORM_ID}-card`); }}
               className="group mt-8 inline-flex min-h-14 w-full items-center justify-center gap-4 border border-line-strong px-7 font-mono text-[12px] font-medium uppercase tracking-[0.14em] text-bone transition-colors hover:border-bone hover:bg-bone hover:text-ink sm:w-auto">
               {finalCta.cta}
               <svg width="12" height="16" viewBox="0 0 12 16" aria-hidden className="transition-transform duration-300 group-hover:translate-y-0.5"><path d="M6 1v13M1 9l5 5 5-5" stroke="currentColor" strokeWidth="1.4" fill="none" /></svg>
@@ -640,7 +640,9 @@ function ApplicationSection() {
           </div>
         </div>
         <div className="lg:col-span-7">
-          <IcForm />
+          <div id={`${IC_FORM_ID}-card`} className="scroll-mt-24 border border-line-strong bg-surface-1/70 p-5 sm:p-8">
+            <LeadForm formId="ishlab-chiqarish" />
+          </div>
         </div>
       </div>
     </section>
