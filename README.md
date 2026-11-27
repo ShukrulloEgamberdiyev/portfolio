@@ -36,15 +36,18 @@ Har biri `/ru/...` va `/en/...` ko‘rinishida ham mavjud.
 ## Struktura
 ```
 src/
-  i18n/          uz.ts · ru.ts · en.ts (bosh sahifa matni), pages.*.ts (ichki sahifalar), provider
-  content/       articles.ts — maqolalar matni
-  data/site.ts   kontaktlar, statistika, mijozlar, case'lar, tizim bosqichlari
-  pages/         har bir sahifa
-  components/    bo'limlar va umumiy bloklar
-  ui/            Headline, Button, Reveal, CountUp, Cursor, Atmosphere
-  lib/           scroll, seo, submit, routes
-scripts/prerender.mjs   HTML sahifalarni va sitemap'ni yaratadi
-docs/apps-script.gs     Google Sheets'ga ariza yozadigan skript
+  i18n/          uz.ts · ru.ts · en.ts, pages.*.ts (ichki sahifalar), home.{uz,ru,en}.ts (bosh sahifa)
+  content/       articles.ts, card.ts, qurilish.ts, avtosalon.ts, ishlab.ts, talim.ts — matnlar
+  forms/         defs.ts (barcha forma savollari), contact.ts (telefon/Telegram), LeadForm.tsx, FormDialog.tsx, i18n.ts
+  server/lead/   /api/lead mantiqi: validate.ts, handler.ts, blobQueue.ts
+  data/site.ts   kontaktlar, tasdiqlangan raqamlar, mijozlar, case'lar
+  pages/         har bir sahifa;  components/  bo'limlar (home/, qurilish/, avtosalon/, ishlab/)
+  lib/           analytics, tracking (UTM, Meta Pixel), scroll, seo, routes
+api/lead.ts, api/lead-retry.ts   Vercel Functions
+scripts/prerender.mjs            HTML sahifalar va sitemap
+scripts/uz-sh.mjs                ş/Ş yozuv uslubi (tekshirish / qo'llash)
+docs/fazo-leads-apps-script.gs   "FAZO Digital" jadvaliga yozuvchi Apps Script
+docs/apps-script.gs              ESKI "Targeting Xizmat" skripti (saytdan uzilgan, faqat tarix uchun)
 ```
 
 ## Ariza → Google Sheets
@@ -54,41 +57,15 @@ CRM imkoniyatlari bo‘yicha saytda nima ko‘rsatilgani: `docs/CRM-AUDIT.md`.
 ## Yozuv uslubi
 O‘zbekcha matnlarda sayt uchun tanlangan uslub: sh → ş, Sh/SH → Ş (faqat shu). `node scripts/uz-sh.mjs --check $(cat scripts/uz-files.txt)` tekshiradi, `--write` qo‘llaydi. Kod identifikatorlari, URL, brend nomlari va mijoz kiritgan ma’lumot o‘zgartirilmaydi.
 
-## /avtosalon landing
-- Alohida sahifa: `avtosalon.html` → `src/avtosalon-main.tsx` → `src/AvtosalonApp.tsx`. Reklama trafigi asosiy sayt JS'ini yuklamaydi. Build `dist/avtosalon.html` va `dist/avtosalon/index.html` ni prerender qiladi.
-- Asosiy manzil: `https://fazodigital.uz/avtosalon`. `/avtosalon/` → 308 bilan `/avtosalon` ga (query, UTM, fbclid saqlanadi) — `vercel.json`.
-- Arizalar o‘sha Apps Script orqali **Targeting Xizmat → AVTOSALON LEADLAR** varag‘iga yoziladi (`formType: 'avtosalon'`). Varaq birinchi arizada yaratiladi; mavjud ustunlar sarlavha nomi bo‘yicha to‘ldiriladi.
-- Muvaffaqiyat faqat server shu arizani saqlaganini tasdiqlaganda (`{ok:true, saved:true, submissionId}`) ko‘rsatiladi; oddiy `{ok:true}` (health) tasdiq hisoblanmaydi.
-- Har bir ariza bitta `Ariza ID` oladi; timeout, internet uzilishi, qayta bosish yoki sahifani yangilashdan keyingi retry shu ID bilan ketadi. Server ID'ni jadvaldagi **Ariza ID** ustunidan (lock ichida) tekshiradi — bir ID uchun bitta qator, payload o‘zgargan yoki cache yo‘qolgan bo‘lsa ham. `Lead` bitta ID uchun bir marta.
-- Server validatsiyasi: majburiy maydonlar, uzunliklar, +998 telefon, Instagram/sayt/Telegram formati, barcha variantlar frontend ro‘yxatiga (`tests/avtosalonContract.test.mjs` ikkala ro‘yxat bir xilligini tekshiradi), `Boshqa` → izoh majburiy.
-- Limitlar (`LIMITS` in `docs/apps-script.gs`): har forma alohida; avtosalon — bitta telefon/Telegram 6 soatda 3 ta yangi ariza, favqulodda umumiy chegara soatiga 200. Retry limitni sarflamaydi.
-- `TOKEN` / `VITE_APPLICATION_TOKEN` brauzerda ochiq — maxfiy kalit emas; himoya honeypot, minimal vaqt, validatsiya va limitlardan iborat.
-- `docs/apps-script.gs` o‘zgarsa: Apps Script → Deploy → Manage deployments → Edit → **New version** (URL o‘zgarmaydi).
-- UTM (`utm_source/medium/campaign/content/term`), `fbclid`, landing URL va referrer sessiya davomida saqlanadi va arizaga qo‘shiladi.
-- Meta Pixel: Vercel → Environment Variables → `VITE_META_PIXEL_ID` (so‘ng redeploy). Hodisalar: PageView, ViewContent, `AvtosalonCTA`, `AvtosalonFormStart`, `AvtosalonFormStep`, `Lead`. ID bo‘lmasa pixel yuklanmaydi.
-- Lokal: `npm run dev` → `http://localhost:5173/avtosalon`; `npm run build && npm run preview` → `http://localhost:4173/avtosalon`.
-- `npm run preview` Vercel kabi ishlaydi: `/about`, `/ru/work` va h.k. o‘z prerender HTML'ini qaytaradi, `/about/` → `/about` (308), noma’lum yo‘l → `404.html` (404).
-
-## /qurilish landing
-- Alohida sahifa: `qurilish.html` → `src/qurilish-main.tsx` → `src/QurilishApp.tsx` → `src/pages/QurilishPage.tsx`. Matnlar va forma variantlari: `src/content/qurilish.ts`. Komponentlar: `src/components/qurilish/` (QrUi, QrForm, Skyline).
-- Asosiy manzil: `https://fazodigital.uz/qurilish`; `/qurilish/` → `/qurilish` (vercel.json). Build `dist/qurilish.html` va `dist/qurilish/index.html` ni prerender qiladi, sitemap'ga qo‘shiladi.
-- Sahifa bo‘limlari: Hero → Muammo → Maqsadli murojaat jarayoni (xizmat nimadan iborat) → Tizim + Hamkorlik ($5,000–7,000/oy, reklama budjeti alohida) → Ariza. Sahifada sayt menyusi ataylab yo‘q (bitta maqsad — ro‘yxatdan o‘tish). Hero rasmi: `src/assets/qurilish/hero-1920.*` (desktop) va `hero-960.*` (mobil kesim), manba — Unsplash (bepul litsenziya).
-- Forma 6 maydon: ism, telefon, kompaniya/loyiha, hudud, loyiha holati, asosiy muammo ("Boshqa" tanlansa — izoh). Budjet va `contactTime` sahifada so‘ralmaydi — server ularni bo‘sh qabul qiladi (eski sahifadan kelsa, ro‘yxatdan bo‘lishi shart).
-- Arizalar o‘sha Apps Script orqali **Targeting Xizmat → QURILISH LEADLAR** varag‘iga yoziladi (`formType: 'qurilish'`, ID `QR-...`). **Muhim:** `docs/apps-script.gs` yangilangan — Apps Script → Deploy → Manage deployments → Edit → **New version** qilinmaguncha /qurilish arizalari qabul qilinmaydi (forma xato ko‘rsatadi, lead yo‘qolmaydi — foydalanuvchi Telegram'ga yo‘naltiriladi).
-- Muvaffaqiyat faqat server `{ok:true, saved:true, submissionId}` qaytarganda ko‘rsatiladi. Retry bir xil ID bilan — dublikat qator bo‘lmaydi. Bitta telefon 6 soatda 3 ta yangi ariza.
-- Meta Pixel hodisalari (`VITE_META_PIXEL_ID` bo‘lsa): PageView, ViewContent, `QurilishCTA`, `QurilishFormStart`, `Lead` (eventID = Ariza ID).
-- `npm test` — `tests/qurilish.test.mjs` forma va server variantlari bir xilligini, narx va budjet variantlarini tekshiradi.
-
-## /ishlab-chiqarish landing
-- Alohida sahifa: `ishlab-chiqarish.html` → `src/ishlab-chiqarish-main.tsx` → `src/IshlabApp.tsx` → `src/pages/IshlabPage.tsx`. Matnlar, case raqamlari va forma variantlari: `src/content/ishlab.ts`. Komponentlar: `src/components/ishlab/` (IcUi, IcForm, ProductionLine). Section/SectionHead/Eyebrow va forma maydonlari /qurilish bilan umumiy.
-- Asosiy manzil: `https://fazodigital.uz/ishlab-chiqarish`; `/ishlab-chiqarish/` → `/ishlab-chiqarish` (vercel.json). Build `dist/ishlab-chiqarish.html` va `dist/ishlab-chiqarish/index.html` ni prerender qiladi, sitemap'ga qo‘shiladi. OG rasm: `public/og-ishlab-chiqarish.jpg`.
-- Arizalar o‘sha Apps Script orqali **Targeting Xizmat → ISHLAB CHIQARISH LEADLAR** varag‘iga yoziladi (`formType: 'ishlab_chiqarish'`, ID `IC-...`). **Muhim:** `docs/apps-script.gs` yangilangan — Apps Script'ga yangi kodni qo‘yib, Deploy → Manage deployments → Edit → **New version** qilinmaguncha /ishlab-chiqarish arizalari qabul qilinmaydi (forma xato ko‘rsatadi va Telegram'ga yo‘naltiradi, kiritilgan ma’lumot saqlanib qoladi).
-- Majburiy maydonlar: ism, telefon (+998), nima ishlab chiqaradi, hudud, sotuv yo‘nalishi, reklama budjeti. "Hozirgi asosiy muammo" — ixtiyoriy.
-- Budjet variantlari: `$500–$1,000`, `$1,000–$3,000`, `$3,000+`, `Budjet bo‘yicha tavsiya kerak` (frontend `OPT.budget` = server `IC.budget`, test tekshiradi).
-- Qayta yuborish: bitta ariza — bitta Ariza ID. Server har arizaning **ma’lumot izi**ni (`src/lib/leadFingerprint.ts` = `icFingerprint` in apps-script) saqlaydi va javobda qaytaradi; brauzer muvaffaqiyatni (va Meta `Lead`ni) faqat server aynan shu ma’lumotni saqlaganini tasdiqlagandan keyin ko‘rsatadi. Bir xil ma’lumot bilan retry — dublikat yaratilmaydi; javob yo‘qolgandan keyin ma’lumot o‘zgartirilsa — o‘sha qator joyida tuzatiladi (`Tuzatilgan vaqt`, `Tuzatishlar soni`, ko‘pi bilan 5 marta), ikkinchi lead yaratilmaydi.
-- UTM/landing: `src/lib/attribution.ts` landing URL'dan faqat UTM/gclid/fbclid parametrlarini qoldiradi va barcha maydonlarni server limitlariga (utm 200, fbclid 500, page 1000, referrer 500) moslaydi — uch landing uchun ham. /ishlab-chiqarish serveri uzun qiymatlarni rad etmaydi, qisqartiradi.
-- Meta Pixel hodisalari (`VITE_META_PIXEL_ID` bo‘lsa): PageView, ViewContent, `IshlabCTA`, `IshlabFormStart`, `Lead` (eventID = Ariza ID).
-- Case raqamlari ($902 / 190 mijoz / 404 dona, 15–28 avgust 2026) — tasdiqlangan ma’lumot; `tests/ishlabChiqarish.test.mjs` ularning o‘zgarmaganini va forma/server variantlari bir xilligini tekshiradi.
+## Soha landinglari (/qurilish, /avtosalon, /ishlab-chiqarish, /talim)
+- Har biri alohida entry (`<nom>.html` → `src/<nom>-main.tsx` → `src/*App.tsx` → `src/pages/*Page.tsx`), prerender qilinadi va sitemap'da bor.
+  Asosiy menyu va bosh sahifadan havola yo‘q — faqat to‘g‘ridan-to‘g‘ri manzil orqali (reklama uchun). noindex qilinmagan.
+- Tuzilma: muammo → biz nima qilamiz → siz nima olasiz → qanday ishlaymiz → ariza.
+- Forma savollari `src/forms/defs.ts` dagi `FORMS.qurilish | avtosalon | ishlab-chiqarish | talim`; arizalar `/api/lead` → "FAZO Digital" jadvali
+  (`Forma` ustunida landing nomi). Eski "… LEADLAR" varaqlariga endi yozilmaydi.
+- Meta Pixel (`VITE_META_PIXEL_ID` bo‘lsa): PageView, ViewContent, landing CTA hodisalari va umumiy `CTAClick`, `FormOpen`, `FormSubmitSuccess`, `Lead` (eventID = Ariza ID), `FormError`.
+- Narx landinglarda ko‘rsatilmaydi (avvalgi $5,000–7,000 tasdiqlanmagan): narx tahlildan keyin yozma taklifda.
+- /ishlab-chiqarish case raqamlari ($902 / 190 mijoz / 404 dona, 15–28 avgust 2026) koddagi izohga ko‘ra tasdiqlangan; o‘zgartirmang.
 
 ## Deploy (GitHub + Vercel)
 ```bash
@@ -98,7 +75,7 @@ git remote add origin https://github.com/<username>/fazodigital.git
 git push -u origin main
 ```
 1. vercel.com → **Add New → Project** → repo'ni tanlang. Sozlama `vercel.json` da tayyor.
-2. Ushbu versiyada Sheets ulanishi tayyor. Eski environment qiymatlari bo‘lsa, yuqoridagi izohga qarang.
+2. Arizalar uchun server o‘zgaruvchilari va Blob store: `docs/LEADS.md`. `main` ga push = production deploy (Vercel Git ulangan).
 3. **Settings → Domains** → `fazodigital.uz` va `www.fazodigital.uz`.
 4. Vercel ko‘rsatgan DNS yozuvini ahost panelida kiriting. `.env` fayl hech qachon GitHub'ga yuklanmaydi.
 
@@ -107,5 +84,5 @@ ahost hostingiga qo‘yish kerak bo‘lsa: `npm run build` dan keyin `dist/` ich
 ## Qolgan ishlar (kontent)
 - **Mijoz logotiplari:** `src/data/site.ts` dagi `CLIENTS` ro‘yxatiga `logo: '/logos/nom.svg'` qo‘shing va fayllarni `public/logos/` ga soling.
 - **Case media:** `CASES` ichida `media: { poster: '/work/nom.jpg', video: '/work/nom.mp4' }`. Video ovozsiz, 6–10 soniya, 2MB gacha.
-- **Meta Pixel:** `index.html` ga pixel kodi **qo‘yilmaydi** (dublikat bo‘ladi). Faqat Vercel → Environment Variables → `VITE_META_PIXEL_ID` ni to‘ldiring va redeploy qiling; pixel `/avtosalon` da `src/lib/tracking.ts` orqali bir marta yuklanadi, `Lead` faqat server arizani saqlaganini tasdiqlagandan keyin yuboriladi.
+- **Meta Pixel:** `index.html` ga pixel kodi **qo‘yilmaydi** (dublikat bo‘ladi). Faqat Vercel → Environment Variables → `VITE_META_PIXEL_ID` ni to‘ldiring va redeploy qiling; pixel barcha sahifalarda `src/lib/tracking.ts` orqali bir marta yuklanadi, `Lead` faqat server arizani saqlaganini tasdiqlagandan keyin yuboriladi.
 - **Maqolalar:** `src/content/articles.ts`. Hozir 3 ta maqola o‘zbek tilida; RU/EN sahifalarida shu matn ko‘rsatiladi va til haqida qisqa izoh chiqadi.

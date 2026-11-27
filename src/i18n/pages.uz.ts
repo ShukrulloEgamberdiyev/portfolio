@@ -105,11 +105,11 @@ export const pagesUz: PageDict = {
   insightsPage: { title: 'Foydali materiallar', intro: 'Iş jarayonida takrorlanadigan xatolar va ularning yechimi haqida.', langNote: '', minutes: 'daqiqa' },
   applyPage: { title: 'Ariza qoldiriş', intro: 'Formani to‘ldiring — arizani strateg ko‘rib chiqadi va mos bo‘lsa, uchraşuv uchun bog‘lanamiz.' },
   privacy: {
-    title: 'Maxfiylik siyosati', updated: 'Yangilangan: 2026-yil sentabr',
+    title: 'Maxfiylik siyosati', updated: 'Yangilangan: noyabr 2026',
     sections: [
-      { h: 'Qanday ma’lumot yig‘amiz', body: 'Saytdagi ariza formasi orqali siz ko‘rsatgan ma’lumotlar: ism, kompaniya nomi, sayt yoki Instagram, soha, daromad va byudjet oralig‘i, maqsad hamda aloqa ma’lumoti (telefon yoki Telegram). Bundan taşqari saytga taşrif statistikasi (sahifalar, qurilma turi, manba) yig‘ilişi mumkin.' },
+      { h: 'Qanday ma’lumot yig‘amiz', body: 'Ariza formasida siz kiritgan ma’lumotlar: ism, telefon raqami, ixtiyoriy Telegram username va savollarga javoblaringiz (xizmat yo‘nalişi, soha, Instagram sahifasi, reklama budjeti oralig‘i va şu kabilar). Arizaga qaysi sahifa va reklama (UTM belgilari) orqali kelganingiz ham qo‘şiladi. Bundan taşqari saytga taşrif statistikasi (sahifalar, qurilma turi, manba) yig‘ilişi mumkin.' },
       { h: 'Nima uchun işlatamiz', body: 'Faqat arizangizni ko‘rib chiqiş, siz bilan bog‘laniş va taklif tayyorlaş uchun. Ma’lumotlaringiz uchinchi şaxslarga sotilmaydi va reklama maqsadida boşqalarga berilmaydi.' },
-      { h: 'Qayerda saqlanadi', body: 'Arizalar FAZO Digital’ning ichki Google Sheets asosidagi CRM tizimida saqlanadi. Unga faqat loyiha ustida işlaydigan xodimlar kira oladi.' },
+      { h: 'Qayerda saqlanadi', body: 'Arizalar FAZO Digital’ning Google Sheets jadvalida saqlanadi. Jadval vaqtincha işlamay qolsa, ariza yo‘qolmasligi uchun şifrlangan yopiq server xotirasida (Vercel Blob) navbatga qo‘yiladi va jadvalga yozilgach u yerdan o‘chiriladi. Ma’lumotlarga faqat loyiha ustida işlaydigan xodimlar kira oladi.' },
       { h: 'Cookie va statistika', body: 'Sayt tilni eslab qoliş uchun brauzer xotirasidan foydalanadi. Reklama samaradorligini o‘lchaş uchun Meta Pixel kabi vositalar işlatilişi mumkin.' },
       { h: 'Sizning huquqingiz', body: 'Istalgan vaqtda ma’lumotlaringizni o‘chirişni yoki tuzatişni so‘raşingiz mumkin. Buning uchun @fazo_digital Telegram manziliga yozing.' },
       { h: 'Aloqa', body: 'FAZO Digital, Toşkent, O‘zbekiston. Telegram: @fazo_digital. Telefon: +998 93 040 10 70.' },

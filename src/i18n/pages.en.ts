@@ -105,11 +105,11 @@ export const pagesEn: PageDict = {
   insightsPage: { title: 'Insights', intro: 'On the mistakes that keep repeating, and how to fix them.', langNote: 'This article is available in Uzbek.', minutes: 'min read' },
   applyPage: { title: 'Application', intro: 'Fill in the form — a strategist reviews every application and gets in touch if there’s a fit.' },
   privacy: {
-    title: 'Privacy Policy', updated: 'Updated: September 2026',
+    title: 'Privacy Policy', updated: 'Updated: November 2026',
     sections: [
-      { h: 'What we collect', body: 'The information you provide in the application form: name, company, website or Instagram, industry, revenue and budget ranges, objective and a contact (phone or Telegram). We may also collect site visit statistics (pages, device type, source).' },
+      { h: 'What we collect', body: 'What you enter in the enquiry form: name, phone number, an optional Telegram username and your answers (service, industry, Instagram page, ad budget range and similar). The page and ad (UTM tags) that brought you are added to the enquiry. We may also collect site visit statistics (pages, device type, source).' },
       { h: 'Why we use it', body: 'Only to review your application, contact you and prepare a proposal. Your data is never sold or passed to third parties for advertising.' },
-      { h: 'Where it is stored', body: 'Applications are stored in FAZO Digital’s internal Google Sheets CRM. Only staff working on the project have access.' },
+      { h: 'Where it is stored', body: 'Enquiries are stored in FAZO Digital’s Google Sheets spreadsheet. If the spreadsheet is temporarily unavailable, the enquiry is queued in private, encrypted server storage (Vercel Blob) so it is not lost, and removed from there once written to the spreadsheet. Only staff working on the project have access.' },
       { h: 'Cookies and analytics', body: 'The site uses browser storage to remember your language. Tools such as Meta Pixel may be used to measure advertising performance.' },
       { h: 'Your rights', body: 'You can ask us to delete or correct your data at any time. Write to @fazo_digital on Telegram.' },
       { h: 'Contact', body: 'FAZO Digital, Tashkent, Uzbekistan. Telegram: @fazo_digital. Phone: +998 93 040 10 70.' },
