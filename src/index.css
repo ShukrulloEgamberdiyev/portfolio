@@ -143,7 +143,7 @@
  */
 @keyframes rise { from { opacity: 0; transform: translateY(var(--rise-y, 20px)); } }
 @keyframes fade-in { from { opacity: 0; } }
-@keyframes mask-rise { from { transform: translateY(108%); } }
+@keyframes mask-rise { from { transform: translateY(130%); } }
 @keyframes nav-in { from { opacity: 0; transform: translateY(-24px); } }
 @keyframes loader-out { to { clip-path: inset(0 0 100% 0); visibility: hidden; } }
 @keyframes loader-bar { from { width: 0; } to { width: 100%; } }
@@ -155,7 +155,7 @@
 
 .reveal[data-reveal="hidden"] { opacity: 0; transform: translateY(var(--reveal-y, 28px)); }
 .reveal[data-reveal="shown"] { transition: opacity 0.9s var(--ease-fazo) var(--reveal-d, 0s), transform 0.9s var(--ease-fazo) var(--reveal-d, 0s); }
-[data-reveal="hidden"] > span > .hl-line { transform: translateY(108%); }
+[data-reveal="hidden"] > span > .hl-line { transform: translateY(130%); }
 [data-reveal="shown"] > span > .hl-line { transition: transform 1.05s var(--ease-fazo) var(--hl-d, 0s); }
 .reveal-line { transform-origin: left; }
 [data-reveal="hidden"] .reveal-line, .reveal-line[data-reveal="hidden"] { transform: scaleX(0); }

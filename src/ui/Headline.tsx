@@ -27,7 +27,7 @@ export function Headline({ lines, as: Tag = 'h2', className = '', immediate = fa
         const body = ownMark ? line.t.slice(0, -1) : line.t;
         const mark = ownMark ? line.t.slice(-1) : '.';
         return (
-          <span key={i} className="block overflow-hidden pb-[0.06em] -mb-[0.06em]">
+          <span key={i} className="block overflow-hidden pb-[0.2em] -mb-[0.2em]">
             <span className={`hl-line block ${immediate ? 'hl-rise' : ''} ${line.outline ? 'outline-text' : ''}`}
               style={{ '--hl-d': `${delay + i * 0.09}s` } as CSSProperties}>
               {i > 0 && ' '}{body}
