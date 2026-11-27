@@ -7,3 +7,4 @@ dist-preview
 *.log
 .vercel
 audit-shots
+.claude/
