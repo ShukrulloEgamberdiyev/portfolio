@@ -65,7 +65,7 @@ function Header() {
       <header className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color] duration-500 ${solid || open ? 'border-b border-line bg-ink/80 backdrop-blur-xl' : 'border-b border-transparent'}`}
         style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
         <div className="shell flex h-16 items-center justify-between lg:h-20">
-          <a href="/" aria-label="FAZO Digital — bosh sahifa" data-cursor="hover" className="tap"><Logo /></a>
+          <a href="/" aria-label="FAZO Digital — boş sahifa" data-cursor="hover" className="tap"><Logo /></a>
           <nav aria-label="Sahifa bo‘limlari" className="hidden items-center gap-8 lg:flex">
             {nav.map((n) => (
               <a key={n.id} href={`#${n.id}`} onClick={go(n.id)} className="group relative text-[14px] text-mist transition-colors hover:text-bone">
@@ -77,9 +77,9 @@ function Header() {
           <div className="flex items-center gap-3">
             <a href={`#${IC_FORM_ID}`} onClick={(e) => { e.preventDefault(); goTo(IC_FORM_ID, 'header', open ? closeForNavigation : undefined); }} data-cursor="hover"
               className="hidden h-11 items-center border border-line-strong px-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-bone transition-colors hover:border-bone hover:bg-bone hover:text-ink md:inline-flex">
-              Loyihani muhokama qilish
+              Loyihani muhokama qiliş
             </a>
-            <button ref={toggleRef} type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls="ic-menu" aria-label={open ? 'Menyuni yopish' : 'Menyuni ochish'}
+            <button ref={toggleRef} type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls="ic-menu" aria-label={open ? 'Menyuni yopiş' : 'Menyuni ochiş'}
               className="relative flex h-11 w-11 items-center justify-center border border-line-strong lg:hidden">
               <span className={`absolute h-px w-5 bg-bone transition-transform duration-300 ${open ? 'rotate-45' : '-translate-y-[4px]'}`} />
               <span className={`absolute h-px w-5 bg-bone transition-transform duration-300 ${open ? '-rotate-45' : 'translate-y-[4px]'}`} />
@@ -102,7 +102,7 @@ function Header() {
               ))}
             </nav>
             <div className="mt-auto">
-              <IcCta location="menu" onNavigate={closeForNavigation} className="w-full">Loyihani muhokama qilish</IcCta>
+              <IcCta location="menu" onNavigate={closeForNavigation} className="w-full">Loyihani muhokama qiliş</IcCta>
             </div>
           </motion.div>
         )}
@@ -555,7 +555,7 @@ function Fit() {
             </ul>
             <div className="border-t border-line px-5 py-6 sm:px-8">
               <p className="text-[1rem] leading-relaxed text-bone/85">{fit.closing}</p>
-              <IcCta location="fit" className="mt-6 w-full sm:w-auto">Loyihani muhokama qilish</IcCta>
+              <IcCta location="fit" className="mt-6 w-full sm:w-auto">Loyihani muhokama qiliş</IcCta>
             </div>
           </div>
         </Reveal>
@@ -678,7 +678,7 @@ function StickyCta() {
     <div aria-hidden={!show}
       className={`fixed inset-x-0 bottom-0 z-30 border-t border-line bg-ink/85 px-4 pt-3 backdrop-blur-xl transition-[transform,opacity,visibility] duration-500 md:hidden ${show ? 'visible translate-y-0 opacity-100' : 'pointer-events-none invisible translate-y-full opacity-0'}`}
       style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)' }}>
-      <IcCta location="sticky-mobile" className="w-full">Loyihani muhokama qilish</IcCta>
+      <IcCta location="sticky-mobile" className="w-full">Loyihani muhokama qiliş</IcCta>
     </div>
   );
 }
@@ -688,7 +688,7 @@ function MiniFooter() {
   return (
     <footer className="border-t border-line pb-28 pt-10 md:pb-10">
       <div className="shell flex flex-col items-start justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.14em] text-ash sm:flex-row sm:items-center">
-        <a href="/" aria-label="FAZO Digital — bosh sahifa" className="tap"><Logo className="text-[14px]" markClass="h-5" /></a>
+        <a href="/" aria-label="FAZO Digital — boş sahifa" className="tap"><Logo className="text-[14px]" markClass="h-5" /></a>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <span>FAZO Digital © 2026</span>
           <a href="/privacy" target="_blank" rel="noopener" className="tap transition-colors hover:text-bone">Maxfiylik siyosati</a>

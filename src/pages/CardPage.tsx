@@ -4,7 +4,7 @@ import { FormDialog } from '../forms/FormDialog';
 import { ctaClick } from '../lib/analytics';
 import { CONTACT } from '../data/site';
 import { contactBlock as C, identity as I, servicesBlock as S } from '../content/card';
-import { captureAttribution } from '../lib/tracking';
+import { captureAttribution, initPixel } from '../lib/tracking';
 
 /* ───────── kichik ikonlar (bir xil chiziq qalinligi) ───────── */
 const ic = { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, 'aria-hidden': true } as const;
@@ -113,7 +113,7 @@ function Contact({ onRegister }: { onRegister: () => void }) {
 /* ───────── Sahifa ───────── */
 export default function CardPage() {
   const [open, setOpen] = useState(false);
-  useEffect(() => { captureAttribution(); }, []);
+  useEffect(() => { captureAttribution(); initPixel(); }, []);
   const openForm = useCallback(() => { ctaClick('card-register'); setOpen(true); }, []);
   const closeForm = useCallback(() => setOpen(false), []);
 

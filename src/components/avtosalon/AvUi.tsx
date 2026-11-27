@@ -2,11 +2,13 @@ import type { ReactNode } from 'react';
 import { AV_FORM_ID } from '../../content/avtosalon';
 import { scrollToId } from '../../lib/scroll';
 import { track } from '../../lib/tracking';
+import { ctaClick } from '../../lib/analytics';
 import { Reveal } from '../../ui/Reveal';
 
 /** Every CTA on the landing scrolls to the one application form. */
 export function goToForm(location: string, target: string = AV_FORM_ID) {
   track('AvtosalonCTA', { location }, { custom: true });
+  ctaClick(`avtosalon-${location}`);
   scrollToId(target);
 }
 

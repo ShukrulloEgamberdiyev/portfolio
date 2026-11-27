@@ -44,7 +44,7 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
   }
   if (path === '/qurilish') {
     return {
-      title: 'Qurilish kompaniyalari uchun mijoz jalb qilish | FAZO Digital',
+      title: 'Quriliş kompaniyalari uchun mijoz jalb qiliş | FAZO Digital',
       description: 'FAZO Digital turar joy loyihalari uchun Meta Ads, Google Ads, landing, CRM va sotuv tizimi orqali potensial mijozlar oqimini yo‘lga qo‘yadi.',
       canonical: `${SITE_URL}/qurilish`,
       image: `${SITE_URL}/og-qurilish.jpg`,
@@ -52,8 +52,8 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
   }
   if (path === '/ishlab-chiqarish') {
     return {
-      title: 'Ishlab chiqarish bizneslari uchun marketing | FAZO Digital',
-      description: 'FAZO Digital ishlab chiqarish bizneslari uchun strategiya, kontent, target reklama, landing, CRM va sotuv jarayonlarini yagona tizimga bog‘laydi.',
+      title: 'Işlab chiqariş bizneslari uchun marketing | FAZO Digital',
+      description: 'FAZO Digital işlab chiqariş bizneslari uchun strategiya, kontent, target reklama, landing, CRM va sotuv jarayonlarini yagona tizimga bog‘laydi.',
       canonical: `${SITE_URL}/ishlab-chiqarish`,
       image: `${SITE_URL}/og-ishlab-chiqarish.jpg`,
     };
@@ -69,7 +69,7 @@ export function seoFor(rawPath: string, lang: Lang): Seo {
   if (path === '/card') {
     return {
       title: 'FAZO Digital — Marketing · SMM · Targeting',
-      description: 'FAZO Digital raqamli vizitkasi: marketing, SMM va targeting. Biznesingiz uchun marketingni tizimlashtiramiz va uni sotuv bilan bog‘laymiz.',
+      description: 'FAZO Digital raqamli vizitkasi: marketing, SMM va targeting. Biznesingiz uchun marketingni tizimlaştiramiz va uni sotuv bilan bog‘laymiz.',
       canonical: `${SITE_URL}/card`,
       image: `${SITE_URL}/og-image.jpg`,
     };

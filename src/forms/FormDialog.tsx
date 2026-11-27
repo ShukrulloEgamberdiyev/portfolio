@@ -8,7 +8,7 @@ import type { FormId } from './defs';
  * and returns focus to the button that opened it. Its height follows the visual viewport, so the
  * on-screen keyboard never hides the field being typed in.
  */
-export function FormDialog({ open, onClose, formId, title, closeLabel = 'Yopish' }: { open: boolean; onClose: () => void; formId: FormId; title: string; closeLabel?: string }) {
+export function FormDialog({ open, onClose, formId, title, closeLabel = 'Yopiş' }: { open: boolean; onClose: () => void; formId: FormId; title: string; closeLabel?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
 

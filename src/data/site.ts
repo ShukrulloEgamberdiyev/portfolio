@@ -42,7 +42,7 @@ export const CASES: { slug: string; name: string; media?: { poster?: string; vid
   { slug: 'dilbar-restaurant', name: 'Dilbar Restaurant' },
 ];
 
-export const SIGNATURE = 'NATIJAGA ISHLAYMIZ. SIZ O‘SASIZ.';
+export const SIGNATURE = 'NATIJAGA IŞLAYMIZ. SIZ O‘SASIZ.';
 
 /** The host that actually serves the site: fazodigital.uz redirects to www, so canonicals, og:url and the sitemap use www. */
 export const SITE_URL = 'https://www.fazodigital.uz';

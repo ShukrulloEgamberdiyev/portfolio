@@ -10,59 +10,59 @@ export const nav = [
 ];
 
 export const hero = {
-  eyebrow: 'Ishlab chiqarish bizneslari uchun',
-  titleA: 'Mahsulot ishlab chiqarasiz.',
+  eyebrow: 'Işlab chiqariş bizneslari uchun',
+  titleA: 'Mahsulot işlab chiqarasiz.',
   titleB: 'Biz unga mijoz olib keladigan marketing tizimini quramiz.',
-  text: 'FAZO Digital ishlab chiqarish bizneslari uchun strategiya, kontent, reklama, sahifa, CRM va sotuv jarayonlarini yagona tizimga bog‘laydi.',
+  text: 'FAZO Digital işlab chiqariş bizneslari uchun strategiya, kontent, reklama, sahifa, CRM va sotuv jarayonlarini yagona tizimga bog‘laydi.',
   chain: ['Strategiya', 'Reklama', 'Murojaat', 'CRM', 'Sotuv jarayoni'],
-  cta: 'Loyihani muhokama qilish',
-  ctaSecondary: 'Tizim qanday ishlaydi?',
+  cta: 'Loyihani muhokama qiliş',
+  ctaSecondary: 'Tizim qanday işlaydi?',
 };
 
 export const problem = {
   eyebrow: 'Muammo',
   title: 'Sifatli mahsulotning o‘zi yetarli emas.',
-  text: 'Sex ishlayapti. Mahsulot tayyor. Jamoa bor. Lekin yangi buyurtmalar tizimli kelmasa, ishlab chiqarish imkoniyatidan to‘liq foydalanish qiyinlashadi.',
+  text: 'Sex işlayapti. Mahsulot tayyor. Jamoa bor. Lekin yangi buyurtmalar tizimli kelmasa, işlab chiqariş imkoniyatidan to‘liq foydalaniş qiyinlaşadi.',
   cards: [
-    { t: 'Reklama bor, lekin tizim yo‘q', d: 'Kampaniyalar ishlaydi, ammo qaysi reklama real mijoz olib kelayotgani aniq kuzatilmaydi.' },
+    { t: 'Reklama bor, lekin tizim yo‘q', d: 'Kampaniyalar işlaydi, ammo qaysi reklama real mijoz olib kelayotgani aniq kuzatilmaydi.' },
     { t: 'Kontent bor, lekin sotuvga bog‘lanmagan', d: 'Instagram yuritiladi, lekin kontentdan murojaat va keyingi sotuv jarayonigacha aniq yo‘l qurilmagan.' },
-    { t: 'Murojaat keladi, keyin yo‘qoladi', d: 'Murojaat tushadi, lekin qayta aloqa va nazorat bo‘lmagani sabab ayrim potensial mijozlar yo‘qoladi.' },
-    { t: 'Optom va chakana aralashib ketgan', d: '1 dona mahsulot oladigan xaridor bilan katta hajmda xarid qiladigan mijozga bir xil taklif beriladi.' },
-    { t: 'Mijoz manbasi noma’lum', d: 'Qaysi kanal, reklama materiali yoki taklif yaxshi ishlayotganini ko‘rsatadigan analitika yetarli emas.' },
-    { t: 'Marketing bo‘laklarga bo‘lingan', d: 'SMM boshqa tomonda, target boshqa tomonda, sotuv bo‘limi esa alohida ishlaydi.' },
+    { t: 'Murojaat keladi, keyin yo‘qoladi', d: 'Murojaat tuşadi, lekin qayta aloqa va nazorat bo‘lmagani sabab ayrim potensial mijozlar yo‘qoladi.' },
+    { t: 'Optom va chakana aralaşib ketgan', d: '1 dona mahsulot oladigan xaridor bilan katta hajmda xarid qiladigan mijozga bir xil taklif beriladi.' },
+    { t: 'Mijoz manbasi noma’lum', d: 'Qaysi kanal, reklama materiali yoki taklif yaxşi işlayotganini ko‘rsatadigan analitika yetarli emas.' },
+    { t: 'Marketing bo‘laklarga bo‘lingan', d: 'SMM boşqa tomonda, target boşqa tomonda, sotuv bo‘limi esa alohida işlaydi.' },
   ],
-  statement: 'Muammo faqat reklamada bo‘lmasligi mumkin. Muammo butun jarayon bir-biriga ulanmaganida bo‘lishi mumkin.',
+  statement: 'Muammo faqat reklamada bo‘lmasligi mumkin. Muammo butun jarayon bir-biriga ulanmaganida bo‘lişi mumkin.',
 };
 
 export const diagnostics = {
   eyebrow: 'Diagnostika',
-  title: 'Reklamadan oldin biznesni tushunamiz.',
-  text: 'Mahsulot, narx, auditoriya, hudud, ishlab chiqarish imkoniyati va hozirgi sotuv jarayonini ko‘rib chiqamiz. Shundan keyin qaysi marketing modeli biznesingizga mosligini aniqlaymiz.',
+  title: 'Reklamadan oldin biznesni tuşunamiz.',
+  text: 'Mahsulot, narx, auditoriya, hudud, işlab chiqariş imkoniyati va hozirgi sotuv jarayonini ko‘rib chiqamiz. Şundan keyin qaysi marketing modeli biznesingizga mosligini aniqlaymiz.',
   outcomeTitle: 'Diagnostikadan keyin',
   outcome: [
     'Biznesingizning hozirgi holati birga ko‘rib chiqiladi',
-    'Sizga mos marketing yo‘nalishi muhokama qilinadi',
-    'Keyingi qadamlar kelishib olinadi',
+    'Sizga mos marketing yo‘nalişi muhokama qilinadi',
+    'Keyingi qadamlar kelişib olinadi',
   ],
   items: [
     { t: 'Mahsulot va taklif', d: 'Assortiment, narx va xaridorga beriladigan taklif' },
     { t: 'Bozor va auditoriya', d: 'Kim sotib oladi, qayerda va qanday hajmda' },
     { t: 'Hozirgi marketing', d: 'Reklama, kontent va murojaat manbalari' },
-    { t: 'Sotuv jarayoni', d: 'Murojaat qanday qabul qilinadi va u bilan kim ishlaydi' },
+    { t: 'Sotuv jarayoni', d: 'Murojaat qanday qabul qilinadi va u bilan kim işlaydi' },
   ],
-  cta: 'Biznesimni tahlil qilish',
+  cta: 'Biznesimni tahlil qiliş',
 };
 
 export const channels = {
   eyebrow: 'Chakana / Optom',
   title: 'Bitta mahsulot. Ikki xil sotuv yo‘li.',
-  text: 'Chakana xaridor va katta hajmda xarid qiluvchi mijoz bir xil qaror qabul qilmaydi. Shuning uchun ularga bir xil reklama ko‘rsatish shart emas.',
+  text: 'Chakana xaridor va katta hajmda xarid qiluvchi mijoz bir xil qaror qabul qilmaydi. Şuning uchun ularga bir xil reklama ko‘rsatiş şart emas.',
   cards: [
     {
       tag: 'Chakana',
       qty: '1',
-      title: 'Oxirgi xaridorga sotish',
-      text: 'Mahsulotni bevosita iste’molchiga sotish uchun alohida taklif, reklama materiallari va reklama yo‘li quriladi.',
+      title: 'Oxirgi xaridorga sotiş',
+      text: 'Mahsulotni bevosita iste’molchiga sotiş uchun alohida taklif, reklama materiallari va reklama yo‘li quriladi.',
       segmentsLabel: 'Kimlar uchun',
       segments: ['Uy uchun xarid qiluvchilar', 'Individual buyurtmachilar', 'Do‘kondan xarid qiluvchilar'],
       flow: ['Reklama materiali', 'Reklama', 'Sahifa / Direct', 'Murojaat', 'Menejer'],
@@ -70,40 +70,40 @@ export const channels = {
     {
       tag: 'Optom',
       qty: '50',
-      title: 'Katta hajmdagi mijozlarni jalb qilish',
-      text: 'Optom va korporativ mijozlar uchun alohida muloqot, taklif va murojaat yig‘ish tizimi quriladi.',
+      title: 'Katta hajmdagi mijozlarni jalb qiliş',
+      text: 'Optom va korporativ mijozlar uchun alohida muloqot, taklif va murojaat yig‘iş tizimi quriladi.',
       segmentsLabel: 'Segmentlar',
-      segments: ['Dilerlar', 'Qayta sotuvchilar', 'Do‘konlar', 'Mehmonxonalar', 'Hostellar', 'Tashkilotlar', 'Korporativ xaridorlar', 'Boshqa bizneslar'],
+      segments: ['Dilerlar', 'Qayta sotuvchilar', 'Do‘konlar', 'Mehmonxonalar', 'Hostellar', 'Taşkilotlar', 'Korporativ xaridorlar', 'Boşqa bizneslar'],
       flow: ['Optom taklifi', 'Reklama', 'Sahifa', 'Ariza', 'CRM', 'Sotuv menejeri'],
     },
   ],
-  example: '1 dona krovat oladigan xaridor bilan 50 dona oladigan biznes egasiga bir xil reklama ishlamasligi kerak.',
+  example: '1 dona krovat oladigan xaridor bilan 50 dona oladigan biznes egasiga bir xil reklama işlamasligi kerak.',
 };
 
 export const system = {
   eyebrow: 'Marketing tizimi',
   title: 'Reklamadan sotuv jarayonigacha — bitta tizim.',
-  text: 'Bizning vazifamiz faqat reklama yoqish emas. Potensial mijoz reklamangizni ko‘rganidan boshlab sotuv jamoasiga yetib borgunigacha bo‘lgan yo‘lni bir tizimga bog‘lash.',
+  text: 'Bizning vazifamiz faqat reklama yoqiş emas. Potensial mijoz reklamangizni ko‘rganidan boşlab sotuv jamoasiga yetib borgunigacha bo‘lgan yo‘lni bir tizimga bog‘laş.',
   stages: [
     { t: 'Strategiya', d: 'Bozor, auditoriya, maqsad' },
     { t: 'Taklif', d: 'Nima uchun aynan sizdan' },
-    { t: 'Kontent', d: 'Reklama materiallari, suratga olish, dizayn' },
-    { t: 'Target reklama', d: 'Kerakli auditoriyaga chiqish' },
+    { t: 'Kontent', d: 'Reklama materiallari, suratga oliş, dizayn' },
+    { t: 'Target reklama', d: 'Kerakli auditoriyaga chiqiş' },
     { t: 'Sahifa / Direct', d: 'Murojaat qabul qilinadigan joy' },
     { t: 'Murojaat', d: 'Qiziqqan potensial mijoz' },
     { t: 'CRM', d: 'Har bir murojaat nazoratda' },
     { t: 'Menejer', d: 'Tezkor aloqa va taklif' },
     { t: 'Qayta aloqa', d: 'Qaror qabul qilguncha aloqa' },
-    { t: 'Natija va analitika', d: 'Qaysi kanal ishlayotgani ko‘rinadi' },
+    { t: 'Natija va analitika', d: 'Qaysi kanal işlayotgani ko‘rinadi' },
   ],
   focus: 5,
   groups: [
-    { name: 'Talab yaratish', from: 0, to: 3 },
+    { name: 'Talab yaratiş', from: 0, to: 3 },
     { name: 'Murojaat', from: 4, to: 5 },
     { name: 'Sotuv jarayoni', from: 6, to: 8 },
     { name: 'Nazorat', from: 9, to: 9 },
   ],
-  highlightA: 'Murojaat olib kelishning o‘zi yetarli emas.',
+  highlightA: 'Murojaat olib kelişning o‘zi yetarli emas.',
   highlightB: 'Uni yo‘qotmaslik ham kerak.',
 };
 
@@ -113,11 +113,11 @@ export const modules = {
   note: 'Qaysi qismlar kerakligi biznesning hozirgi holatiga qarab aniqlanadi.',
   items: [
     { t: 'Marketing strategiyasi', d: 'Pozitsioning, auditoriya, raqobatchilar, taklif va reklama strategiyasi.' },
-    { t: 'Kontent', d: 'Reklama g‘oyalari, suratga olish, Reels, dizayn, reklama matnlari va materiallari.' },
-    { t: 'Target reklama', d: 'Auditoriyani ajratish, kampaniyalar, qiziqqanlarga qayta reklama va reklamani yaxshilash.' },
-    { t: 'Sahifa', d: 'Kerak bo‘lsa mahsulot, optom yo‘nalish yoki alohida taklif uchun alohida sahifa.' },
-    { t: 'CRM', d: 'Murojaatlar, ularning holati, qayta aloqa va menejerlar ishini nazorat qilish tizimi.' },
-    { t: 'Sotuv jarayoni', d: 'Kerak bo‘lsa suhbat skriptlari, ish ko‘rsatkichlari, menejerlar jarayoni va murojaat bilan ishlash tizimini shakllantirish.' },
+    { t: 'Kontent', d: 'Reklama g‘oyalari, suratga oliş, Reels, dizayn, reklama matnlari va materiallari.' },
+    { t: 'Target reklama', d: 'Auditoriyani ajratiş, kampaniyalar, qiziqqanlarga qayta reklama va reklamani yaxşilaş.' },
+    { t: 'Sahifa', d: 'Kerak bo‘lsa mahsulot, optom yo‘naliş yoki alohida taklif uchun alohida sahifa.' },
+    { t: 'CRM', d: 'Murojaatlar, ularning holati, qayta aloqa va menejerlar işini nazorat qiliş tizimi.' },
+    { t: 'Sotuv jarayoni', d: 'Kerak bo‘lsa suhbat skriptlari, iş ko‘rsatkichlari, menejerlar jarayoni va murojaat bilan işlaş tizimini şakllantiriş.' },
   ],
 };
 
@@ -127,9 +127,9 @@ export const modules = {
  */
 export const caseStudy = {
   eyebrow: 'Real tajriba',
-  title: 'Mebel yo‘nalishidagi real tajriba.',
+  title: 'Mebel yo‘nalişidagi real tajriba.',
   text: 'Nazariya emas — real reklama va sotuv jarayonidan olingan natija.',
-  label: 'Mebel ishlab chiqarish · Anonim loyiha',
+  label: 'Mebel işlab chiqariş · Anonim loyiha',
   period: '15–28 avgust 2026',
   metrics: [
     { v: '$902', k: 'reklama xarajati' },
@@ -137,81 +137,81 @@ export const caseStudy = {
     { v: '404 dona', k: 'sotilgan mahsulot' },
   ],
   story: [
-    { k: 'Vazifa', d: 'Mebel mahsulotlariga yangi mijozlar oqimini yaratish va reklama orqali kelayotgan talabni sotuv jarayoniga bog‘lash.' },
-    { k: 'Yondashuv', d: 'Mahsulot takliflari, reklama materiallari, auditoriyalar va murojaat bilan ishlash jarayoni ustida ishladik.' },
+    { k: 'Vazifa', d: 'Mebel mahsulotlariga yangi mijozlar oqimini yaratiş va reklama orqali kelayotgan talabni sotuv jarayoniga bog‘laş.' },
+    { k: 'Yondaşuv', d: 'Mahsulot takliflari, reklama materiallari, auditoriyalar va murojaat bilan işlaş jarayoni ustida işladik.' },
     { k: 'Natija', d: 'Ko‘rsatilgan davr ichida reklama orqali kelgan mijozlar hisobiga 404 dona mahsulot sotildi.' },
   ],
-  disclaimer: 'Bu natija aynan ushbu loyiha va ko‘rsatilgan davrga tegishli. Natijalar mahsulot, narx, bozor, reklama budjeti va sotuv jarayoniga qarab farq qiladi.',
+  disclaimer: 'Bu natija aynan uşbu loyiha va ko‘rsatilgan davrga tegişli. Natijalar mahsulot, narx, bozor, reklama budjeti va sotuv jarayoniga qarab farq qiladi.',
 };
 
 export const industries = {
   eyebrow: 'Kimlar uchun',
-  title: 'Qaysi ishlab chiqarish bizneslari bilan ishlashimiz mumkin?',
-  items: ['Mebel', 'Oshxona mebeli', 'Matras', 'Eshik va rom', 'Tekstil', 'Metall mahsulotlar', 'Qurilish materiallari', 'Uy uchun mahsulotlar', 'Boshqa ishlab chiqarish yo‘nalishlari'],
+  title: 'Qaysi işlab chiqariş bizneslari bilan işlaşimiz mumkin?',
+  items: ['Mebel', 'Oşxona mebeli', 'Matras', 'Eşik va rom', 'Tekstil', 'Metall mahsulotlar', 'Quriliş materiallari', 'Uy uchun mahsulotlar', 'Boşqa işlab chiqariş yo‘nalişlari'],
   proven: 'Mebel',
   provenTag: 'Real tajriba bor',
-  note: 'Yo‘nalishingiz ro‘yxatda yo‘qmi? Agar mahsulot ishlab chiqarsangiz, loyihangizni alohida ko‘rib chiqamiz.',
-  cta: 'Yo‘nalishimni muhokama qilish',
+  note: 'Yo‘nalişingiz ro‘yxatda yo‘qmi? Agar mahsulot işlab chiqarsangiz, loyihangizni alohida ko‘rib chiqamiz.',
+  cta: 'Yo‘nalişimni muhokama qiliş',
 };
 
 export const states = {
   eyebrow: 'Hozirgi holat',
   title: 'Hozir biznesingiz qaysi bosqichda?',
   items: [
-    { t: 'Ishlab chiqarish bor. Marketing tizimi yo‘q.', d: 'Noldan mijoz jalb qilish tizimini shakllantiramiz.' },
+    { t: 'Işlab chiqariş bor. Marketing tizimi yo‘q.', d: 'Noldan mijoz jalb qiliş tizimini şakllantiramiz.' },
     { t: 'Reklama bor. Natija qoniqtirmaydi.', d: 'Amaldagi marketing, taklif, reklama materiallari va murojaat jarayonini tahlil qilib, zaif nuqtalarni aniqlaymiz.' },
-    { t: 'Murojaatlar keladi. Sotuv jarayoni sust.', d: 'CRM, qayta aloqa va menejerlar bilan ishlash jarayonini tartibga solishga yordam beramiz.' },
+    { t: 'Murojaatlar keladi. Sotuv jarayoni sust.', d: 'CRM, qayta aloqa va menejerlar bilan işlaş jarayonini tartibga solişga yordam beramiz.' },
   ],
-  cta: 'Qaysi bosqichdaligimni aniqlash',
+  cta: 'Qaysi bosqichdaligimni aniqlaş',
 };
 
 export const process = {
   eyebrow: 'Jarayon',
-  title: 'Qanday ishlaymiz?',
+  title: 'Qanday işlaymiz?',
   steps: [
     { t: 'Ariza', d: 'Biznesingiz haqida asosiy ma’lumotlarni olamiz.' },
     { t: 'Diagnostika', d: 'Mahsulot, bozor, marketing va sotuv jarayonini ko‘rib chiqamiz.' },
-    { t: 'Strategiya', d: 'Auditoriya, taklif va mijoz jalb qilish modelini belgilaymiz.' },
-    { t: 'Tizimni qurish', d: 'Kerakli kontent, reklama, sahifa, CRM va boshqa qismlar tayyorlanadi.' },
-    { t: 'Ishga tushirish', d: 'Kampaniyalar ishga tushadi va murojaatlar oqimi kuzatiladi.' },
-    { t: 'Optimallashtirish', d: 'Natijalarga qarab reklama materiallari, reklama va jarayonlar yaxshilanadi.' },
+    { t: 'Strategiya', d: 'Auditoriya, taklif va mijoz jalb qiliş modelini belgilaymiz.' },
+    { t: 'Tizimni quriş', d: 'Kerakli kontent, reklama, sahifa, CRM va boşqa qismlar tayyorlanadi.' },
+    { t: 'Işga tuşiriş', d: 'Kampaniyalar işga tuşadi va murojaatlar oqimi kuzatiladi.' },
+    { t: 'Optimallaştiriş', d: 'Natijalarga qarab reklama materiallari, reklama va jarayonlar yaxşilanadi.' },
   ],
 };
 
 export const fit = {
-  eyebrow: 'Kimlar bilan ishlaymiz',
-  title: 'Har bir loyiha bilan ishlamaymiz.',
-  text: 'Marketing yaxshi ishlashi uchun biznesning o‘zi ham yangi mijozlarni qabul qilishga tayyor bo‘lishi kerak.',
+  eyebrow: 'Kimlar bilan işlaymiz',
+  title: 'Har bir loyiha bilan işlamaymiz.',
+  text: 'Marketing yaxşi işlaşi uchun biznesning o‘zi ham yangi mijozlarni qabul qilişga tayyor bo‘lişi kerak.',
   listTitle: 'Mos loyiha belgilari',
   list: [
-    'Ishlab chiqarish yo‘lga qo‘yilgan',
+    'Işlab chiqariş yo‘lga qo‘yilgan',
     'Mahsulot sotuvga tayyor',
-    'Yangi buyurtmalarni bajarish imkoniyati mavjud',
-    'Marketing uchun budjet ajratishga tayyor',
-    'Tizimli ishlash istagi mavjud',
+    'Yangi buyurtmalarni bajariş imkoniyati mavjud',
+    'Marketing uchun budjet ajratişga tayyor',
+    'Tizimli işlaş istagi mavjud',
   ],
-  closing: 'Agar biznesingiz shu bosqichda bo‘lsa, loyihani birga ko‘rib chiqishimiz mumkin.',
+  closing: 'Agar biznesingiz şu bosqichda bo‘lsa, loyihani birga ko‘rib chiqişimiz mumkin.',
 };
 
 export const faq = {
   eyebrow: 'Savollar',
   title: 'Ko‘p beriladigan savollar.',
   items: [
-    { q: 'Faqat target reklama qilib berasizlarmi?', a: 'Bizning asosiy yondashuvimiz faqat reklama kabinetini boshqarish emas. Reklama natijasi taklif, reklama materiallari, sahifa va sotuv jarayoniga ham bog‘liq bo‘lgani uchun loyihaga tizim sifatida qaraymiz.' },
-    { q: 'Kontentni ham tayyorlaysizlarmi?', a: 'Loyiha ehtiyojiga qarab suratga olish, montaj, dizayn, reklama matnlari va materiallarini tayyorlash jarayonga kiritilishi mumkin.' },
-    { q: 'CRM bo‘lmasa nima qilamiz?', a: 'Kerak bo‘lsa murojaatlarni yig‘ish, ularning holati va qayta aloqa jarayonini nazorat qilish uchun CRM tizimini qurishga yordam beramiz.' },
-    { q: 'Sotuv bo‘limimiz bo‘lmasa-chi?', a: 'Loyiha ehtiyojiga qarab sotuv jarayoni, suhbat skriptlari, ish ko‘rsatkichlari va menejerlar bilan ishlash tizimini shakllantirishga yordam berishimiz mumkin.' },
-    { q: 'Faqat Toshkentdagi bizneslar bilan ishlaysizlarmi?', a: 'Yo‘q. O‘zbekiston bo‘ylab ishlab chiqarish bizneslari bilan loyihalarni ko‘rib chiqamiz.' },
+    { q: 'Faqat target reklama qilib berasizlarmi?', a: 'Bizning asosiy yondaşuvimiz faqat reklama kabinetini boşqariş emas. Reklama natijasi taklif, reklama materiallari, sahifa va sotuv jarayoniga ham bog‘liq bo‘lgani uchun loyihaga tizim sifatida qaraymiz.' },
+    { q: 'Kontentni ham tayyorlaysizlarmi?', a: 'Loyiha ehtiyojiga qarab suratga oliş, montaj, dizayn, reklama matnlari va materiallarini tayyorlaş jarayonga kiritilişi mumkin.' },
+    { q: 'CRM bo‘lmasa nima qilamiz?', a: 'Kerak bo‘lsa murojaatlarni yig‘iş, ularning holati va qayta aloqa jarayonini nazorat qiliş uchun CRM tizimini qurişga yordam beramiz.' },
+    { q: 'Sotuv bo‘limimiz bo‘lmasa-chi?', a: 'Loyiha ehtiyojiga qarab sotuv jarayoni, suhbat skriptlari, iş ko‘rsatkichlari va menejerlar bilan işlaş tizimini şakllantirişga yordam berişimiz mumkin.' },
+    { q: 'Faqat Toşkentdagi bizneslar bilan işlaysizlarmi?', a: 'Yo‘q. O‘zbekiston bo‘ylab işlab chiqariş bizneslari bilan loyihalarni ko‘rib chiqamiz.' },
     { q: 'Qancha reklama budjeti kerak?', a: 'Bu mahsulot, hudud, auditoriya va maqsadga bog‘liq. Diagnostikadan keyin loyiha uchun real reklama budjeti bo‘yicha tavsiya beriladi.' },
-    { q: 'Natija qancha vaqtda chiqadi?', a: 'Aniq muddatni oldindan kafolatlab bo‘lmaydi. Natija mahsulot, narx, bozor, reklama budjeti va sotuv jarayoniga bog‘liq. Dastlabki ma’lumotlar asosida kampaniyalar bosqichma-bosqich optimallashtiriladi.' },
+    { q: 'Natija qancha vaqtda chiqadi?', a: 'Aniq muddatni oldindan kafolatlab bo‘lmaydi. Natija mahsulot, narx, bozor, reklama budjeti va sotuv jarayoniga bog‘liq. Dastlabki ma’lumotlar asosida kampaniyalar bosqichma-bosqich optimallaştiriladi.' },
   ],
 };
 
 export const finalCta = {
-  eyebrow: 'Loyihani muhokama qilish',
-  titleA: 'Ishlab chiqarish bor.',
-  titleB: 'Endi mijoz oqimini tizimlashtirish kerak.',
-  text: 'Biznesingiz haqida qisqacha ma’lumot qoldiring. FAZO Digital jamoasi loyihangizni ko‘rib chiqib, qaysi marketing modeli mos kelishini muhokama qiladi.',
-  cta: 'Loyihani muhokama qilish',
-  aside: ['Ariza 1–2 daqiqa oladi', 'Ma’lumotlaringiz faqat siz bilan bog‘lanish uchun ishlatiladi'],
+  eyebrow: 'Loyihani muhokama qiliş',
+  titleA: 'Işlab chiqariş bor.',
+  titleB: 'Endi mijoz oqimini tizimlaştiriş kerak.',
+  text: 'Biznesingiz haqida qisqacha ma’lumot qoldiring. FAZO Digital jamoasi loyihangizni ko‘rib chiqib, qaysi marketing modeli mos kelişini muhokama qiladi.',
+  cta: 'Loyihani muhokama qiliş',
+  aside: ['Ariza 1–2 daqiqa oladi', 'Ma’lumotlaringiz faqat siz bilan bog‘laniş uchun işlatiladi'],
 };

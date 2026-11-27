@@ -37,14 +37,15 @@ test('every page is readable without JavaScript or animation: nothing is prerend
   }
 });
 
-test('the three landings ship their offer and form in the HTML', opts, () => {
+test('the four landings ship their offer and form in the HTML', opts, () => {
   const text = (rel) => pages.find((p) => p.rel === rel).html.replace(/<[^>]+>/g, ' ');
-  assert.match(text('ishlab-chiqarish.html'), /Mahsulot ishlab chiqarasiz\./);
-  assert.match(text('ishlab-chiqarish.html'), /Loyihani muhokama qilish/);
-  assert.match(text('qurilish.html'), /\$5,000–\$7,000/);
-  assert.match(text('qurilish.html'), /Reklama budjeti alohida ajratiladi\./);
-  assert.match(text('avtosalon.html'), /Ariza qoldirish/);
-  for (const rel of ['ishlab-chiqarish.html', 'qurilish.html', 'avtosalon.html']) assert.match(pages.find((p) => p.rel === rel).html, /<form[\s>]/, `${rel} form`);
+  assert.match(text('ishlab-chiqarish.html'), /Mahsulot işlab chiqarasiz\./);
+  assert.match(text('ishlab-chiqarish.html'), /Loyihani muhokama qiliş/);
+  assert.doesNotMatch(text('qurilish.html'), /\$5,000/); // unconfirmed price removed
+  assert.match(text('qurilish.html'), /Reklama budjeti alohida ajratiladi/);
+  assert.match(text('avtosalon.html'), /Ariza qoldiriş/);
+  assert.match(text('talim.html'), /Siz nima olasiz/);
+  for (const rel of ['ishlab-chiqarish.html', 'qurilish.html', 'avtosalon.html', 'talim.html']) assert.match(pages.find((p) => p.rel === rel).html, /<form[\s>]/, `${rel} form`);
 });
 
 test('head: one title, description, H1; canonical on the served host; 404 is noindex', opts, () => {

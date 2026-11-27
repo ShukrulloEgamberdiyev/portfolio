@@ -1,6 +1,7 @@
 import { useLang } from '../i18n';
 import { CONTACT, SECTION_IDS } from '../data/site';
 import { onAnchorClick } from '../lib/scroll';
+import { ctaClick } from '../lib/analytics';
 import { Button } from '../ui/Button';
 import { Headline } from '../ui/Headline';
 import { Reveal } from '../ui/Reveal';
@@ -25,7 +26,7 @@ export function FinalCTA() {
         <div className="mt-14 grid gap-10 lg:mt-20 lg:grid-cols-12 lg:items-end">
           <Reveal className="lg:col-span-5"><p className="lead">{f.sub}</p></Reveal>
           <Reveal className="flex flex-wrap gap-3 lg:col-span-7 lg:justify-end" delay={0.1}>
-            <Button href={`#${SECTION_IDS.apply}`} onClick={(e) => onAnchorClick(e as React.MouseEvent<HTMLAnchorElement>, SECTION_IDS.apply)}>{f.cta}</Button>
+            <Button href={`#${SECTION_IDS.apply}`} onClick={(e) => { ctaClick('final'); onAnchorClick(e as React.MouseEvent<HTMLAnchorElement>, SECTION_IDS.apply); }}>{f.cta}</Button>
             <Button variant="ghost" href={CONTACT.telegram.url} external>{f.telegram}</Button>
           </Reveal>
         </div>

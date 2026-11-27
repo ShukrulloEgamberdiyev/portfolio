@@ -176,7 +176,7 @@ function Chain({ steps, loop, badge }: { steps: { t: string; d: string }[]; loop
           return (
             <li key={s.t} className="relative flex lg:block">
               {/* connector: vertical on phones, horizontal on desktop */}
-              <span aria-hidden className="absolute left-[15px] top-8 bottom-0 w-px bg-line-strong lg:left-auto lg:right-0 lg:top-[15px] lg:h-px lg:w-full lg:translate-x-1/2" style={{ display: i === steps.length - 1 ? 'none' : undefined }} />
+              {i < steps.length - 1 && <span aria-hidden className="absolute left-[15px] top-8 bottom-0 w-px bg-line-strong lg:left-auto lg:right-0 lg:top-[15px] lg:h-px lg:w-full lg:translate-x-1/2" />}
               <span aria-hidden className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border font-mono text-[11px] ${crm ? 'border-violet bg-violet text-white' : capi ? 'border-violet text-violet' : 'border-line-strong bg-ink text-mist'}`}>
                 {i + 1}
               </span>

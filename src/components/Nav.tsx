@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { LANGS, useLang } from '../i18n';
 import { Button } from '../ui/Button';
 import { Logo } from './Logo';
+import { ctaClick } from '../lib/analytics';
 
 export function Nav() {
   const { t, lang, setLang } = useLang();
@@ -60,7 +61,7 @@ export function Nav() {
               ))}
             </div>
             <div className="hidden md:block">
-              <Button to="/apply" onClick={close} className={`${compact ? 'h-10' : 'h-11'} min-h-0! py-0! px-5 text-[11px] whitespace-nowrap`}>{t.nav.cta}</Button>
+              <Button to="/apply" onClick={() => { ctaClick('nav'); close(); }} className={`${compact ? 'h-10' : 'h-11'} min-h-0! py-0! px-5 text-[11px] whitespace-nowrap`}>{t.nav.cta}</Button>
             </div>
             <button ref={menuBtn} onClick={() => setOpen(true)} className="flex h-11 items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] xl:hidden" aria-expanded={open} aria-controls="mobile-menu">
               {t.nav.menu}
@@ -96,7 +97,7 @@ export function Nav() {
                   <button key={l} onClick={() => setLang(l)} aria-pressed={lang === l} className={`px-2 py-2 ${lang === l ? 'text-bone' : 'text-ash'}`}>{l}</button>
                 ))}
               </div>
-              <Button to="/apply" onClick={close} magnetic={false} className="h-12 min-h-0! py-0! px-5 text-[11px]">{t.nav.cta}</Button>
+              <Button to="/apply" onClick={() => { ctaClick('nav-menu'); close(); }} magnetic={false} className="h-12 min-h-0! py-0! px-5 text-[11px]">{t.nav.cta}</Button>
             </div>
           </motion.div>
         )}

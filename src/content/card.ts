@@ -6,7 +6,7 @@
 export const identity = {
   name: 'FAZO DIGITAL',
   services: ['MARKETING', 'SMM', 'TARGETING'],
-  positioning: 'Biznesingiz uchun marketingni tizimlashtiramiz va uni sotuv bilan bog‘laymiz.',
+  positioning: 'Biznesingiz uchun marketingni tizimlaştiramiz va uni sotuv bilan bog‘laymiz.',
   siteLabel: 'FAZO DIGITAL SAYTI',
   siteUrl: 'https://www.fazodigital.uz/',
 };
@@ -17,12 +17,12 @@ export const servicesBlock = {
     {
       id: 'marketing',
       label: 'MARKETING',
-      text: 'Biznesingiz uchun marketing strategiyasini ishlab chiqamiz va mijoz jalb qilish jarayonini tizimlashtiramiz. Marketing, reklama va sotuv jarayonlarini bir-biriga bog‘lab ishlaymiz.',
+      text: 'Biznesingiz uchun marketing strategiyasini işlab chiqamiz va mijoz jalb qiliş jarayonini tizimlaştiramiz. Marketing, reklama va sotuv jarayonlarini bir-biriga bog‘lab işlaymiz.',
     },
     {
       id: 'smm',
       label: 'SMM',
-      text: 'Ijtimoiy tarmoqlardagi brendingizni professional shakllantiramiz. Kontent strategiyasi, syomka, montaj, dizayn va sahifalarni yuritish jarayonlarini boshqaramiz.',
+      text: 'Ijtimoiy tarmoqlardagi brendingizni professional şakllantiramiz. Kontent strategiyasi, syomka, montaj, dizayn va sahifalarni yuritiş jarayonlarini boşqaramiz.',
     },
     {
       id: 'targeting',
@@ -34,10 +34,10 @@ export const servicesBlock = {
 
 export const contactBlock = {
   heading: 'BIZ BILAN BOG‘LANING',
-  register: 'RO‘YXATDAN O‘TISH',
+  register: 'RO‘YXATDAN O‘TIŞ',
   instagram: 'INSTAGRAM',
   telegram: 'TELEGRAM',
-  call: 'QO‘NG‘IROQ QILISH',
-  formTitle: 'Ro‘yxatdan o‘tish',
-  close: 'Yopish',
+  call: 'QO‘NG‘IROQ QILIŞ',
+  formTitle: 'Ro‘yxatdan o‘tiş',
+  close: 'Yopiş',
 };

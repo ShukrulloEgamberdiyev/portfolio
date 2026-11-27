@@ -67,7 +67,7 @@ const BUDGET_OPTIONS = ['$500 gacha', '$500–1,500', '$1,500–5,000', '$5,000 
 const BUDGET_Q = (showIf?: Record<string, string[]>): ChoiceQuestion => ({
   id: 'adBudget',
   kind: 'choice',
-  label: 'Oylik reklama budjeti qancha bo‘lishi mumkin?',
+  label: 'Oylik reklama budjeti qancha bo‘lişi mumkin?',
   hint: 'Bu summa reklama platformasiga to‘lanadi va xizmat haqiga kirmaydi.',
   options: BUDGET_OPTIONS,
   ...(showIf ? { showIf } : {}),
@@ -86,7 +86,7 @@ const OTHER_TEXT_Q = (from: string, label = 'Qisqacha yozing'): TextQuestion => 
   kind: 'text',
   label,
   max: 200,
-  showIf: { [from]: ['Boshqa'] },
+  showIf: { [from]: ['Boşqa'] },
 });
 
 const SITE_SERVICES = [
@@ -108,10 +108,10 @@ export const FORMS: Record<FormId, FormDef> = {
     service: 'Umumiy',
     serviceFrom: 'service',
     questions: [
-      { id: 'service', kind: 'choice', label: 'Sizga qaysi yo‘nalishda yordam kerak?', options: SITE_SERVICES },
+      { id: 'service', kind: 'choice', label: 'Sizga qaysi yo‘nalişda yordam kerak?', options: SITE_SERVICES },
       {
         id: 'industry', kind: 'choice', label: 'Biznesingiz qaysi sohada?',
-        options: ['Qurilish va ko‘chmas mulk', 'Avtosalon', 'Ta’lim', 'Ishlab chiqarish', 'Savdo yoki xizmat ko‘rsatish', 'Boshqa'],
+        options: ['Quriliş va ko‘chmas mulk', 'Avtosalon', 'Ta’lim', 'Işlab chiqariş', 'Savdo yoki xizmat ko‘rsatiş', 'Boşqa'],
       },
       OTHER_TEXT_Q('industry', 'Sohangizni qisqacha yozing'),
       INSTAGRAM_Q(),
@@ -133,15 +133,15 @@ export const FORMS: Record<FormId, FormDef> = {
   },
   qurilish: {
     id: 'qurilish',
-    service: 'Qurilish',
+    service: 'Quriliş',
     questions: [
       {
         id: 'stage', kind: 'choice', label: 'Loyihangiz qaysi bosqichda?',
-        options: ['Yangi loyiha, sotuv hali boshlanmagan', 'Qurilish jarayonida, sotuv boshlangan', 'Qurilish tugagan, sotuv davom etmoqda'],
+        options: ['Yangi loyiha, sotuv hali boşlanmagan', 'Quriliş jarayonida, sotuv boşlangan', 'Quriliş tugagan, sotuv davom etmoqda'],
       },
       {
         id: 'problem', kind: 'choice', label: 'Hozir eng ko‘p nima qiynayapti?',
-        options: ['Murojaatlar kam', 'Murojaatlar ko‘p, lekin sifati past', 'Murojaatlar sotuvgacha yetmayapti', 'Reklama natijasini sotuv bilan solishtira olmaymiz', 'Boshqa'],
+        options: ['Murojaatlar kam', 'Murojaatlar ko‘p, lekin sifati past', 'Murojaatlar sotuvgacha yetmayapti', 'Reklama natijasini sotuv bilan soliştira olmaymiz', 'Boşqa'],
       },
       OTHER_TEXT_Q('problem'),
       { id: 'salesTeam', kind: 'choice', label: 'Sotuv bo‘limingiz bormi?', options: ['Ha, menejerlar bor', 'Yo‘q, sotuvni o‘zimiz qilamiz'] },
@@ -156,7 +156,7 @@ export const FORMS: Record<FormId, FormDef> = {
     id: 'avtosalon',
     service: 'Avtosalon',
     questions: [
-      { id: 'cars', kind: 'choice', label: 'Qanday avtomobillar sotasiz?', options: ['Yangi avtomobillar', 'Ishlatilgan avtomobillar', 'Ikkalasi ham'] },
+      { id: 'cars', kind: 'choice', label: 'Qanday avtomobillar sotasiz?', options: ['Yangi avtomobillar', 'Işlatilgan avtomobillar', 'Ikkalasi ham'] },
       { id: 'adsNow', kind: 'choice', label: 'Hozir reklama berasizmi?', options: ['Ha, o‘zimiz yuritamiz', 'Ha, agentlik yoki mutaxassis yuritadi', 'Yo‘q'] },
       {
         id: 'monthlyLeads', kind: 'choice', label: 'Oyiga taxminan nechta murojaat keladi?',
@@ -165,14 +165,14 @@ export const FORMS: Record<FormId, FormDef> = {
       },
       LEADS_WHERE_Q(),
       {
-        id: 'problem', kind: 'choice', label: 'Qaysi masala birinchi navbatda hal bo‘lishi kerak?',
-        options: ['Test-drayv va tashrif kam', 'Murojaatlarga kech javob beriladi', 'Qaysi reklama sotuv berayotgani noma’lum', 'Boshqa'],
+        id: 'problem', kind: 'choice', label: 'Qaysi masala birinchi navbatda hal bo‘lişi kerak?',
+        options: ['Test-drayv va taşrif kam', 'Murojaatlarga kech javob beriladi', 'Qaysi reklama sotuv berayotgani noma’lum', 'Boşqa'],
       },
       OTHER_TEXT_Q('problem'),
       INSTAGRAM_Q(),
       INSTAGRAM_LINK_Q(),
       BUDGET_Q(),
-      { id: 'company', kind: 'text', label: 'Avtosalon nomi va shahar', max: 120 },
+      { id: 'company', kind: 'text', label: 'Avtosalon nomi va şahar', max: 120 },
     ],
   },
   talim: {
@@ -181,12 +181,12 @@ export const FORMS: Record<FormId, FormDef> = {
     questions: [
       {
         id: 'type', kind: 'choice', label: 'Ta’lim muassasangiz turi',
-        options: ['O‘quv markazi yoki kurslar', 'Xususiy maktab yoki bog‘cha', 'Onlayn kurs', 'Boshqa'],
+        options: ['O‘quv markazi yoki kurslar', 'Xususiy maktab yoki bog‘cha', 'Onlayn kurs', 'Boşqa'],
       },
       OTHER_TEXT_Q('type'),
       {
         id: 'goal', kind: 'choice', label: 'Asosiy maqsadingiz qaysi?',
-        options: ['Yangi o‘quvchilar qabulini oshirish', 'Murojaatlar javobsiz qolmasligi', 'Qaysi reklama o‘quvchi olib kelayotganini bilish', 'Brendni tanitish'],
+        options: ['Yangi o‘quvchilar qabulini oşiriş', 'Murojaatlar javobsiz qolmasligi', 'Qaysi reklama o‘quvchi olib kelayotganini biliş', 'Brendni tanitiş'],
       },
       { id: 'branches', kind: 'choice', label: 'Nechta filialingiz bor?', options: ['1 ta', '2–3 ta', '4 ta va undan ko‘p', 'Faqat onlayn'] },
       {
@@ -196,21 +196,21 @@ export const FORMS: Record<FormId, FormDef> = {
       INSTAGRAM_Q(),
       INSTAGRAM_LINK_Q(),
       BUDGET_Q(),
-      { id: 'company', kind: 'text', label: 'Muassasa nomi va shahar', max: 120 },
+      { id: 'company', kind: 'text', label: 'Muassasa nomi va şahar', max: 120 },
     ],
   },
   'ishlab-chiqarish': {
     id: 'ishlab-chiqarish',
-    service: 'Ishlab chiqarish',
+    service: 'Işlab chiqariş',
     questions: [
       {
-        id: 'product', kind: 'choice', label: 'Nima ishlab chiqarasiz?',
-        options: ['Qurilish materiallari', 'Mebel', 'Oziq-ovqat', 'To‘qimachilik', 'Boshqa'],
+        id: 'product', kind: 'choice', label: 'Nima işlab chiqarasiz?',
+        options: ['Quriliş materiallari', 'Mebel', 'Oziq-ovqat', 'To‘qimachilik', 'Boşqa'],
       },
       OTHER_TEXT_Q('product', 'Mahsulotingizni qisqacha yozing'),
       { id: 'buyers', kind: 'choice', label: 'Asosan kimga sotasiz?', options: ['Diler va ulgurji xaridorlarga', 'To‘g‘ridan-to‘g‘ri iste’molchiga', 'Ikkalasiga ham'] },
       {
-        id: 'problem', kind: 'choice', label: 'Qaysi masala birinchi navbatda hal bo‘lishi kerak?',
+        id: 'problem', kind: 'choice', label: 'Qaysi masala birinchi navbatda hal bo‘lişi kerak?',
         options: ['Yangi diler va hamkorlar kam', 'Murojaatlar kam', 'Murojaatlar kuzatilmaydi', 'Brend bozorda tanilmagan'],
       },
       LEADS_WHERE_Q(),

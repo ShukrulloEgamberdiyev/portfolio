@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { IC_FORM_ID } from '../../content/ishlab';
 import { scrollToId } from '../../lib/scroll';
 import { track } from '../../lib/tracking';
+import { ctaClick } from '../../lib/analytics';
 
 /* Section scaffolding, eyebrow and the violet full stop are shared with /qurilish — one design language. */
 export { Dotted, Eyebrow, Section, SectionHead } from '../qurilish/QrUi';
@@ -25,6 +26,7 @@ export function focusTarget(id: string) {
  */
 export function goTo(id: string, location: string, before?: () => void) {
   track('IshlabCTA', { location, target: id }, { custom: true });
+  ctaClick(`ishlab-${location}`);
   const run = () => { scrollToId(id); focusTarget(id); };
   if (!before) { run(); return; }
   before();

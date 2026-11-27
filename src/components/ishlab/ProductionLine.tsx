@@ -75,7 +75,7 @@ const BELT_X1 = 790;
 
 function ProductionLineSvg({ className = '' }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 800 620" role="img" aria-label="Ishlab chiqarish sexi: xomashyo, stanok va tayyor mahsulotlar konveyeri" preserveAspectRatio="xMidYMax meet">
+    <svg className={className} viewBox="0 0 800 620" role="img" aria-label="Işlab chiqariş sexi: xomaşyo, stanok va tayyor mahsulotlar konveyeri" preserveAspectRatio="xMidYMax meet">
       <defs>
         <pattern id="ic-grid" width="40" height="40" patternUnits="userSpaceOnUse">
           <path d="M40 0H0v40" fill="none" stroke="#f5f5f5" strokeOpacity="0.045" strokeWidth="1" />

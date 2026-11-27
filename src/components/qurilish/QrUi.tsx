@@ -2,11 +2,13 @@ import type { ReactNode } from 'react';
 import { QR_FORM_ID } from '../../content/qurilish';
 import { scrollToId } from '../../lib/scroll';
 import { track } from '../../lib/tracking';
+import { ctaClick } from '../../lib/analytics';
 import { Reveal } from '../../ui/Reveal';
 
 /** Every CTA on the landing leads to the one registration form. */
 export function goToForm(location: string) {
   track('QurilishCTA', { location }, { custom: true });
+  ctaClick(`qurilish-${location}`);
   scrollToId(QR_FORM_ID, 0); // no header on this landing: land exactly on “Ro‘yxatdan o‘tish”
 }
 

@@ -15,10 +15,10 @@ export type PhoneResult = { ok: true; e164: string; display: string; foreign: bo
 
 export const PHONE_ERRORS = {
   empty: 'Telefon raqamingizni kiriting',
-  short: 'Raqam to‘liq emas: +998 dan keyin 9 ta raqam bo‘lishi kerak',
-  long: 'Raqamda ortiqcha raqam bor: +998 dan keyin 9 ta raqam bo‘lishi kerak',
-  zero: 'Operator kodi 0 bilan boshlanmaydi — raqamni tekshiring',
-  letters: 'Raqamda faqat raqamlar, bo‘sh joy, +, - va qavslar bo‘lishi mumkin',
+  short: 'Raqam to‘liq emas: +998 dan keyin 9 ta raqam bo‘lişi kerak',
+  long: 'Raqamda ortiqcha raqam bor: +998 dan keyin 9 ta raqam bo‘lişi kerak',
+  zero: 'Operator kodi 0 bilan boşlanmaydi — raqamni tekşiring',
+  letters: 'Raqamda faqat raqamlar, bo‘ş joy, +, - va qavslar bo‘lişi mumkin',
   foreign: 'Xorijiy raqamni + va mamlakat kodi bilan yozing (masalan, +7…, +1…)',
 } as const;
 

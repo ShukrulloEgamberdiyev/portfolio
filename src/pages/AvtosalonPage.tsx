@@ -30,7 +30,7 @@ function Header() {
         {/* Mobile: the hero CTA is the primary action, so the header button appears only after scrolling. */}
         <a href={`#${AV_FORM_ID}`} onClick={(e) => { e.preventDefault(); goToForm('header'); }} data-cursor="hover"
           className={`${solid ? 'inline-flex' : 'hidden sm:inline-flex'} h-10 items-center rounded-full border border-line-strong px-4 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-bone transition-colors hover:border-signal hover:text-signal sm:px-5`}>
-          Ariza qoldirish
+          Ariza qoldiriş
         </a>
       </div>
     </header>
@@ -194,7 +194,7 @@ function Expectations() {
             <Reveal delay={0.1}><p className="mt-6 text-[1.15rem] font-semibold leading-snug tracking-[-0.015em] text-signal sm:text-[1.3rem]">{expectations.sub}</p></Reveal>
             <Reveal delay={0.15} className="mt-8 hidden lg:block">
               <div className="relative overflow-hidden rounded-[18px] border border-line">
-                <img src={detailImg} alt="Avtosalon shourumidagi avtomobil detali" loading="lazy" decoding="async" width={720} height={900} className="aspect-[16/11] w-full object-cover object-[50%_40%]" />
+                <img src={detailImg} alt="Avtosalon şourumidagi avtomobil detali" loading="lazy" decoding="async" width={720} height={900} className="aspect-[16/11] w-full object-cover object-[50%_40%]" />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
               </div>
             </Reveal>
@@ -299,7 +299,7 @@ function StickyCta() {
     <div aria-hidden={!show}
       className={`fixed inset-x-0 bottom-0 z-40 border-t border-line bg-ink/85 px-4 pt-3 backdrop-blur-xl transition-[transform,opacity] duration-400 md:hidden ${show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-full opacity-0'}`}
       style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)' }}>
-      <AvCta location="sticky-mobile" className="w-full">Ariza qoldirish</AvCta>
+      <AvCta location="sticky-mobile" className="w-full">Ariza qoldiriş</AvCta>
     </div>
   );
 }

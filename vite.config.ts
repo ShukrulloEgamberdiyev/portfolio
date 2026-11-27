@@ -105,9 +105,45 @@ function agency077Api(): Plugin {
   };
 }
 
+/**
+ * /api/lead for `vite` and `vite preview` (production uses api/lead.ts on Vercel). Uses the real handler;
+ * Sheets only when LEADS_SHEETS_URL/SECRET are set in the shell, otherwise leads go to an in-memory queue
+ * (answer "queued"). LEADS_DEV_FAIL=1 simulates Sheets and queue both down (answer 503).
+ */
+function leadApi(): Plugin {
+  const memory = new Map<string, unknown>();
+  const mount = (mw: Connect.Server): void => {
+    mw.use('/api/lead', async (req, res) => {
+      const { handleLead, handleStatus } = await import('./src/server/lead/handler.ts');
+      const fail = process.env.LEADS_DEV_FAIL === '1';
+      const queue = {
+        available: !fail,
+        async put(e: { lead: { id: string } }) { memory.set(e.lead.id, e); },
+        async list(n: number) { return [...memory.values()].slice(0, n) as never[]; },
+        async remove(id: string) { memory.delete(id); },
+      };
+      const env = { LEADS_SHEETS_URL: fail ? undefined : process.env.LEADS_SHEETS_URL, LEADS_SHEETS_SECRET: process.env.LEADS_SHEETS_SECRET, LEADS_ADMIN_KEY: process.env.LEADS_ADMIN_KEY };
+      const headers = new Headers();
+      for (const [k, v] of Object.entries(req.headers)) if (typeof v === 'string') headers.set(k, v);
+      let response: Response;
+      if (req.method === 'POST') {
+        const chunks: Buffer[] = [];
+        for await (const c of req) chunks.push(c as Buffer);
+        response = await handleLead(new Request('http://local/api/lead', { method: 'POST', headers, body: Buffer.concat(chunks) }), env, { queue });
+      } else {
+        response = await handleStatus(new Request('http://local/api/lead', { headers }), env, queue);
+      }
+      res.statusCode = response.status;
+      response.headers.forEach((v, k) => res.setHeader(k, v));
+      res.end(await response.text());
+    });
+  };
+  return { name: 'fazo-lead-local-api', configureServer(server) { mount(server.middlewares); }, configurePreviewServer(server) { mount(server.middlewares); } };
+}
+
 // `--mode singlefile` inlines everything into one HTML (used for the hosted preview).
 export default defineConfig(({ mode, isSsrBuild }) => ({
-  plugins: [react(), tailwindcss(), landingRoutes(), agency077Api(), previewPrerendered(), ...(mode === 'singlefile' ? [viteSingleFile()] : [])],
+  plugins: [react(), tailwindcss(), landingRoutes(), agency077Api(), leadApi(), previewPrerendered(), ...(mode === 'singlefile' ? [viteSingleFile()] : [])],
   build: {
     outDir: mode === 'singlefile' ? 'dist-preview' : 'dist',
     target: 'es2020',

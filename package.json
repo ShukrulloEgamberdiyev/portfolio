@@ -10,8 +10,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "build:spa": "vite build",
-    "test": "node --test tests/*.test.mjs",
-    "verify": "npm run build && npm test"
+    "test": "node --import ./tests/helpers/ts-hooks.mjs --test tests/*.test.mjs",
+    "verify": "npm run build && npm test && node scripts/uz-sh.mjs --check $(cat scripts/uz-files.txt)"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
